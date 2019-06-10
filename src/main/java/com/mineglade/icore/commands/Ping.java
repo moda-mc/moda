@@ -3,7 +3,6 @@ package com.mineglade.icore.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import com.mineglade.icore.Main;
@@ -11,17 +10,21 @@ import com.mineglade.icore.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
+import xyz.derkades.derkutils.bukkit.reflection.ReflectionUtil;
 
 public class Ping implements CommandExecutor {
 
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	@Override
+	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("You are the server. your ping is not applicable...");
 			return true;
 		}
-		Player player = (Player) sender;
-		int ping = ((CraftPlayer) player).getHandle().ping;
+		final Player player = (Player) sender;
+
+		final int ping = ReflectionUtil.getPing(player);
+
 		if (label.equalsIgnoreCase("hi")) {
 			player.spigot().sendMessage(
 					new ComponentBuilder("")
@@ -37,7 +40,7 @@ public class Ping implements CommandExecutor {
 					.append("Your ping to the server is ").color(ChatColor.GRAY)
 					.append(ping + "ms").color(ChatColor.GREEN)
 					.create());
-			
+
 		}
 		return true;
 	}

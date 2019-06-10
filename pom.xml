@@ -9,22 +9,22 @@
 	<packaging>jar</packaging>
 
 	<name>icore</name>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/mineglade/iCore</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
+
 	<build>
 		<resources>
-		
+
 			<resource>
 				<directory>src</directory>
 				<includes>
 					<include>**/*.yml</include>
 				</includes>
 			</resource>
-			
+
 		</resources>
 		<plugins>
 			<plugin>
@@ -36,14 +36,44 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.1</version>
+				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<minimizeJar>true</minimizeJar>
+
+					<relocations>
+						<relocation>
+							<pattern>net.dv8tion.jda</pattern>
+							<shadedPattern>com.mineglade.icore.lib.jda</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.iwepbb.crypto</pattern>
+							<shadedPattern>com.mineglade.icore.lib.crypto</shadedPattern>
+						</relocation>
+					</relocations>
+
+					<filters>
+						<filter>
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>META-INF/*.SF</exclude>
+								<exclude>META-INF/*.DSA</exclude>
+								<exclude>META-INF/*.RSA</exclude>
+							</excludes>
+						</filter>
+					</filters>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-	
-	
-	
+
 	<dependencies>
-	
-		<dependency> <!-- Spigot (this includes Spigot API, Bukkit API, Craftbukkit and NMS) -->
+
+		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
 			<version>1.12.2-R0.1-SNAPSHOT</version>
@@ -51,21 +81,38 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
+			<groupId>xyz.derkades</groupId>
+			<artifactId>Derkutils</artifactId>
+			<version>1.5.1</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>net.dv8tion</groupId>
+			<artifactId>JDA</artifactId>
+			<version>3.8.3_463</version>
+			<exclusions>
+				<exclusion>
+					<groupId>club.minnced</groupId>
+					<artifactId>opus-java</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 	</dependencies>
-	
+
 	<repositories>
-	
+
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
-		
+
+		<repository>
+			<id>jcenter</id>
+			<name>jcenter-bintray</name>
+			<url>http://jcenter.bintray.com</url>
+		</repository>
+
 	</repositories>
-	
+
 </project>
