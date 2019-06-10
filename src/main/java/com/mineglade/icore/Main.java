@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.icore.commands.Icore;
 import com.mineglade.icore.commands.Ping;
+import com.mineglade.icore.commands.Shrug;
 import com.mineglade.icore.events.Chat;
 
 import net.md_5.bungee.api.ChatColor;
@@ -56,6 +57,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void registerCommands() {
 		getCommand("ping").setExecutor(new Ping());
 		getCommand("icore").setExecutor(new Icore());
+		getCommand("shrug").setExecutor(new Shrug());
 	}
 	
 	public void registerEvents() {

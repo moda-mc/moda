@@ -8,33 +8,50 @@ softdepend: [Vault, PlaceholderAPI]
 
 commands:
   ping:
-    description: returns the player's ping to the server.
-    usage: "Usage: /ping"
+    description: "returns the player's ping to the server."
+    usage: "/ping"
     aliases: [hi, pong, pung, peng, pang]
     
   icore:
-    description: core command for iCore 
-    usage: "Usage: /icore <subcommand>"
+    description: "core command for iCore" 
+    usage: "/icore help"
     aliases: [ic]
     permission: icore.help
     
+  shrug:
+    description: "sends a ¯\\(ツ)/¯" 
+    usage: "/shrug"
        
 permissions:
   icore.ping:
-    description: allows the /ping command
+    description: "allows the /ping command"
     default: true
   icore.help:
-    description: allows the /icore command
+    description: "allows the /icore command"
     default: true
   icore.reload:
-    description: allows the player to reload the plugin
+    description: "allows an admin to reload the plugin"
+    default: op
+  icore.support:
+    description: "allows the player to request support from players with the icore.support.receive permission"
+    default: true
+  icore.support.receive:
+    description: "allows the player to receive support queries"
     default: op
     
+  icore.support.*:
+    description: "wildcard permission for all icore.support permissions"
+    default: op
+    children:
+      icore.support: true
+      icore.support.receive: true
+    
   icore.*: 
-    description: wildcard permission to allow all commands.
+    description: "wildcard permission to allow all commands."
     default: op
     children:
       icore.ping: true
       icore.help: true
       icore.reload: true
+      icore.support.*: true
   

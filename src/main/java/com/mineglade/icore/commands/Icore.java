@@ -16,15 +16,16 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import xyz.derkades.derkutils.ListUtils;
 
 public class Icore implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		if (args.length != 1) {
+		if (args.length < 1) {
 			Bukkit.dispatchCommand(sender, label + " help");
 			return true;
-		}
+		} 
 		
 		if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h")) {
 			if (!(sender instanceof Player)) {
@@ -41,13 +42,45 @@ public class Icore implements CommandExecutor {
 		}
 		
 		if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
-			Main.instance.reloadConfig();
-			sender.sendMessage(Main.getCommandPrefix() + ChatColor.GREEN + "all iCore configs have been reloaded.");
+			
+			if (sender.hasPermission("icore.reload")) {
+				Main.instance.reloadConfig();
+				sender.sendMessage(Main.getCommandPrefix() + ChatColor.GREEN + "all iCore configs have been reloaded.");
+			} else {
+				sender.spigot().sendMessage(
+						new ComponentBuilder("")
+							.append(Main.getCommandPrefix())
+							.append("You do not have permission to use this command.").color(ChatColor.RED)
+							.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " support "))
+							.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("you need ").color(ChatColor.GRAY)
+									.append("icore.reload").color(ChatColor.GREEN)
+									.append(" to run this command").color(ChatColor.GRAY)
+									.create()))
+							.create());
+			}
+		}
+		
+		if (args[0].equalsIgnoreCase("support") || args[0].equalsIgnoreCase("sp") || args[0].equalsIgnoreCase("helpivefallenandicantgetup")) {
+			if (args.length < 2) {
+				sender.spigot().sendMessage(
+						new ComponentBuilder("")
+						.append("You need to provide a description for this command")
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " support "))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("")
+								.append("Usage: /" + label + " support <description>")
+								.create()))
+						.create());
+			} else {
+				String description = String.join(" ", ListUtils.removeFirstStringFromArray(args));
+				sender.sendMessage(Main.getCommandPrefix() + ChatColor.GREEN + "Your support query has been sent to the staff team.");
+				Bukkit.broadcast(Main.getCommandPrefix() + "[Support] " + sender.getName() + ": " + description, "icore.support.receive");
+				return true;
+			}
 		}
 		
 		return true;
 	}
-	
+
 	private void iCoreHelpEntry(Player player, String label, String subcommand, String description, String permission, String... aliases) {
 		player.spigot().sendMessage(
 				new ComponentBuilder("")
