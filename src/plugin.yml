@@ -1,0 +1,40 @@
+main: com.mineglade.icore.Main
+name: iCore
+version: 0.01-alpha
+author: patchtv
+website: https://www.mineglade.com/
+api-version: 1.14
+softdepend: [Vault, PlaceholderAPI]
+
+commands:
+  ping:
+    description: returns the player's ping to the server.
+    usage: "Usage: /ping"
+    aliases: [hi, pong, pung, peng, pang]
+    
+  icore:
+    description: core command for iCore 
+    usage: "Usage: /icore <subcommand>"
+    aliases: [ic]
+    permission: icore.help
+    
+       
+permissions:
+  icore.ping:
+    description: allows the /ping command
+    default: true
+  icore.help:
+    description: allows the /icore command
+    default: true
+  icore.reload:
+    description: allows the player to reload the plugin
+    default: op
+    
+  icore.*: 
+    description: wildcard permission to allow all commands.
+    default: op
+    children:
+      icore.ping: true
+      icore.help: true
+      icore.reload: true
+  
