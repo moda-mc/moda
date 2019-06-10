@@ -1,7 +1,7 @@
 main: com.mineglade.icore.Main
 name: iCore
 version: 0.01-alpha
-author: patchtv
+authors: [patchtv,Derkades]
 website: https://www.mineglade.com/
 api-version: 1.14
 softdepend: [Vault, PlaceholderAPI]
