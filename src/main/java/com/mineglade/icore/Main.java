@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+//import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.icore.commands.Icore;
@@ -14,12 +15,15 @@ import com.mineglade.icore.commands.Shrug;
 import com.mineglade.icore.events.Chat;
 
 import net.md_5.bungee.api.ChatColor;
+import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin implements Listener {
 	
 	public static Main instance;
 	public static FileConfiguration mutedPlayers;
 
+	public static Economy economy = null;
+	
 	public Main() {
 		instance = this;
 	}
@@ -46,13 +50,17 @@ public class Main extends JavaPlugin implements Listener {
 		
 	}
 	
-//	private boolean initVault() {
-//		if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
+//    private boolean setupEconomy() {
+//        if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
 //            return false;
 //        }
-//		return true;
-//		
-//	}
+//        final RegisteredServiceProvider<Economy> rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
+//        if (rsp == null) {
+//            return false;
+//        }
+//        economy = rsp.getProvider();
+//        return economy != null;
+//    }
 	
 	public void registerCommands() {
 		getCommand("ping").setExecutor(new Ping());
@@ -68,6 +76,10 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static String getCommandPrefix() {
 		return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("command-prefix"));
+	}
+	
+	public static String getJoinLeavePrefix (final ChatColor color, final char c) {
+		return ChatColor.WHITE + "[" + color + c + ChatColor.WHITE + "]" + ChatColor.GRAY + " | " + color;
 	}
 	
 	public static String getChatPrefix() {

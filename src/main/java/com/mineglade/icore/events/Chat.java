@@ -24,9 +24,11 @@ public class Chat implements Listener {
 		final Player player = event.getPlayer();
 
 		Bukkit.spigot()
-				.broadcast(new ComponentBuilder("").append("[").color(ChatColor.RESET).append("+")
-						.color(ChatColor.GREEN).append("]").color(ChatColor.RESET).append(" | ")
-						.color(ChatColor.DARK_GRAY).append(player.getDisplayName()).color(ChatColor.GREEN).create());
+				.broadcast(new ComponentBuilder("")
+						.append(Main.getJoinLeavePrefix(ChatColor.GREEN, '+'))
+							.event((HoverEvent) null)
+						.append(player.getDisplayName()).color(ChatColor.GREEN)
+						.create());
 
 		// if (Bukkit.getServer().getServerName().equals("hub")) {
 		// event.getPlayer().spigot().sendMessage(new ComponentBuilder("").create());
@@ -41,8 +43,8 @@ public class Chat implements Listener {
 		final Player player = event.getPlayer();
 
 		Bukkit.spigot()
-				.broadcast(new ComponentBuilder("").append("[").color(ChatColor.RESET).append("-").color(ChatColor.RED)
-						.append("]").color(ChatColor.RESET).append(" | ").color(ChatColor.DARK_GRAY)
+				.broadcast(new ComponentBuilder("")
+						.append(Main.getJoinLeavePrefix(ChatColor.RED, '-'))
 						.append(player.getDisplayName()).color(ChatColor.RED).create());
 
 	}
@@ -56,7 +58,8 @@ public class Chat implements Listener {
 			recipient.spigot()
 					.sendMessage(new ComponentBuilder("")
 							.append(TextComponent.fromLegacyText(Main.getChatPrefix()))
-							.append(player.getDisplayName()).append(" » " + event.getMessage()).event((HoverEvent) null)
+							.append(player.getDisplayName())
+							.append(" » " + event.getMessage()).event((HoverEvent) null)
 							.create());
 		}
 
