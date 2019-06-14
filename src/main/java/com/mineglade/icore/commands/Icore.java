@@ -74,7 +74,6 @@ public class Icore implements CommandExecutor {
 				String description = String.join(" ", ListUtils.removeFirstStringFromArray(args));
 				sender.sendMessage(Main.getCommandPrefix() + ChatColor.GREEN + "Your support query has been sent to the staff team.");
 				Bukkit.broadcast(Main.getCommandPrefix() + "[Support] " + sender.getName() + ": " + description, "icore.support.receive");
-				return true;
 			}
 		}
 		
