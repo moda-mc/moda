@@ -7,15 +7,15 @@ import org.bukkit.entity.Player;
 
 public class Shrug implements CommandExecutor {
 
-	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("/" + label + " cannot be run from the console.");
-		} else {
-			Player player = (Player) sender;
-			player.chat("¯\\(ツ)/¯");
-		}
-		return true;
-	}
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("/" + label + " cannot be run from the console.");
+        } else {
+            Player player = (Player) sender;
+            player.chat("¯\\(ツ)/¯");
+        }
+        return true;
+    }
 
 }

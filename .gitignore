@@ -9,6 +9,9 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+.idea/
+META-INF/
+out/
 .classpath
 .project
 .settings/

@@ -1,4 +1,4 @@
-main: com.mineglade.icore.Main
+main: com.mineglade.icore.ICore
 name: iCore
 version: 0.01-alpha
 authors: [patchtv,Derkades]
@@ -11,17 +11,17 @@ commands:
     description: "returns the player's ping to the server."
     usage: "/ping"
     aliases: [hi, pong, pung, peng, pang]
-    
+
   icore:
-    description: "core command for iCore" 
+    description: "core command for iCore"
     usage: "/icore help"
     aliases: [ic]
     permission: icore.help
-    
+
   shrug:
-    description: "sends a ¯\\(ツ)/¯" 
+    description: "sends a ¯\\(ツ)/¯"
     usage: "/shrug"
-       
+
 permissions:
   icore.ping:
     description: "allows the /ping command"
@@ -38,15 +38,15 @@ permissions:
   icore.support.receive:
     description: "allows the player to receive support queries"
     default: op
-    
+
   icore.support.*:
     description: "wildcard permission for all icore.support permissions"
     default: op
     children:
       icore.support: true
       icore.support.receive: true
-    
-  icore.*: 
+
+  icore.*:
     description: "wildcard permission to allow all commands."
     default: op
     children:
