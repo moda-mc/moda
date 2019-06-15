@@ -1,15 +1,23 @@
 package com.mineglade.icore;
 
 import com.mineglade.icore.commands.CoreCommand;
-import com.mineglade.icore.commands.Ping;
-import com.mineglade.icore.commands.Shrug;
-import com.mineglade.icore.events.Chat;
+import com.mineglade.icore.commands.PingCommand;
+import com.mineglade.icore.commands.ShrugCommand;
+import com.mineglade.icore.commands.VoteCommand;
+import com.mineglade.icore.events.ChatEvent;
+import com.mineglade.icore.events.JoinLeaveEvent;
+import com.mineglade.icore.events.VoteEvent;
 import net.md_5.bungee.api.ChatColor;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -22,33 +30,28 @@ public class ICore extends JavaPlugin implements Listener {
     public static FileConfiguration mutedPlayers;
 
     public static Economy economy = null;
+    public static Permission permission = null;
+    public static Chat chat = null;
 
     public ICore() {
         instance = this;
     }
 
-    public static String getCommandPrefix() {
-        return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("command-prefix"));
-    }
-
-    public static String getJoinLeavePrefix(final ChatColor color, final char c) {
-        return ChatColor.WHITE + "[" + color + c + ChatColor.WHITE + "]" + ChatColor.GRAY + " | " + color;
-    }
-
-//    private boolean setupEconomy() {
-//        if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
-//            return false;
-//        }
-//        final RegisteredServiceProvider<Economy> rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
-//        if (rsp == null) {
-//            return false;
-//        }
-//        economy = rsp.getProvider();
-//        return economy != null;
-//    }
-
-    public static String getChatPrefix() {
-        return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("chat-prefix"));
+    public static String getPrefix(PrefixType type) {
+        if (type == null) {
+            throw new IllegalArgumentException();
+        }
+        if (type == PrefixType.CHAT ) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("chat-prefix", ""));
+        } else if (type == PrefixType.COMMAND) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("command-prefix", ""));
+        } else if (type == PrefixType.JOIN) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("join-prefix", ""));
+        } else if (type == PrefixType.LEAVE) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("leave-prefix", ""));
+        } else {
+            throw new AssertionError();
+        }
     }
 
     public void onEnable() {
@@ -56,11 +59,14 @@ public class ICore extends JavaPlugin implements Listener {
         PluginDescriptionFile pdFile = getDescription();
         Logger logger = getLogger();
 
+        if (!this.setupVault()) {
+            this.getLogger().severe("Vault error");
+        }
         registerCommands();
         registerEvents();
         logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
-
         saveDefaultConfig();
+
 
     }
 
@@ -73,16 +79,51 @@ public class ICore extends JavaPlugin implements Listener {
 
     }
 
-    public void registerCommands() {
-        getCommand("ping").setExecutor(new Ping());
-        getCommand("icore").setExecutor(new CoreCommand());
-        getCommand("shrug").setExecutor(new Shrug());
+    private boolean setupVault() {
+        if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+
+        final RegisteredServiceProvider<Economy> rspEcon = this.getServer().getServicesManager().getRegistration(Economy.class);
+        if (rspEcon == null) {
+            return false;
+        }
+        economy = rspEcon.getProvider();
+
+        final RegisteredServiceProvider<Permission> rspPerm = this.getServer().getServicesManager().getRegistration(Permission.class);
+        if (rspPerm == null) {
+            return false;
+        }
+        permission = rspPerm.getProvider();
+
+        final RegisteredServiceProvider<Chat> rspChat = this.getServer().getServicesManager().getRegistration(Chat.class);
+        if (rspChat == null) {
+            return false;
+        }
+        chat = rspChat.getProvider();
+
+        return true;
     }
 
-    public void registerEvents() {
+    public static boolean isVanished(Player player) {
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            if (meta.asBoolean()) return true;
+        }
+        return false;
+    }
+
+    private void registerCommands() {
+        getCommand("ping").setExecutor(new PingCommand());
+        getCommand("icore").setExecutor(new CoreCommand());
+        getCommand("shrug").setExecutor(new ShrugCommand());
+        getCommand("vote").setExecutor(new VoteCommand());
+    }
+
+    private void registerEvents() {
         PluginManager pm = getServer().getPluginManager();
 
-        pm.registerEvents(new Chat(), this);
+        pm.registerEvents(new ChatEvent(), this);
+        pm.registerEvents(new JoinLeaveEvent(), this);
+        pm.registerEvents(new VoteEvent(), this);
     }
-
 }
