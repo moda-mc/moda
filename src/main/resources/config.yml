@@ -1,4 +1,34 @@
 # Plugin Configuration for iCore (by MineGlade)
 
+# =====================================================
+#                       Prefixes
+# =====================================================
+# you can use color codes with an & character.
+# &a-f,0-1,k,l,m,n,o
+
 command-prefix: "&8[&bP&8] &7| "
 chat-prefix: "&8[&6C&8] &7| "
+join-prefix: "&f[&a+&f] &7| "
+leave-prefix: "&f[&c-&f] &7| "
+
+# =====================================================
+#                  Message Of The Day
+# =====================================================
+# you can use PlaceholderAPI PlaceHolders
+
+motd:
+  - text: "\n&8[&bP&8] &7| Hey there, "
+  - text: "&a%player_displayname%"
+    hover: "&7That's your name, right?"
+  - text: "&7!\n&8[&bP&8] &7| There are currently &a%server_online%&7 players online."
+    suggest_command: "/list"
+  - text: "\n&8[&bP&8] &7| &f&nClick here to join the discord.\n"
+    url: "https://d.minegla.de/"
+# =====================================================
+#                     Vote Sites
+# =====================================================
+# you can use PlaceholderAPI PlaceHolders
+vote-sites:
+  - text: "\n&8[&bP&8] &7| "
+
+# =====================================================
