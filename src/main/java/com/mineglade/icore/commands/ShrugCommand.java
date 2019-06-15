@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Shrug implements CommandExecutor {
+public class ShrugCommand implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 
@@ -13,7 +13,7 @@ public class Shrug implements CommandExecutor {
             sender.sendMessage("/" + label + " cannot be run from the console.");
         } else {
             Player player = (Player) sender;
-            player.chat("¯\\(ツ)/¯");
+            player.chat(String.join(" ", args) + "¯\\(ツ)/¯" );
         }
         return true;
     }
