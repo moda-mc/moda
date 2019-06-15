@@ -6,7 +6,7 @@
 
     <groupId>com.mineglade</groupId>
     <artifactId>icore</artifactId>
-    <version>0.01</version>
+    <version>0.02-alpha</version>
     <packaging>jar</packaging>
 
     <name>icore</name>
@@ -15,7 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.8</jdk.version>
-        <spigot.version>1.14.2-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.12.2-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
     <build>
@@ -23,7 +23,7 @@
 
         <resources>
             <resource>
-                <directory>${basedir}/src/main/java/resources</directory>
+                <directory>${basedir}/src/main/resources</directory>
                 <includes>
                     <include>*.yml</include>
                 </includes>
@@ -57,6 +57,10 @@
                         <relocation>
                             <pattern>com.iwepbb.crypto</pattern>
                             <shadedPattern>com.mineglade.icore.lib.crypto</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>xyz.derkades.derkutils</pattern>
+                            <shadedPattern>com.mineglade.icore.lib.derkutils</shadedPattern>
                         </relocation>
                     </relocations>
 
@@ -95,6 +99,13 @@
             <groupId>xyz.derkades</groupId>
             <artifactId>Derkutils</artifactId>
             <version>1.5.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vexsoftware</groupId>
+            <artifactId>nuvotifier</artifactId>
+            <version>2.5.3</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
