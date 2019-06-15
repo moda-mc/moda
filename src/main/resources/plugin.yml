@@ -1,16 +1,12 @@
 main: com.mineglade.icore.ICore
 name: iCore
-version: 0.01-alpha
-authors: [patchtv,Derkades]
-website: https://www.mineglade.com/
-api-version: 1.14
-softdepend: [Vault, PlaceholderAPI]
+version: 0.02-alpha
+authors: [patchtv, Derkades]
+website: https://www.github.com/mineglade/icore
+depend: [Vault, PlaceholderAPI]
+softdepend: [SuperVanish, Votifier]
 
 commands:
-  ping:
-    description: "returns the player's ping to the server."
-    usage: "/ping"
-    aliases: [hi, pong, pung, peng, pang]
 
   icore:
     description: "core command for iCore"
@@ -18,26 +14,81 @@ commands:
     aliases: [ic]
     permission: icore.help
 
+  vote:
+    description: "returns a list of sites to vote on."
+    usage: "/vote [top]"
+    permission: icore.vote
+
+  ping:
+    description: "returns the player's ping to the server."
+    usage: "/ping"
+    aliases: [hi, pong, pung, peng, pang]
+
   shrug:
-    description: "sends a ¯\\(ツ)/¯"
+    description: "sends a ¯\\(ツ)/¯ with a provided message."
     usage: "/shrug"
 
+  support:
+    description: "ask the staff team for support."
+    usage: "/support <message>"
+
 permissions:
-  icore.ping:
-    description: "allows the /ping command"
-    default: true
+
+# Default Permissions:
   icore.help:
-    description: "allows the /icore command"
+    description: "allows the player to use /icore"
     default: true
-  icore.reload:
-    description: "allows an admin to reload the plugin"
-    default: op
+
+# Vote Permissions:
+  icore.vote:
+    description: "allows the player to use /vote"
+    default: true
+  icore.vote.top:
+    description: "allows the player to use /vote top"
+    default: true
+
+# Misc Permissions:
+  icore.ping:
+    description: "allows the player to use /ping"
+    default: true
+  icore.shrug:
+    description: "allows the player to use /shrug"
+    default: true
+
+# Support permissions:
   icore.support:
-    description: "allows the player to request support from players with the icore.support.receive permission"
+    description: "allows the player to use /support"
     default: true
   icore.support.receive:
-    description: "allows the player to receive support queries"
+    description: "allows the player to receive support queries, and use /support inbox"
     default: op
+
+# Administrator permissions:
+  icore.reload:
+    description: "allows the player to use /ic reload"
+    default: op
+
+
+# WildCards:
+  icore.misc:
+    description: "allows all misc commands"
+    default: true
+    children:
+      icore.shrug: true
+      icore.ping: true
+
+  icore.admin:
+    description: "allows all admin commands"
+    default: op
+    children:
+      icore.reload: true
+
+  icore.vote.*:
+    description: "wildcard permission for all icore.vote permissions"
+    default: true
+    children:
+      icore.vote: true
+      icore.vote.top: true
 
   icore.support.*:
     description: "wildcard permission for all icore.support permissions"
@@ -47,11 +98,13 @@ permissions:
       icore.support.receive: true
 
   icore.*:
-    description: "wildcard permission to allow all commands."
+    description: "wildcard permission to allow all icore commands."
     default: op
     children:
-      icore.ping: true
       icore.help: true
-      icore.reload: true
+      icore.misc: true
+      icore.admin: true
+      icore.vote.*: true
       icore.support.*: true
+
   
