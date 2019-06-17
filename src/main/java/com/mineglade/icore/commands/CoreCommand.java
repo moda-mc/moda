@@ -35,6 +35,7 @@ public class CoreCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 player.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN + "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
                 iCoreHelpEntry(player, label, "help", "returns a list of all iCore Commands", "icore.help", "help", "h", "");
+                iCoreHelpEntry(player, label, "support", "ask the staff team for support.", "icore.support", "support", "sp");
                 iCoreHelpEntry(player, label, "reload", "reloads all iCore configs.", "icore.reload", "reload ", "rl");
 
             }
@@ -44,6 +45,7 @@ public class CoreCommand implements CommandExecutor {
 
             if (sender.hasPermission("icore.reload")) {
                 ICore.instance.reloadConfig();
+                ICore.instance.initDataBaseConnection();
                 sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN + "all iCore configs have been reloaded.");
             } else {
                 sender.spigot().sendMessage(
