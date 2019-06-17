@@ -21,7 +21,10 @@ public class MessageListener extends ListenerAdapter {
 	
 	public static void bot() {
 		try {
-			JDA jda = new JDABuilder(ICore.instance.getConfig().getString("discord-bot.token")).addEventListener(new MessageListener()).build();
+			JDA jda = new JDABuilder(ICore.instance.getConfig().getString("discord-bot.token"))
+					.addEventListener(new MessageListener())
+					.build();
+			
 			jda.awaitReady();
 			ICore.instance.getLogger().info("Finished Building JDA");
 		}
