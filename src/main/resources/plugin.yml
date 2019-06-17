@@ -28,10 +28,6 @@ commands:
     description: "sends a ¯\\(ツ)/¯ with a provided message."
     usage: "/shrug"
 
-  support:
-    description: "ask the staff team for support."
-    usage: "/support <message>"
-
 permissions:
 
 # Default Permissions:
