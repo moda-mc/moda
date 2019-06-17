@@ -1,8 +1,6 @@
 package com.mineglade.icore.commands;
 
 import com.mineglade.icore.ICore;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
