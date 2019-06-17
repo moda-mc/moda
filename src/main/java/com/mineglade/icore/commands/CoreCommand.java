@@ -1,25 +1,28 @@
 package com.mineglade.icore.commands;
 
-import com.mineglade.icore.ICore;
-import com.mineglade.icore.PrefixType;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import xyz.derkades.derkutils.ListUtils;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import com.mineglade.icore.ICore;
+import com.mineglade.icore.PrefixType;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import xyz.derkades.derkutils.ListUtils;
 
 public class CoreCommand implements CommandExecutor {
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    @Override
+public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 
         if (args.length < 1) {
             Bukkit.dispatchCommand(sender, label + " help");
@@ -32,11 +35,11 @@ public class CoreCommand implements CommandExecutor {
                 sender.sendMessage("/icore help");
                 sender.sendMessage("/icore reload");
             } else {
-                Player player = (Player) sender;
+                final Player player = (Player) sender;
                 player.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN + "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
-                iCoreHelpEntry(player, label, "help", "returns a list of all iCore Commands", "icore.help", "help", "h", "");
-                iCoreHelpEntry(player, label, "support", "ask the staff team for support.", "icore.support", "support", "sp");
-                iCoreHelpEntry(player, label, "reload", "reloads all iCore configs.", "icore.reload", "reload ", "rl");
+                this.iCoreHelpEntry(player, label, "help", "returns a list of all iCore Commands", "icore.help", "help", "h", "");
+                this.iCoreHelpEntry(player, label, "support", "ask the staff team for support.", "icore.support", "support", "sp");
+                this.iCoreHelpEntry(player, label, "reload", "reloads all iCore configs.", "icore.reload", "reload ", "rl");
 
             }
         }
@@ -47,6 +50,8 @@ public class CoreCommand implements CommandExecutor {
                 ICore.instance.reloadConfig();
                 ICore.instance.initDataBaseConnection();
                 sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN + "all iCore configs have been reloaded.");
+
+                Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, ICore.discord::restart);
             } else {
                 sender.spigot().sendMessage(
                         new ComponentBuilder("")
@@ -72,7 +77,7 @@ public class CoreCommand implements CommandExecutor {
                                         .create()))
                                 .create());
             } else {
-                String description = String.join(" ", ListUtils.removeFirstStringFromArray(args));
+                final String description = String.join(" ", ListUtils.removeFirstStringFromArray(args));
                 sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN + "Your support query has been sent to the staff team.");
                 Bukkit.broadcast(ICore.getPrefix(PrefixType.COMMAND) + "[Support] " + sender.getName() + ": " + description, "icore.support.receive");
             }
@@ -88,7 +93,7 @@ public class CoreCommand implements CommandExecutor {
         return true;
     }
 
-    private void iCoreHelpEntry(Player player, String label, String subcommand, String description, String permission, String... aliases) {
+    private void iCoreHelpEntry(final Player player, final String label, final String subcommand, final String description, final String permission, final String... aliases) {
         player.spigot().sendMessage(
                 new ComponentBuilder("")
                         .append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.COMMAND)))

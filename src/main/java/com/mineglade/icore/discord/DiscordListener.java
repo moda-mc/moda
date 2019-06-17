@@ -18,40 +18,45 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class DiscordListener extends ListenerAdapter {
-	
-	public static void bot() {
+
+	private JDA jda;
+
+	public DiscordListener() {
+		this.init();
+	}
+
+
+	private void init() {
 		try {
-			JDA jda = new JDABuilder(ICore.instance.getConfig().getString("discord-bot.token"))
+			this.jda = new JDABuilder(ICore.instance.getConfig().getString("discord-bot.token"))
 					.addEventListener(new DiscordListener())
 					.build();
-			
-			jda.awaitReady();
-			ICore.instance.getLogger().info("Finished Building JDA");
-		}
-		catch (LoginException e) {
+
+			this.jda.awaitReady();
+//			ICore.instance.getLogger().info("Finished Building JDA");
+		} catch (final LoginException | InterruptedException e) {
 			e.printStackTrace();
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
-	public void onMessageReceived(MessageReceivedEvent event) {
-		JDA jda = event.getJDA();
-		long responseNumber = event.getResponseNumber();
-		
-		User author = event.getAuthor();
-		Message message = event.getMessage();
-		MessageChannel channel = event.getChannel();
-		
-		String msg = message.getContentDisplay();
-		
-		boolean bot = author.isBot();
-		
+
+	@Override
+	public void onMessageReceived(final MessageReceivedEvent event) {
+		final JDA jda = event.getJDA();
+
+		final User author = event.getAuthor();
+		final Message message = event.getMessage();
+		final MessageChannel channel = event.getChannel();
+
+		final String msg = message.getContentDisplay();
+
+		final boolean bot = author.isBot();
+
 		if (event.isFromType(ChannelType.TEXT)) {
-			Guild guild = event.getGuild();
-			TextChannel textChannel = event.getTextChannel();
-			Member member = event.getMember();
-			
+			final Guild guild = event.getGuild();
+			final TextChannel textChannel = event.getTextChannel();
+			final Member member = event.getMember();
+
 			String name;
 			if (message.isWebhookMessage()) {
 				name = author.getName();
@@ -60,18 +65,33 @@ public class DiscordListener extends ListenerAdapter {
 				name = member.getEffectiveName();
 			}
 			ICore.instance.getLogger().info(String.format("%s: %s", author.getName(), msg));
-			
+
 		}
 		else if (event.isFromType(ChannelType.PRIVATE))
 		{
-            PrivateChannel privateChannel = event.getPrivateChannel();
+            final PrivateChannel privateChannel = event.getPrivateChannel();
 
             ICore.instance.getLogger().info(String.format("[PRIV] %s: %s", author.getName(), msg));
         }
-		
+
 		if (msg.equals("!ip"))
         {
             channel.sendMessage("You can join the server on `play.mineglade.com`").queue();
         }
 	}
+
+	public JDA getInstance() {
+		return this.jda;
+	}
+
+	public void shutdown() {
+		if (this.jda != null)
+			this.jda.shutdownNow();
+	}
+
+	public void restart() {
+		this.shutdown();
+		this.init();
+	}
+
 }
