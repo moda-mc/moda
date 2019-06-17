@@ -43,7 +43,7 @@ motd:
 vote-response:
   - text: "\n&8[&bP&8] &7| ======= &aVoting Sites&7 ======="
   
-  - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-site list,\n&7 so here is a list of sites to vote on for &aMineGlade\n"
+  - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-sites list,\n&8[&bP&8] &7| so here is a list of sites to vote on for &fMine&aGlade\n"
     
   - text: "\n&8[&bP&8] &7| &71. &aminecraft-server-list"
     hover: "vote for us on minecraft-server-list.com!"
