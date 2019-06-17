@@ -25,11 +25,10 @@ public class DiscordListener extends ListenerAdapter {
 		this.init();
 	}
 
-
 	private void init() {
 		try {
 			this.jda = new JDABuilder(ICore.instance.getConfig().getString("discord-bot.token"))
-					.addEventListener(new DiscordListener())
+					.addEventListener(this)
 					.build();
 
 			this.jda.awaitReady();
