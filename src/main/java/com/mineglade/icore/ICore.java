@@ -24,7 +24,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -42,23 +44,6 @@ public class ICore extends JavaPlugin implements Listener {
     public ICore() {
         instance = this;
     }
-
-    public static String getPrefix(PrefixType type) {
-        if (type == null) {
-            throw new IllegalArgumentException();
-        }
-        if (type == PrefixType.CHAT ) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("chat-prefix", ""));
-        } else if (type == PrefixType.COMMAND) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("command-prefix", ""));
-        } else if (type == PrefixType.JOIN) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("join-prefix", ""));
-        } else if (type == PrefixType.LEAVE) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("leave-prefix", ""));
-        } else {
-            throw new AssertionError();
-        }
-    }
     
     public void onEnable() {
 
@@ -73,41 +58,25 @@ public class ICore extends JavaPlugin implements Listener {
             this.getLogger().severe("Vault error");
         }
         
-        try {
-			db = new DatabaseHandler(
-					getConfig().getString("mysql.host"),
-					getConfig().getInt("mysql.port"),
-					getConfig().getString("mysql.database"),
-					getConfig().getString("mysql.user"),
-					getConfig().getString("mysql.password")
-					);
-			
-			PreparedStatement statement = db.prepareStatement(
-					"CREATE TABLE `" + getConfig().getString("mysql.database") + "`.`votes` "
-					+ "(`uuid` VARCHAR(100) NOT NULL,"
-					+ " `votes` INT NOT NULL,"
-					+ " PRIMARY KEY (`uuid`)) "
-					+ "ENGINE = InnoDB ");
-			statement.execute();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
-        
-        
+        initDataBaseConnection();
         registerCommands();
         registerEvents();
         logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
         saveDefaultConfig();
-
     }
 
     public void onDisable() {
 
         PluginDescriptionFile pdFile = getDescription();
         Logger logger = getLogger();
+        
+        if (db != null)
+			try {
+				db.getConnection().close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				Bukkit.getPluginManager().disablePlugin(this);
+			}
 
         logger.info(pdFile.getName() + " has been disabled (v" + pdFile.getVersion() + ")");
 
@@ -150,6 +119,67 @@ public class ICore extends JavaPlugin implements Listener {
             if (meta.asBoolean()) return true;
         }
         return false;
+    }
+    
+    public static String getPrefix(PrefixType type) {
+        if (type == null) {
+            throw new IllegalArgumentException();
+        }
+        if (type == PrefixType.CHAT ) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("chat-prefix", ""));
+        } else if (type == PrefixType.COMMAND) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("command-prefix", ""));
+        } else if (type == PrefixType.JOIN) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("join-prefix", ""));
+        } else if (type == PrefixType.LEAVE) {
+            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("leave-prefix", ""));
+        } else {
+            throw new AssertionError();
+        }
+    }
+    
+    public void initDataBaseConnection() {
+        
+    	if (db != null)
+			try {
+				db.getConnection().close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				Bukkit.getPluginManager().disablePlugin(this);
+    			return;
+			}
+    	
+    	Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
+        	try {
+    			db = new DatabaseHandler(
+    					getConfig().getString("mysql.host"),
+    					getConfig().getInt("mysql.port"),
+    					getConfig().getString("mysql.database"),
+    					getConfig().getString("mysql.user"),
+    					getConfig().getString("mysql.password")
+    					);
+    			
+    			final DatabaseMetaData meta = db.getConnection().getMetaData();
+                final ResultSet result = meta.getTables(null, null, "votes", null);
+
+                if (result != null && result.next()) {
+                    return; // Table exists
+                }
+                
+    			PreparedStatement statement = db.prepareStatement(
+    					"CREATE TABLE `" + getConfig().getString("mysql.database") + "`.`votes` "
+    					+ "(`uuid` VARCHAR(100) NOT NULL,"
+    					+ " `votes` INT NOT NULL,"
+    					+ " PRIMARY KEY (`uuid`)) "
+    					+ "ENGINE = InnoDB ");
+    			statement.execute();
+    			
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    			Bukkit.getPluginManager().disablePlugin(this);
+    			return;
+    		}
+        });
     }
 
     private void registerCommands() {
