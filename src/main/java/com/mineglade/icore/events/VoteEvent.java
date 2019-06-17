@@ -31,7 +31,9 @@ public class VoteEvent implements Listener {
         
         Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
         	try {
-    			PreparedStatement statement = ICore.db.prepareStatement("INSERT INTO votes (uuid, votes) VALUES (?, 1) ON DUPLICATE KEY UPDATE votes=votes+1", UUIDFetcher.getUUID(vote.getUsername()));
+    			PreparedStatement statement = ICore.db.prepareStatement(
+    					"INSERT INTO votes (uuid, votes) VALUES (?, 1) ON DUPLICATE KEY UPDATE votes=votes+1"
+    					, UUIDFetcher.getUUID(vote.getUsername()));
     			statement.execute();
         	} catch (SQLException e) {
     			e.printStackTrace();
