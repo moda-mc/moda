@@ -26,7 +26,7 @@ public class ChatEvent implements Listener {
                             .append(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',ICore.chat.getPlayerPrefix(player) + " " )))
                             .append(player.getDisplayName())
                             .append(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&'," " + ICore.chat.getPlayerSuffix(player))))
-                            .append(" » " + event.getMessage()).event((HoverEvent) null)
+                            .append("» " + event.getMessage()).event((HoverEvent) null)
                             .create());
         }
 
