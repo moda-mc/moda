@@ -83,7 +83,7 @@ public class ICore extends JavaPlugin implements Listener {
 
         logger.info(pdFile.getName() + " has been disabled (v" + pdFile.getVersion() + ")");
 
-        this.discord.shutdown();
+        discord.shutdown();
     }
 
     private boolean setupVault() {
