@@ -12,6 +12,17 @@ join-prefix: "&f[&a+&f] &7| "
 leave-prefix: "&f[&c-&f] &7| "
 
 # =====================================================
+#                        MySQL
+# =====================================================
+
+mysql:
+  host: "localhost"
+  port: 3306
+  database: "db"
+  user: "root"
+  password: "password"
+
+# =====================================================
 #                  Message Of The Day
 # =====================================================
 # you can use PlaceholderAPI PlaceHolders
@@ -26,11 +37,10 @@ motd:
     url: "https://d.minegla.de/"
 
 # =====================================================
-#                     Vote Sites
+#                         Voting
 # =====================================================
 # you can use PlaceholderAPI PlaceHolders
-
-vote-sites:
+vote-response:
   - text: "\n&8[&bP&8] &7| ======= &aVoting Sites&7 ======="
   
   - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-site list,\n&7 so here is a list of sites to vote on for &aMineGlade\n"
@@ -54,8 +64,9 @@ vote-sites:
   - text: "\n&8[&bP&8] &7| &75. &amccommunity"
     hover: "vote for us on mccommunity.net!"
     url: "https://mccommunity.net/server/106-MineGlade/vote/"
-
   - text: "\n"
+  
+  - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
 
 # =====================================================
 #                     Discord Bot
