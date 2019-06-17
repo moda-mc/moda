@@ -40,34 +40,44 @@ motd:
 #                         Voting
 # =====================================================
 # you can use PlaceholderAPI PlaceHolders
-vote-response:
-  - text: "\n&8[&bP&8] &7| ======= &aVoting Sites&7 ======="
-  
-  - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-sites list,\n&8[&bP&8] &7| so here is a list of sites to vote on for &fMine&aGlade\n"
-    
-  - text: "\n&8[&bP&8] &7| &71. &aminecraft-server-list"
-    hover: "vote for us on minecraft-server-list.com!"
-    url: "https://minecraft-server-list.com/server/416687/vote/"
-  
-  - text: "\n&8[&bP&8] &7| &72. &aminecraft-mp"
-    hover: "vote for us on minecraft-mp.com!"
-    url: "https://minecraft-mp.com/server/222832/vote/"
-  
-  - text: "\n&8[&bP&8] &7| &73. &aminecraftservers"
-    hover: "vote for us on minecraftservers.org!"
-    url: "https://minecraftservers.org/vote/439188"
-    
-  - text: "\n&8[&bP&8] &7| &74. &atopg"
-    hover: "vote for us on topg.org!"
-    url: "https://topg.org/Minecraft/in-513647"
-  
-  - text: "\n&8[&bP&8] &7| &75. &amccommunity"
-    hover: "vote for us on mccommunity.net!"
-    url: "https://mccommunity.net/server/106-MineGlade/vote/"
-  - text: "\n"
-  
-  - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
+voting:
+  enabled: true
+  database-readonly: false
+  rewards: 
+    - "econ deposit %player% 35"
+  vote-broadcast:
+    - text: "&8[&bP&8] &7| &a%player% &7has voted on &a%vote-site%!"
+      hover: "&fClick here to vote as well!"
+      suggest_command: "/vote"
+      
+  vote-command-response:
+    - text: "\n&8[&bP&8] &7| ======= &aVoting Sites&7 ======="
 
+    - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-sites list,\n&8[&bP&8] &7| so here is a list of sites to vote on for &fMine&aGlade\n"
+
+    - text: "\n&8[&bP&8] &7| &71. &aminecraft-server-list"
+      hover: "vote for us on minecraft-server-list.com!"
+      url: "https://minecraft-server-list.com/server/416687/vote/"
+
+    - text: "\n&8[&bP&8] &7| &72. &aminecraft-mp"
+      hover: "vote for us on minecraft-mp.com!"
+      url: "https://minecraft-mp.com/server/222832/vote/"
+
+    - text: "\n&8[&bP&8] &7| &73. &aminecraftservers"
+      hover: "vote for us on minecraftservers.org!"
+      url: "https://minecraftservers.org/vote/439188"
+
+    - text: "\n&8[&bP&8] &7| &74. &atopg"
+      hover: "vote for us on topg.org!"
+      url: "https://topg.org/Minecraft/in-513647"
+
+    - text: "\n&8[&bP&8] &7| &75. &amccommunity"
+      hover: "vote for us on mccommunity.net!"
+      url: "https://mccommunity.net/server/106-MineGlade/vote/"
+    - text: "\n"
+
+    - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
+     
 # =====================================================
 #                     Discord Bot
 # =====================================================

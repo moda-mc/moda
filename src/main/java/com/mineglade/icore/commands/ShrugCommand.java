@@ -13,7 +13,7 @@ public class ShrugCommand implements CommandExecutor {
             sender.sendMessage("/" + label + " cannot be run from the console.");
         } else {
             Player player = (Player) sender;
-            player.chat(String.join(" ", args) + "¯\\(ツ)/¯" );
+            player.chat(String.join(" ", args) + " ¯\\(ツ)/¯" );
         }
         return true;
     }

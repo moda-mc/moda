@@ -17,12 +17,12 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class MessageListener extends ListenerAdapter {
+public class DiscordListener extends ListenerAdapter {
 	
 	public static void bot() {
 		try {
 			JDA jda = new JDABuilder(ICore.instance.getConfig().getString("discord-bot.token"))
-					.addEventListener(new MessageListener())
+					.addEventListener(new DiscordListener())
 					.build();
 			
 			jda.awaitReady();

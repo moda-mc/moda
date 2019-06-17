@@ -4,7 +4,7 @@ import com.mineglade.icore.commands.CoreCommand;
 import com.mineglade.icore.commands.PingCommand;
 import com.mineglade.icore.commands.ShrugCommand;
 import com.mineglade.icore.commands.VoteCommand;
-import com.mineglade.icore.discord.MessageListener;
+import com.mineglade.icore.discord.DiscordListener;
 import com.mineglade.icore.events.ChatEvent;
 import com.mineglade.icore.events.JoinLeaveEvent;
 import com.mineglade.icore.events.VoteEvent;
@@ -52,7 +52,7 @@ public class ICore extends JavaPlugin implements Listener {
         
         
         
-        Bukkit.getScheduler().runTaskAsynchronously(this, MessageListener::bot);
+        Bukkit.getScheduler().runTaskAsynchronously(this, DiscordListener::bot);
         
         if (!this.setupVault()) {
             this.getLogger().severe("Vault error");

@@ -39,7 +39,7 @@ public class JoinLeaveEvent implements Listener {
                 .append(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&'," " + ICore.chat.getPlayerSuffix(player))))
                 .create());
 
-        player.spigot().sendMessage(Chat.toComponentWithPlaceholders(config, "motd", player));
+        player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "motd", player));
 
     }
 
