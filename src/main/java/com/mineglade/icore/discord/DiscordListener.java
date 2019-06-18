@@ -2,17 +2,15 @@ package com.mineglade.icore.discord;
 
 import javax.security.auth.login.LoginException;
 
+import org.bukkit.Bukkit;
+
 import com.mineglade.icore.ICore;
 
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -22,7 +20,7 @@ public class DiscordListener extends ListenerAdapter {
 	private JDA jda;
 
 	public DiscordListener() {
-		this.init();
+		Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, this::init);
 	}
 
 	private void init() {
@@ -35,13 +33,13 @@ public class DiscordListener extends ListenerAdapter {
 //			ICore.instance.getLogger().info("Finished Building JDA");
 		} catch (final LoginException | InterruptedException e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			return;
 		}
 	}
 
 	@Override
 	public void onMessageReceived(final MessageReceivedEvent event) {
-		final JDA jda = event.getJDA();
+		//final JDA jda = event.getJDA();
 
 		final User author = event.getAuthor();
 		final Message message = event.getMessage();
@@ -49,26 +47,26 @@ public class DiscordListener extends ListenerAdapter {
 
 		final String msg = message.getContentDisplay();
 
-		final boolean bot = author.isBot();
+		//final boolean bot = author.isBot();
 
 		if (event.isFromType(ChannelType.TEXT)) {
-			final Guild guild = event.getGuild();
-			final TextChannel textChannel = event.getTextChannel();
-			final Member member = event.getMember();
+//			final Guild guild = event.getGuild();
+//			final TextChannel textChannel = event.getTextChannel();
+//			final Member member = event.getMember();
 
-			String name;
-			if (message.isWebhookMessage()) {
-				name = author.getName();
-			}
-			else {
-				name = member.getEffectiveName();
-			}
+//			String name;
+//			if (message.isWebhookMessage()) {
+//				name = author.getName();
+//			}
+//			else {
+//				name = member.getEffectiveName();
+//			}
 			ICore.instance.getLogger().info(String.format("%s: %s", author.getName(), msg));
 
 		}
 		else if (event.isFromType(ChannelType.PRIVATE))
 		{
-            final PrivateChannel privateChannel = event.getPrivateChannel();
+            //final PrivateChannel privateChannel = event.getPrivateChannel();
 
             ICore.instance.getLogger().info(String.format("[PRIV] %s: %s", author.getName(), msg));
         }

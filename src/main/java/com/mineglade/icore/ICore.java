@@ -54,20 +54,20 @@ public class ICore extends JavaPlugin implements Listener {
     	this.saveDefaultConfig();
         final PluginDescriptionFile pdFile = this.getDescription();
         final Logger logger = this.getLogger();
-        
+
         if (ICore.instance.getConfig().getBoolean("discord.enabled")) {
-        	Bukkit.getScheduler().runTaskAsynchronously(this, DiscordListener::new);
+        	discord = new DiscordListener();
         }
 
         if (!this.setupVault()) {
             this.getLogger().severe("Vault error");
         }
-        
+
         this.initDataBaseConnection();
         this.registerCommands();
         this.registerEvents();
         logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
-        
+
         new VoteReminder().runTaskTimer(this, 20*60*10, 20*60*10);
     }
 
@@ -85,8 +85,15 @@ public class ICore extends JavaPlugin implements Listener {
 			}
 
         logger.info(pdFile.getName() + " has been disabled (v" + pdFile.getVersion() + ")");
-        
-        discord.shutdown();
+
+        if (discord != null) {
+        	discord.shutdown();
+        	try {
+				Thread.sleep(2000); // Give JDA time to shut down before bukkit unloads the plugin
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+			}
+        }
     }
 
     private boolean setupVault() {
