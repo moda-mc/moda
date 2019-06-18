@@ -75,8 +75,12 @@ voting:
       hover: "vote for us on mccommunity.net!"
       url: "https://mccommunity.net/server/106-MineGlade/vote/"
     - text: "\n"
-
-    - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
+    - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes.\n"
+    
+  vote-reminder:
+    - text: "\n&8[&bP&8] &7| Remember to vote for us! You currently have &a%votes% &7votes.\n"
+      hover: "&fClick here to vote"
+      suggest_command: "/vote"
      
 # =====================================================
 #                     Discord Bot
