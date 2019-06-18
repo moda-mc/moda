@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.mineglade.icore.commands.CoreCommand;
 import com.mineglade.icore.commands.PingCommand;
 import com.mineglade.icore.commands.ShrugCommand;
+import com.mineglade.icore.commands.SuggestCommand;
 import com.mineglade.icore.commands.VoteCommand;
 import com.mineglade.icore.discord.DiscordListener;
 import com.mineglade.icore.events.ChatEvent;
@@ -54,7 +55,9 @@ public class ICore extends JavaPlugin implements Listener {
         final PluginDescriptionFile pdFile = this.getDescription();
         final Logger logger = this.getLogger();
         
-        Bukkit.getScheduler().runTaskAsynchronously(this, DiscordListener::new);
+        if (ICore.instance.getConfig().getBoolean("discord.enabled")) {
+        	Bukkit.getScheduler().runTaskAsynchronously(this, DiscordListener::new);
+        }
 
         if (!this.setupVault()) {
             this.getLogger().severe("Vault error");
@@ -82,7 +85,7 @@ public class ICore extends JavaPlugin implements Listener {
 			}
 
         logger.info(pdFile.getName() + " has been disabled (v" + pdFile.getVersion() + ")");
-
+        
         discord.shutdown();
     }
 
@@ -191,6 +194,9 @@ public class ICore extends JavaPlugin implements Listener {
         this.getCommand("icore").setExecutor(new CoreCommand());
         this.getCommand("shrug").setExecutor(new ShrugCommand());
         this.getCommand("vote").setExecutor(new VoteCommand());
+        if (ICore.instance.getConfig().getBoolean("github.enabled")) {
+        	this.getCommand("suggest").setExecutor(new SuggestCommand());
+        }
     }
 
     private void registerEvents() {
