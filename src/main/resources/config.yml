@@ -23,6 +23,20 @@ mysql:
   password: "password"
 
 # =====================================================
+#                       GitHub
+# =====================================================
+
+github:
+  enabled: false
+  username: "username"
+  password: "password"
+  repository: "Username/Repository"
+  response: 
+    - text: "&8[&bP&8] &7| &nClick here to view your suggestion\n"
+      url: "%url%"
+      hover: "your suggestion can be found on \n%url%"
+
+# =====================================================
 #                  Message Of The Day
 # =====================================================
 # you can use PlaceholderAPI PlaceHolders
