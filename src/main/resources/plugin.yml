@@ -1,5 +1,6 @@
 main: com.mineglade.icore.ICore
 name: iCore
+description: "A plugin to run the core of your game server; Chat Formatting, Vote Listener, Discord Chat Relay, Nicknames"
 version: 0.02-alpha
 authors: [patchtv, Derkades]
 website: https://www.github.com/mineglade/icore
@@ -43,6 +44,11 @@ permissions:
     description: "allows the player to use /vote top"
     default: true
 
+# Chat Permissions:
+  icore.chat.color:
+    description: "allows color in chat."
+    default: op
+    
 # Misc Permissions:
   icore.ping:
     description: "allows the player to use /ping"
@@ -98,9 +104,11 @@ permissions:
     default: op
     children:
       icore.help: true
+      icore.chat.color: true
       icore.misc: true
       icore.admin: true
       icore.vote.*: true
       icore.support.*: true
+      
 
   
