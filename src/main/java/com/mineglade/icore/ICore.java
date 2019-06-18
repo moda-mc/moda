@@ -24,6 +24,7 @@ import com.mineglade.icore.discord.DiscordListener;
 import com.mineglade.icore.events.ChatEvent;
 import com.mineglade.icore.events.JoinLeaveEvent;
 import com.mineglade.icore.events.VoteEvent;
+import com.mineglade.icore.tasks.VoteReminder;
 
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
@@ -49,23 +50,22 @@ public class ICore extends JavaPlugin implements Listener {
 
     @Override
 	public void onEnable() {
-
+    	this.saveDefaultConfig();
         final PluginDescriptionFile pdFile = this.getDescription();
         final Logger logger = this.getLogger();
-
-
-
+        
         Bukkit.getScheduler().runTaskAsynchronously(this, DiscordListener::new);
 
         if (!this.setupVault()) {
             this.getLogger().severe("Vault error");
         }
-
+        
         this.initDataBaseConnection();
         this.registerCommands();
         this.registerEvents();
         logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
-        this.saveDefaultConfig();
+        
+        new VoteReminder().runTaskTimer(this, 20*60*10, 20*60*10);
     }
 
     @Override
