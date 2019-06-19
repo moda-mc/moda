@@ -17,7 +17,7 @@ commands:
 
   vote:
     description: "returns a list of sites to vote on."
-    usage: "/vote [top]"
+    usage: "§8[§cW§8] §7| §cThis command only works when mysql has been properly set up!"
     permission: icore.vote
 
   ping:
