@@ -2,6 +2,8 @@ package com.mineglade.icore.commands;
 
 import com.mineglade.icore.ICore;
 
+//import net.md_5.bungee.api.chat.ComponentBuilder;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +24,12 @@ public class VoteCommand implements CommandExecutor {
         Player player = (Player) sender;
         FileConfiguration config = ICore.instance.getConfig();
 
+//        if (!(ICore.instance.getConfig().getBoolean("mysql.enabled") && ICore.instance.getConfig().getBoolean("voting.enabled"))) {
+//        	player.spigot().sendMessage(new ComponentBuilder("")
+//        			.append("")
+//        			.create());
+//        	return true;
+//        }
         if (args.length == 1 && args[0].equalsIgnoreCase("top")) {
             player.sendMessage("the /vote top command is not functional yet, please be patient.");
         }
