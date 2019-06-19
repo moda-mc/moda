@@ -57,15 +57,23 @@ public class ICore extends JavaPlugin implements Listener {
 		if (ICore.instance.getConfig().getBoolean("discord.enabled")) {
 			logger.info("Enabling JDA hook (Discord).");
 			discord = new DiscordListener();
+		} else {
+			logger.warning("Discord is not enabled, please set up your config.");
 		}
 
 		if (!this.setupVault()) {
 			logger.severe("Could not set up Vault, is it installed?");
+		} else {
+			logger.info("Succesfully hooked into Vault.");
 		}
-		logger.info("Connecting to MySQL Database");
-		this.initDataBaseConnection();
-		this.registerCommands();
-		this.registerEvents();
+		if (ICore.instance.getConfig().getBoolean("mysql.enabled")) {
+			logger.info("Connecting to MySQL Database");
+			this.initDataBaseConnection();
+			this.registerCommands();
+			this.registerEvents();
+		} else {
+			logger.warning("MySQL is not enabled, please set up your config.");
+		}
 		logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
 
 		new VoteReminder().runTaskTimer(this, 20 * 60 * 10, 20 * 60 * 10);
