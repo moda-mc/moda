@@ -14,15 +14,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.derkades.derkutils.bukkit.Chat;
+import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
 public class JoinLeaveEvent implements Listener {
 
-
-
+	
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage("");
 
+        Placeholder user = new Placeholder("%player%", event.getPlayer().getDisplayName());
         final Player player = event.getPlayer();
 
         if (ICore.isVanished(player)){
@@ -39,7 +40,7 @@ public class JoinLeaveEvent implements Listener {
                 .append(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&'," " + ICore.chat.getPlayerSuffix(player))))
                 .create());
 
-        player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "motd", player));
+        player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "motd", player, user));
 
     }
 
