@@ -33,183 +33,185 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import xyz.derkades.derkutils.DatabaseHandler;
 
-
 public class ICore extends JavaPlugin implements Listener {
 
-    public static ICore instance;
-    public static FileConfiguration mutedPlayers;
+	public static ICore instance;
+	public static FileConfiguration mutedPlayers;
 
-    public static DatabaseHandler db = null;
-    public static Economy economy = null;
-    public static Permission permission = null;
-    public static Chat chat = null;
-    public static DiscordListener discord;
+	public static DatabaseHandler db = null;
+	public static Economy economy = null;
+	public static Permission permission = null;
+	public static Chat chat = null;
+	public static DiscordListener discord;
 
-    public ICore() {
-        instance = this;
-    }
+	public ICore() {
+		instance = this;
+	}
 
-    @Override
+	@Override
 	public void onEnable() {
-    	this.saveDefaultConfig();
-        final PluginDescriptionFile pdFile = this.getDescription();
-        final Logger logger = this.getLogger();
+		this.saveDefaultConfig();
+		final PluginDescriptionFile pdFile = this.getDescription();
+		final Logger logger = this.getLogger();
 
-        if (ICore.instance.getConfig().getBoolean("discord.enabled")) {
-        	discord = new DiscordListener();
-        }
+		if (ICore.instance.getConfig().getBoolean("discord.enabled")) {
+			logger.info("Enabling JDA hook (Discord).");
+			discord = new DiscordListener();
+		}
 
-        if (!this.setupVault()) {
-            this.getLogger().severe("Vault error");
-        }
+		if (!this.setupVault()) {
+			logger.severe("Could not set up Vault, is it installed?");
+		}
+		logger.info("Connecting to MySQL Database");
+		this.initDataBaseConnection();
+		this.registerCommands();
+		this.registerEvents();
+		logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
 
-        this.initDataBaseConnection();
-        this.registerCommands();
-        this.registerEvents();
-        logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
+		new VoteReminder().runTaskTimer(this, 20 * 60 * 10, 20 * 60 * 10);
+	}
 
-        new VoteReminder().runTaskTimer(this, 20*60*10, 20*60*10);
-    }
-
-    @Override
+	@Override
 	public void onDisable() {
-        final PluginDescriptionFile pdFile = this.getDescription();
-        final Logger logger = this.getLogger();
+		final PluginDescriptionFile pdFile = this.getDescription();
+		final Logger logger = this.getLogger();
 
-        if (db != null)
+		if (db != null)
 			try {
+				logger.info("Shutting down database connections.");
 				db.getConnection().close();
 			} catch (final SQLException e1) {
 				e1.printStackTrace();
 				Bukkit.getPluginManager().disablePlugin(this);
 			}
 
-        logger.info(pdFile.getName() + " has been disabled (v" + pdFile.getVersion() + ")");
-
-        if (discord != null) {
-        	discord.shutdown();
-        	try {
+		if (discord != null) {
+			logger.info("Shutting down JDA hook (Discord)");
+			discord.shutdown();
+			try {
+				logger.info("Waiting 2 seconds for JDA to shut down properly before disabling the plugin.");
 				Thread.sleep(2000); // Give JDA time to shut down before bukkit unloads the plugin
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
-        }
-    }
+		}
+		logger.info(pdFile.getName() + " has been fully disabled (v" + pdFile.getVersion() + ")");
+	}
 
-    private boolean setupVault() {
-        if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
+	private boolean setupVault() {
+		if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
 
-        final RegisteredServiceProvider<Economy> rspEcon = this.getServer().getServicesManager()
-        		.getRegistration(Economy.class);
+		final RegisteredServiceProvider<Economy> rspEcon = this.getServer().getServicesManager()
+				.getRegistration(Economy.class);
 
-        if (rspEcon == null) {
-            return false;
-        }
-        economy = rspEcon.getProvider();
+		if (rspEcon == null) {
+			return false;
+		}
+		economy = rspEcon.getProvider();
 
-        final RegisteredServiceProvider<Permission> rspPerm = this.getServer().getServicesManager()
-        		.getRegistration(Permission.class);
+		final RegisteredServiceProvider<Permission> rspPerm = this.getServer().getServicesManager()
+				.getRegistration(Permission.class);
 
-        if (rspPerm == null) {
-            return false;
-        }
-        permission = rspPerm.getProvider();
+		if (rspPerm == null) {
+			return false;
+		}
+		permission = rspPerm.getProvider();
 
-        final RegisteredServiceProvider<Chat> rspChat = this.getServer().getServicesManager()
-        		.getRegistration(Chat.class);
+		final RegisteredServiceProvider<Chat> rspChat = this.getServer().getServicesManager()
+				.getRegistration(Chat.class);
 
-        if (rspChat == null) {
-            return false;
-        }
-        chat = rspChat.getProvider();
+		if (rspChat == null) {
+			return false;
+		}
+		chat = rspChat.getProvider();
 
-        return true;
-    }
+		return true;
+	}
 
-    public static boolean isVanished(final Player player) {
-        for (final MetadataValue meta : player.getMetadata("vanished")) {
-            if (meta.asBoolean()) return true;
-        }
-        return false;
-    }
+	public static boolean isVanished(final Player player) {
+		for (final MetadataValue meta : player.getMetadata("vanished")) {
+			if (meta.asBoolean())
+				return true;
+		}
+		return false;
+	}
 
-    public static String getPrefix(final PrefixType type) {
-        if (type == null) {
-            throw new IllegalArgumentException();
-        }
-        if (type == PrefixType.CHAT ) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("chat-prefix", ""));
-        } else if (type == PrefixType.COMMAND) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("command-prefix", ""));
-        } else if (type == PrefixType.JOIN) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("join-prefix", ""));
-        } else if (type == PrefixType.LEAVE) {
-            return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("leave-prefix", ""));
-        } else {
-            throw new AssertionError();
-        }
-    }
+	public static String getPrefix(final PrefixType type) {
+		if (type == null) {
+			throw new IllegalArgumentException();
+		}
+		if (type == PrefixType.CHAT) {
+			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.chat", ""));
+		} else if (type == PrefixType.COMMAND) {
+			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.command", ""));
+		} else if (type == PrefixType.JOIN) {
+			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.join", ""));
+		} else if (type == PrefixType.LEAVE) {
+			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.leave", ""));
+		} else {
+			throw new AssertionError();
+		}
+	}
 
-    public void initDataBaseConnection() {
+	public void initDataBaseConnection() {
 
-    	if (db != null)
+		if (db != null)
 			try {
 				db.getConnection().close();
 			} catch (final SQLException e1) {
 				e1.printStackTrace();
 				Bukkit.getPluginManager().disablePlugin(this);
-    			return;
+				return;
 			}
 
-    	Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
-        	try {
-    			db = new DatabaseHandler(
-    					this.getConfig().getString("mysql.host"),
-    					this.getConfig().getInt("mysql.port"),
-    					this.getConfig().getString("mysql.database"),
-    					this.getConfig().getString("mysql.user"),
-    					this.getConfig().getString("mysql.password")
-    					);
+		Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
+			try {
+				db = new DatabaseHandler(this.getConfig().getString("mysql.host"),
+						this.getConfig().getInt("mysql.port"), this.getConfig().getString("mysql.database"),
+						this.getConfig().getString("mysql.user"), this.getConfig().getString("mysql.password"));
 
-    			final DatabaseMetaData meta = db.getConnection().getMetaData();
-                final ResultSet result = meta.getTables(null, null, "votes", null);
+				final DatabaseMetaData meta = db.getConnection().getMetaData();
+				final ResultSet result = meta.getTables(null, null, "votes", null);
 
-                if (result != null && result.next()) {
-                    return; // Table exists
-                }
+				if (result != null && result.next()) {
+					return; // Table exists
+				}
 
-    			final PreparedStatement statement = db.prepareStatement(
-    					"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`votes` "
-    					+ "(`uuid` VARCHAR(100) NOT NULL,"
-    					+ " `votes` INT NOT NULL,"
-    					+ " PRIMARY KEY (`uuid`)) "
-    					+ "ENGINE = InnoDB ");
-    			statement.execute();
+				final PreparedStatement statement = db.prepareStatement("CREATE TABLE `"
+						+ this.getConfig().getString("mysql.database") + "`.`votes` " + "(`uuid` VARCHAR(100) NOT NULL,"
+						+ " `votes` INT NOT NULL," + " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
+				statement.execute();
 
-    		} catch (final SQLException e) {
-    			e.printStackTrace();
-    			Bukkit.getPluginManager().disablePlugin(this);
-    			return;
-    		}
-        });
-    }
+			} catch (final SQLException e) {
+				e.printStackTrace();
+				Bukkit.getPluginManager().disablePlugin(this);
+				return;
+			}
+		});
+	}
 
-    private void registerCommands() {
-        this.getCommand("ping").setExecutor(new PingCommand());
-        this.getCommand("icore").setExecutor(new CoreCommand());
-        this.getCommand("shrug").setExecutor(new ShrugCommand());
-        this.getCommand("vote").setExecutor(new VoteCommand());
-        if (ICore.instance.getConfig().getBoolean("github.enabled")) {
-        	this.getCommand("suggest").setExecutor(new SuggestCommand());
-        }
-    }
+	private void registerCommands() {
+		this.getCommand("ping").setExecutor(new PingCommand());
+		this.getCommand("icore").setExecutor(new CoreCommand());
+		this.getCommand("shrug").setExecutor(new ShrugCommand());
+		if (ICore.instance.getConfig().getBoolean("voting.enabled")
+				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
+			this.getCommand("vote").setExecutor(new VoteCommand());
+		}
+		if (ICore.instance.getConfig().getBoolean("github.enabled")) {
+			this.getCommand("suggest").setExecutor(new SuggestCommand());
+		}
+	}
 
-    private void registerEvents() {
-        final PluginManager pm = this.getServer().getPluginManager();
-        pm.registerEvents(new ChatEvent(), this);
-        pm.registerEvents(new JoinLeaveEvent(), this);
-        pm.registerEvents(new VoteEvent(), this);
-    }
+	private void registerEvents() {
+		final PluginManager pm = this.getServer().getPluginManager();
+		pm.registerEvents(new ChatEvent(), this);
+		pm.registerEvents(new JoinLeaveEvent(), this);
+		if (ICore.instance.getConfig().getBoolean("voting.enabled")
+				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
+			pm.registerEvents(new VoteEvent(), this);
+		}
+	}
 }
