@@ -17,7 +17,7 @@ commands:
 
   vote:
     description: "returns a list of sites to vote on."
-    usage: "§8[§cW§8] §7| §cThis command only works when mysql has been properly set up!"
+    usage: "/vote"
     permission: icore.vote
 
   ping:
@@ -28,6 +28,10 @@ commands:
   shrug:
     description: "sends a ¯\\(ツ)/¯ with a provided message."
     usage: "/shrug"
+
+  suggest:
+    description: "suggest a feature to the dedicated GitHub repository"
+    usage: "/suggest"
 
 permissions:
 
