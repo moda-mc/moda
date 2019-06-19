@@ -40,6 +40,7 @@ public class SuggestCommand implements CommandExecutor {
 				final String description = String.join(" ", args);
 				final GHIssue issue = repo.createIssue("[" + player.getName() + "] " + description)
 						.body(description).create();
+				issue.addLabels(repo.getLabel("enhancement"));
 				final Placeholder url = new Placeholder("%url%", issue.getUrl() + "");
 				player.spigot().sendMessage(Chat.toComponentWithPlaceholders(config, "github.response", url));;
 			} catch (final IOException e) {
@@ -48,8 +49,7 @@ public class SuggestCommand implements CommandExecutor {
 			}
 		});
 		
-		
-		return false;
+		return true;
 	}
 
 }
