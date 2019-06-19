@@ -48,10 +48,11 @@ public boolean onCommand(final CommandSender sender, final Command command, fina
 
             if (sender.hasPermission("icore.reload")) {
                 ICore.instance.reloadConfig();
-                ICore.instance.initDataBaseConnection();
                 sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN + "all iCore configs have been reloaded.");
-
+                ICore.instance.initDataBaseConnection();
+                sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN + "all database connections have been reloaded.");
                 Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, ICore.discord::restart);
+                sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN + "iCore's JDA hook has been reloaded (Discord).");
             } else {
                 sender.spigot().sendMessage(
                         new ComponentBuilder("")
