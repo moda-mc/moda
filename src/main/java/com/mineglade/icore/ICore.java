@@ -118,6 +118,7 @@ public class ICore extends JavaPlugin implements Listener {
 				.getRegistration(Economy.class);
 
 		if (rspEcon == null) {
+			getLogger().severe("[VaultError] no Economy plugin found, is it installed?");
 			return false;
 		}
 		economy = rspEcon.getProvider();
@@ -126,6 +127,7 @@ public class ICore extends JavaPlugin implements Listener {
 				.getRegistration(Permission.class);
 
 		if (rspPerm == null) {
+			getLogger().severe("[VaultError] no Permission plugin found, is it installed?");
 			return false;
 		}
 		permission = rspPerm.getProvider();
@@ -134,6 +136,7 @@ public class ICore extends JavaPlugin implements Listener {
 				.getRegistration(Chat.class);
 
 		if (rspChat == null) {
+			getLogger().severe("[VaultError] no Chat plugin found, is it installed?");
 			return false;
 		}
 		chat = rspChat.getProvider();
