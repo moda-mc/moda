@@ -1,7 +1,9 @@
 package com.mineglade.icore.commands;
 
 import com.mineglade.icore.ICore;
+import com.mineglade.icore.PrefixType;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
 import java.sql.PreparedStatement;
@@ -26,7 +28,8 @@ public class VoteCommand implements CommandExecutor {
 
         if (!(ICore.instance.getConfig().getBoolean("mysql.enabled") && ICore.instance.getConfig().getBoolean("voting.enabled"))) {
         	player.spigot().sendMessage(new ComponentBuilder("")
-        			.append("")
+        			.append((ICore.getPrefix(PrefixType.COMMAND)))
+        			.append(ChatColor.RED + "Voting has not been enabled on this server.")
         			.create());
         	return true;
         }
