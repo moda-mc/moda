@@ -18,9 +18,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.icore.commands.CoreCommand;
 import com.mineglade.icore.commands.PingCommand;
-import com.mineglade.icore.commands.ShrugCommand;
 import com.mineglade.icore.commands.SuggestCommand;
 import com.mineglade.icore.commands.VoteCommand;
+import com.mineglade.icore.commands.emotes.LennyCommand;
+import com.mineglade.icore.commands.emotes.ShrugCommand;
 import com.mineglade.icore.discord.DiscordListener;
 import com.mineglade.icore.events.ChatEvent;
 import com.mineglade.icore.events.JoinLeaveEvent;
@@ -69,13 +70,13 @@ public class ICore extends JavaPlugin implements Listener {
 		if (ICore.instance.getConfig().getBoolean("mysql.enabled")) {
 			logger.info("Connecting to MySQL Database");
 			this.initDataBaseConnection();
-			this.registerCommands();
-			this.registerEvents();
 		} else {
 			logger.warning("MySQL is not enabled, please set up your config.");
 		}
 		logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
-
+		
+		this.registerCommands();
+		this.registerEvents();
 		if (ICore.instance.getConfig().getBoolean("voting.enabled")
 				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
 			new VoteReminder().runTaskTimer(this, 20 * 60 * 10, 20 * 60 * 10);
@@ -207,13 +208,19 @@ public class ICore extends JavaPlugin implements Listener {
 	}
 
 	private void registerCommands() {
+		// Misc Commands
 		this.getCommand("ping").setExecutor(new PingCommand());
-		this.getCommand("icore").setExecutor(new CoreCommand());
+		// Emotes
 		this.getCommand("shrug").setExecutor(new ShrugCommand());
+		this.getCommand("lenny").setExecutor(new LennyCommand());
+		// Core Command
+		this.getCommand("icore").setExecutor(new CoreCommand());
+		// Voting
 		if (ICore.instance.getConfig().getBoolean("voting.enabled")
 				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
 			this.getCommand("vote").setExecutor(new VoteCommand());
 		}
+		// Suggestions
 		if (ICore.instance.getConfig().getBoolean("github.enabled")) {
 			this.getCommand("suggest").setExecutor(new SuggestCommand());
 		}
