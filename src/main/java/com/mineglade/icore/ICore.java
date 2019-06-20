@@ -76,7 +76,10 @@ public class ICore extends JavaPlugin implements Listener {
 		}
 		logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
 
-		new VoteReminder().runTaskTimer(this, 20 * 60 * 10, 20 * 60 * 10);
+		if (ICore.instance.getConfig().getBoolean("voting.enabled")
+				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
+			new VoteReminder().runTaskTimer(this, 20 * 60 * 10, 20 * 60 * 10);
+		}
 	}
 
 	@Override
