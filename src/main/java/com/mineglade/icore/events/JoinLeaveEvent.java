@@ -24,6 +24,7 @@ public class JoinLeaveEvent implements Listener {
         event.setJoinMessage("");
 
         Placeholder user = new Placeholder("%player%", event.getPlayer().getDisplayName());
+        Placeholder online = new Placeholder("%online%", Bukkit.getOnlinePlayers().size() + "");
         final Player player = event.getPlayer();
 
         if (ICore.isVanished(player)){
@@ -40,7 +41,7 @@ public class JoinLeaveEvent implements Listener {
                 .append(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&'," " + ICore.chat.getPlayerSuffix(player))))
                 .create());
 
-        player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "motd", player, user));
+        player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "motd", player, user, online));
 
     }
 
