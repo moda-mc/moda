@@ -14,12 +14,10 @@ commands:
     description: "core command for iCore"
     usage: "/icore help"
     aliases: [ic]
-    permission: icore.help
 
   vote:
     description: "returns a list of sites to vote on."
     usage: "/vote"
-    permission: icore.vote
 
   ping:
     description: "returns the player's ping to the server."
@@ -28,7 +26,10 @@ commands:
 
   shrug:
     description: "sends a ¯\\(ツ)/¯ with a provided message."
-    usage: "/shrug"
+    usage: "/shrug [message]"
+  lenny:
+    description: "sends a ( ͡° ͜ʖ ͡°) with a provided message."
+    usage: "/lenny [message]"
 
   suggest:
     description: "suggest a feature to the dedicated GitHub repository"
@@ -58,8 +59,11 @@ permissions:
   icore.ping:
     description: "allows the player to use /ping"
     default: true
-  icore.shrug:
+  icore.emotes.shrug:
     description: "allows the player to use /shrug"
+    default: true
+  icore.emotes.lenny:
+    description: "allows the player to use /lenny"
     default: true
 
 # Support permissions:
@@ -81,8 +85,15 @@ permissions:
     description: "allows all misc commands"
     default: true
     children:
-      icore.shrug: true
+      icore.emotes: true
       icore.ping: true
+
+  icore.emotes:
+    description: "allows all emotes"
+    default: true
+    children:
+      icore.emotes.shrug: true
+      icore.emotes.lenny: true
 
   icore.admin:
     description: "allows all admin commands"
