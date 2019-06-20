@@ -1,6 +1,7 @@
 package com.mineglade.icore.commands;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -40,7 +41,13 @@ public class SuggestCommand implements CommandExecutor {
 				final String description = String.join(" ", args);
 				final GHIssue issue = repo.createIssue("[" + player.getName() + "] " + description)
 						.body(description).create();
-				issue.addLabels(repo.getLabel("enhancement"));
+				issue.addLabels(config.getStringList("github.labels").stream().map(t -> {
+					try {
+						return repo.getLabel(t);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}).collect(Collectors.toList()));
 				final Placeholder url = new Placeholder("%url%", issue.getUrl() + "");
 				player.spigot().sendMessage(Chat.toComponentWithPlaceholders(config, "github.response", url));;
 			} catch (final IOException e) {
