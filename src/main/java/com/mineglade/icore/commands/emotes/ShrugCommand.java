@@ -32,7 +32,7 @@ public class ShrugCommand implements CommandExecutor {
         	return true;
         }
         if (args.length > 0) {
-            player.chat(String.join(" ", args) + " ¯\\(ツ)/¯" );
+            player.chat(String.join(" ", args) + " ¯\\_(ツ)_/¯" );
            
         } else {
             player.chat("¯\\(ツ)/¯");

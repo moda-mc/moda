@@ -27,6 +27,7 @@ commands:
   shrug:
     description: "sends a ¯\\(ツ)/¯ with a provided message."
     usage: "/shrug [message]"
+    
   lenny:
     description: "sends a ( ͡° ͜ʖ ͡°) with a provided message."
     usage: "/lenny [message]"
