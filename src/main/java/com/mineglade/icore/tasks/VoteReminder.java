@@ -44,7 +44,7 @@ public class VoteReminder extends BukkitRunnable {
 				Bukkit.getScheduler().runTask(ICore.instance, () -> {
 					Placeholder votes = new Placeholder("%votes%", voteCount + "");
 					player.spigot().sendMessage(
-							Chat.toComponentWithPapiPlaceholders(config, "voting.vote-reminder", player, votes));
+							Chat.toComponentWithPapiPlaceholders(config, "voting.reminder.message", player, votes));
 				});
 			});
 		}
