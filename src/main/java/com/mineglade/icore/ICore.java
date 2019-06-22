@@ -20,8 +20,16 @@ import com.mineglade.icore.commands.CoreCommand;
 import com.mineglade.icore.commands.PingCommand;
 import com.mineglade.icore.commands.SuggestCommand;
 import com.mineglade.icore.commands.VoteCommand;
-import com.mineglade.icore.commands.emotes.LennyCommand;
-import com.mineglade.icore.commands.emotes.ShrugCommand;
+import com.mineglade.icore.commands.emotes.BearEmote;
+import com.mineglade.icore.commands.emotes.FlowerEmote;
+import com.mineglade.icore.commands.emotes.GibEmote;
+import com.mineglade.icore.commands.emotes.LennyEmote;
+import com.mineglade.icore.commands.emotes.LoveEmote;
+import com.mineglade.icore.commands.emotes.MaoEmote;
+import com.mineglade.icore.commands.emotes.ShrugEmote;
+import com.mineglade.icore.commands.emotes.TableflipEmote;
+import com.mineglade.icore.commands.emotes.UnflipEmote;
+import com.mineglade.icore.commands.emotes.YesEmote;
 import com.mineglade.icore.discord.DiscordListener;
 import com.mineglade.icore.events.ChatEvent;
 import com.mineglade.icore.events.JoinLeaveEvent;
@@ -74,7 +82,7 @@ public class ICore extends JavaPlugin implements Listener {
 			logger.warning("MySQL is not enabled, please set up your config.");
 		}
 		logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
-		
+
 		this.registerCommands();
 		this.registerEvents();
 		if (ICore.instance.getConfig().getBoolean("voting.enabled")
@@ -187,17 +195,25 @@ public class ICore extends JavaPlugin implements Listener {
 						this.getConfig().getInt("mysql.port"), this.getConfig().getString("mysql.database"),
 						this.getConfig().getString("mysql.user"), this.getConfig().getString("mysql.password"));
 
-				final DatabaseMetaData meta = db.getConnection().getMetaData();
-				final ResultSet result = meta.getTables(null, null, "votes", null);
-
-				if (result != null && result.next()) {
-					return; // Table exists
-				}
-
-				final PreparedStatement statement = db.prepareStatement("CREATE TABLE `"
-						+ this.getConfig().getString("mysql.database") + "`.`votes` " + "(`uuid` VARCHAR(100) NOT NULL,"
-						+ " `votes` INT NOT NULL," + " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-				statement.execute();
+				createTableIfNonexistent("votes",
+						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`votes` "
+								+ "(`uuid` VARCHAR(100) NOT NULL," + " `votes` INT NOT NULL,"
+								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
+				
+				createTableIfNonexistent("playerChatColor",
+						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerChatColor` "
+								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
+								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
+				
+				createTableIfNonexistent("playerNameColor",
+						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNameColor` "
+								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
+								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
+				
+				createTableIfNonexistent("playerNickname",
+						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickname` "
+								+ "(`uuid` VARCHAR(100) NOT NULL," + " `nickname` VARCHAR(256) NOT NULL,"
+								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
 			} catch (final SQLException e) {
 				e.printStackTrace();
@@ -207,12 +223,32 @@ public class ICore extends JavaPlugin implements Listener {
 		});
 	}
 
+	private void createTableIfNonexistent(String table, String sql) throws SQLException {
+		final DatabaseMetaData meta = db.getConnection().getMetaData();
+		final ResultSet result = meta.getTables(null, null, table, null);
+
+		if (result != null && result.next()) {
+			return; // Table exists
+		}
+
+		final PreparedStatement statement = db.prepareStatement(sql);
+		statement.execute();
+	}
+
 	private void registerCommands() {
 		// Misc Commands
 		this.getCommand("ping").setExecutor(new PingCommand());
 		// Emotes
-		this.getCommand("shrug").setExecutor(new ShrugCommand());
-		this.getCommand("lenny").setExecutor(new LennyCommand());
+		this.getCommand("bear").setExecutor(new BearEmote());
+		this.getCommand("flower").setExecutor(new FlowerEmote());
+		this.getCommand("gib").setExecutor(new GibEmote());
+		this.getCommand("lenny").setExecutor(new LennyEmote());
+		this.getCommand("love").setExecutor(new LoveEmote());
+		this.getCommand("mao").setExecutor(new MaoEmote());
+		this.getCommand("shrug").setExecutor(new ShrugEmote());
+		this.getCommand("tableflip").setExecutor(new TableflipEmote());
+		this.getCommand("unflip").setExecutor(new UnflipEmote());
+		// this.getCommand("yes").setExecutor(new YesEmote());
 		// Core Command
 		this.getCommand("icore").setExecutor(new CoreCommand());
 		// Voting
