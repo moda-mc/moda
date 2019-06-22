@@ -118,16 +118,16 @@ voting:
     - "econ deposit %player% 35"
 
 # NO PLACEHOLDERAPI PLACEHOLDERS SUPPORTED (Votifier doesn't support this)
-  vote-broadcast: 
+  broadcast-message: 
     - text: "&8[&bP&8] &7| &a%player% &7has voted on &a%vote-site%!"
       hover: "&fClick here to vote as well!"
       suggest_command: "/vote"
 
 # PlaceHolderAPI Placeholders can be used below.
-  vote-command-response: 
-    - text: "\n&8[&bP&8] &7| ======= &aVoting Sites&7 ======="
+  vote-sites: 
+    - text: "&8[&bP&8] &7| ======= &aVoting Sites&7 ======="
 
-    - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-sites list,\n&8[&bP&8] &7| so here is a list of sites to vote on for &fMine&aGlade\n"
+    - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-sites list,\n&8[&bP&8] &7| so here is a list of sites to vote on for &fMine&aGlade"
 
     - text: "\n&8[&bP&8] &7| &71. &aminecraft-server-list"
       hover: "vote for us on minecraft-server-list.com!"
@@ -149,13 +149,25 @@ voting:
       hover: "vote for us on mccommunity.net!"
       url: "https://mccommunity.net/server/106-MineGlade/vote/"
     - text: "\n"
-    - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes.\n"
+    - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
     
-  vote-reminder:
-    - text: "\n&8[&bP&8] &7| Remember to vote for us! You currently have &a%votes% &7votes.\n"
-      hover: "&fClick here to vote"
-      suggest_command: "/vote"
-     
+  reminder:
+    interval: 30 # how long between two vote reminders, in minutes
+    delay: 30 # how long before the vote reminder appears for the first time, in minutes
+    message:
+      - text: "&8[&bP&8] &7| Remember to vote for us! You currently have &a%votes% &7votes."
+        hover: "&fClick here to vote"
+        suggest_command: "/vote"
+
+# =====================================================
+#                       Emotes
+# =====================================================
+# iCore has a selection of emotes a player can use with
+# commands. a list of emotes can be found on the [wiki]
+
+emotes:
+  enabled: true
+
 # =====================================================
 #                       The End
 # =====================================================
