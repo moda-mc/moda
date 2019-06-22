@@ -10,7 +10,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 
-public class LennyCommand implements CommandExecutor {
+public class LoveEmote implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 
@@ -19,7 +19,7 @@ public class LennyCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        if (!(player.hasPermission("icore.emotes.lenny"))) {
+        if (!(player.hasPermission("icore.command.emotes.love"))) {
         	player.spigot().sendMessage(
                     new ComponentBuilder("")
                     .append(ICore.getPrefix(PrefixType.COMMAND))
@@ -32,10 +32,10 @@ public class LennyCommand implements CommandExecutor {
         	return true;
         }
         if (args.length > 0) {
-            player.chat(String.join(" ", args) + " ( ͡° ͜ʖ ͡°)" );
+            player.chat(String.join(" ", args) + " (づ￣ ³￣)づ" );
            
         } else {
-            player.chat("( ͡° ͜ʖ ͡°)");
+            player.chat("(づ￣ ³￣)づ");
         }
         return true;
     }
