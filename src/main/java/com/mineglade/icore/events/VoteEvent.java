@@ -43,7 +43,7 @@ public class VoteEvent implements Listener {
 
 		Placeholder voter = new Placeholder("%player%", player);
 		Placeholder voteSite = new Placeholder("%vote-site%", vote.getServiceName());
-		Bukkit.spigot().broadcast(Chat.toComponentWithPlaceholders(config, "voting.vote-broadcast", voter, voteSite));
+		Bukkit.spigot().broadcast(Chat.toComponentWithPlaceholders(config, "voting.broadcast-message", voter, voteSite));
 	}
 
 }
