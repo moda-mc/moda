@@ -14,6 +14,14 @@ public class LoveEmote implements CommandExecutor {
 
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 
+    	if (!ICore.instance.getConfig().getBoolean("emotes.enabled")) {
+			sender.spigot().sendMessage(new ComponentBuilder("")
+					.append(ICore.getPrefix(PrefixType.COMMAND))
+					.append("Emotes are disabled for this server.")
+					.create());
+			return true;
+		}
+    	
         if (!(sender instanceof Player)) {
             sender.sendMessage("/" + label + " cannot be run from the console.");
             return true;
