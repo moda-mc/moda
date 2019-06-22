@@ -9,28 +9,52 @@ depend: [Vault, PlaceholderAPI]
 softdepend: [SuperVanish, Votifier]
 
 commands:
-
+# Basic commands:
   icore:
     description: "core command for iCore"
     usage: "/icore help"
     aliases: [ic]
-
-  vote:
-    description: "returns a list of sites to vote on."
-    usage: "/vote"
-
   ping:
     description: "returns the player's ping to the server."
     usage: "/ping"
     aliases: [hi, pong, pung, peng, pang]
-
-  shrug:
-    description: "sends a ¯\\(ツ)/¯ with a provided message."
-    usage: "/shrug [message]"
     
+# Vote commands:
+  vote:
+    description: "returns a list of sites to vote on."
+    usage: "/vote"
+    
+# Emote Commands
+  bear:
+    description: "sends a ʕ•ᴥ•ʔ with a provided message"
+    usage: "/bear [message]"
+  flower:
+    description: "sends a (◕‿◕✿) with a provided message"
+    usage: "/bear [message]"
+  gib:
+    description: "sends a ༼ つ ◕_◕ ༽つ with a provided message"
+    usage: "/gib [message]"
   lenny:
-    description: "sends a ( ͡° ͜ʖ ͡°) with a provided message."
+    description: "sends a ( ͡° ͜ʖ ͡°) with a provided message"
     usage: "/lenny [message]"
+  love:
+    description: "sends a (づ￣ ³￣)づ with a provided message"
+    usage: "/love [message]"
+  mao:
+    description: "sends a ฅ^•ﻌ•^ฅ with a provided message"
+    usage: "/mao [message]"
+  shrug:
+    description: "sends a ¯\\_(ツ)_/¯ with a provided message"
+    usage: "/shrug [message]"
+  tableflip:
+    description: "sends a (╯°□°）╯︵ ┻━┻ with a provided message"
+    usage: "/tableflip [message]"
+  unflip:
+    description: "sends a ┬─┬ ノ( ゜-゜ノ) with a provided message"
+    usage: "/unflip [message]"
+  yes:
+    description: "sends a •ᴗ• with a provided message"
+    usage: "/yes [message]"
 
   suggest:
     description: "suggest a feature to the dedicated GitHub repository"
@@ -38,94 +62,238 @@ commands:
 
 permissions:
 
-# Default Permissions:
-  icore.help:
+# Command permissions:
+  
+  # Basic commands:
+  icore.command.help:
     description: "allows the player to use /icore"
     default: true
-
-# Vote Permissions:
-  icore.vote:
-    description: "allows the player to use /vote"
-    default: true
-  icore.vote.top:
-    description: "allows the player to use /vote top"
-    default: true
-
-# Chat Permissions:
-  icore.chat.color:
-    description: "allows color in chat."
-    default: op
-    
-# Misc Permissions:
-  icore.ping:
+  icore.command.ping:
     description: "allows the player to use /ping"
     default: true
-  icore.emotes.shrug:
-    description: "allows the player to use /shrug"
+    
+  # Vote commands:
+  icore.command.vote: 
+    description: "allows the player to use /vote"
     default: true
-  icore.emotes.lenny:
-    description: "allows the player to use /lenny"
+  icore.command.vote.top:
+    description: "allows the player to use /vote top"
     default: true
-
-# Support permissions:
-  icore.support:
+  
+  # Support commands:
+  icore.command.support:
     description: "allows the player to use /support"
     default: true
-  icore.support.receive:
+  icore.command.support.receive:
     description: "allows the player to receive support queries, and use /support inbox"
     default: op
-
-# Administrator permissions:
-  icore.reload:
-    description: "allows the player to use /ic reload"
-    default: op
-
-
-# WildCards:
-  icore.misc:
-    description: "allows all misc commands"
+    
+  # Misc commands
+  icore.command.color.chat:
+    description: "allows the user to set their chat color"
     default: true
-    children:
-      icore.emotes: true
-      icore.ping: true
-
-  icore.emotes:
-    description: "allows all emotes"
+  icore.command.color.chat.format:
+    description: "allows the user to set their chat formatting"
     default: true
-    children:
-      icore.emotes.shrug: true
-      icore.emotes.lenny: true
-
-  icore.admin:
-    description: "allows all admin commands"
+  icore.command.color.chat.other:
+    description: "allows the user to set another player's chat color"
     default: op
-    children:
-      icore.reload: true
-
-  icore.vote.*:
-    description: "wildcard permission for all icore.vote permissions"
+    
+  icore.command.color.name:
+    description: "allows the user to set their name color"
     default: true
-    children:
-      icore.vote: true
-      icore.vote.top: true
-
-  icore.support.*:
-    description: "wildcard permission for all icore.support permissions"
+  icore.command.color.name.format:
+    description: "allows the user to set their name formatting"
+    default: true
+  icore.command.color.name.other:
+    description: "allows the user to set another player's name color"
     default: op
-    children:
-      icore.support: true
-      icore.support.receive: true
 
-  icore.*:
-    description: "wildcard permission to allow all icore commands."
+
+  # Emote commands:
+  icore.command.emotes.bear:
+    description: "allows the user to use /bear"
+    default: true
+  icore.command.emotes.flower:
+    description: "allows the user to use /flower"
+    default: true
+  icore.command.emotes.gib:
+    description: "allows the user to use /gib"
+    default: true
+  icore.command.emotes.lenny:
+    description: "allows the user to use /lenny"
+    default: true
+  icore.command.emotes.love:
+    description: "allows the user to use /love"
+    default: true
+  icore.command.emotes.mao:
+    description: "allows the user to use /mao"
+    default: true
+  icore.command.emotes.shrug:
+    description: "allows the user to use /shrug"
+    default: true
+  icore.command.emotes.tableflip:
+    description: "allows the user to use /tableflip"
+    default: true
+  icore.command.emotes.unflip:
+    description: "allows the user to use /unflip"
+    default: true
+  icore.command.emotes.yes:
+    description: "allows the user to use /yes"
+    default: true
+  
+  
+  
+  # Admin commands:
+  icore.command.reload:
+    description:  "allows the user to use /ic reload"
     default: op
-    children:
-      icore.help: true
-      icore.chat.color: true
-      icore.misc: true
-      icore.admin: true
-      icore.vote.*: true
-      icore.support.*: true
+
+# Color & format permissions:
+  icore.color.chat.reset:
+    description: "allows the user to set their chat formatting to bold"
+    default: true
+
+  icore.color.chat.aqua:
+    description: "allows the user to set their chat color to aqua"
+    default: op
+  icore.color.chat.black:
+    description: "allows the user to set their chat color to black"
+    default: op
+  icore.color.chat.blue:
+    description: "allows the user to set their chat color to blue"
+    default: op
+  icore.color.chat.dark_aqua:
+    description: "allows the user to set their chat color to dark aqua"
+    default: op
+  icore.color.chat.dark_blue:
+    description: "allows the user to set their chat color to dark blue"
+    default: op
+  icore.color.chat.dark_green:
+    description: "allows the user to set their chat color to dark green"
+    default: op
+  icore.color.chat.dark_gray:
+    description: "allows the user to set their chat color to dark gray"
+    default: op
+  icore.color.chat.dark_purple:
+    description: "allows the user to set their chat color to dark purple"
+    default: op
+  icore.color.chat.dark_red:
+    description: "allows the user to set their chat color to dark red"
+    default: op
+  icore.color.chat.gold:
+    description: "allows the user to set their chat color to gold"
+    default: op
+  icore.color.chat.gray:
+    description: "allows the user to set their chat color to aqua"
+    default: op
+  icore.color.chat.green:
+    description: "allows the user to set their chat color to green"
+    default: op
+  icore.color.chat.light_purple:
+    description: "allows the user to set their chat color to light purple"
+    default: op
+  icore.color.chat.red:
+    description: "allows the user to set their chat color to red"
+    default: op
+  icore.color.chat.white:
+    description: "allows the user to set their chat color to white"
+    default: op
+  icore.color.chat.yellow:
+    description: "allows the user to set their chat color to yellow"
+    default: op
+  
+  icore.color.chat.bold:
+    description: "allows the user to set their chat formatting to bold"
+    default: op
+  icore.color.chat.italic:
+    description: "allows the user to set their chat formatting to italic"
+    default: op
+  icore.color.chat.magic:
+    description: "allows the user to set their chat formatting to magic"
+    default: op
+  icore.color.chat.strikethrough:
+    description: "allows the user to set their chat formatting to strikethrough"
+    default: op
+  icore.color.chat.underline:
+    description: "allows the user to set their chat formatting to underline"
+    default: op
+  
+  icore.color.name.reset:
+    description: "allows the user to set their chat formatting to bold"
+    default: true
+
+  icore.color.name.aqua:
+    description: "allows the user to set their chat color to aqua"
+    default: op
+  icore.color.name.black:
+    description: "allows the user to set their chat color to black"
+    default: op
+  icore.color.name.blue:
+    description: "allows the user to set their chat color to blue"
+    default: op
+  icore.color.name.dark_aqua:
+    description: "allows the user to set their chat color to dark aqua"
+    default: op
+  icore.color.name.dark_blue:
+    description: "allows the user to set their chat color to dark blue"
+    default: op
+  icore.color.name.dark_green:
+    description: "allows the user to set their chat color to dark green"
+    default: op
+  icore.color.name.dark_gray:
+    description: "allows the user to set their chat color to dark gray"
+    default: op
+  icore.color.name.dark_purple:
+    description: "allows the user to set their chat color to dark purple"
+    default: op
+  icore.color.name.dark_red:
+    description: "allows the user to set their chat color to dark red"
+    default: op
+  icore.color.name.gold:
+    description: "allows the user to set their chat color to gold"
+    default: op
+  icore.color.name.gray:
+    description: "allows the user to set their chat color to aqua"
+    default: op
+  icore.color.name.green:
+    description: "allows the user to set their chat color to green"
+    default: op
+  icore.color.name.light_purple:
+    description: "allows the user to set their chat color to light purple"
+    default: op
+  icore.color.name.red:
+    description: "allows the user to set their chat color to red"
+    default: op
+  icore.color.name.white:
+    description: "allows the user to set their chat color to white"
+    default: op
+  icore.color.name.yellow:
+    description: "allows the user to set their chat color to yellow"
+    default: op
+
+  icore.color.name.bold:
+    description: "allows the user to set their chat formatting to bold"
+    default: op
+  icore.color.name.italic:
+    description: "allows the user to set their chat formatting to italic"
+    default: op
+  icore.color.name.magic:
+    description: "allows the user to set their chat formatting to magic"
+    default: op
+  icore.color.name.strikethrough:
+    description: "allows the user to set their chat formatting to strikethrough"
+    default: op
+  icore.color.name.underline:
+    description: "allows the user to set their chat formatting to underline"
+    default: op
+
+# Chat permissions:
+  icore.chat.use_colors:
+    description: "allows the user to use color-codes in chat."
+    default: op
+  
+
       
 
   
