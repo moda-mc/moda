@@ -60,7 +60,7 @@ public class VoteCommand implements CommandExecutor {
             
             	Bukkit.getScheduler().runTask(ICore.instance, () -> {
             		Placeholder votes = new Placeholder("%votes%", voteCount + "");
-                    player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "voting.vote-command-response", player, votes));
+                    player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "voting.vote-sites", player, votes));
             	});
             });
             
