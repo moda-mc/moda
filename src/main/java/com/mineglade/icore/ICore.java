@@ -29,7 +29,6 @@ import com.mineglade.icore.commands.emotes.MaoEmote;
 import com.mineglade.icore.commands.emotes.ShrugEmote;
 import com.mineglade.icore.commands.emotes.TableflipEmote;
 import com.mineglade.icore.commands.emotes.UnflipEmote;
-import com.mineglade.icore.commands.emotes.YesEmote;
 import com.mineglade.icore.discord.DiscordListener;
 import com.mineglade.icore.events.ChatEvent;
 import com.mineglade.icore.events.JoinLeaveEvent;
@@ -87,7 +86,8 @@ public class ICore extends JavaPlugin implements Listener {
 		this.registerEvents();
 		if (ICore.instance.getConfig().getBoolean("voting.enabled")
 				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
-			new VoteReminder().runTaskTimer(this, 20 * 60 * 10, 20 * 60 * 10);
+			new VoteReminder().runTaskTimer(this, 20 * 60 * ICore.instance.getConfig().getLong("voting.reminder.delay"),
+					20 * 60 * ICore.instance.getConfig().getLong("voting.reminder.interval"));
 		}
 	}
 
@@ -199,17 +199,17 @@ public class ICore extends JavaPlugin implements Listener {
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`votes` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `votes` INT NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-				
+
 				createTableIfNonexistent("playerChatColor",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerChatColor` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-				
+
 				createTableIfNonexistent("playerNameColor",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNameColor` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-				
+
 				createTableIfNonexistent("playerNickname",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickname` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `nickname` VARCHAR(256) NOT NULL,"
@@ -236,8 +236,12 @@ public class ICore extends JavaPlugin implements Listener {
 	}
 
 	private void registerCommands() {
-		// Misc Commands
+		// Core Command
+		this.getCommand("icore").setExecutor(new CoreCommand());
+		
+		// Main Commands
 		this.getCommand("ping").setExecutor(new PingCommand());
+		
 		// Emotes
 		this.getCommand("bear").setExecutor(new BearEmote());
 		this.getCommand("flower").setExecutor(new FlowerEmote());
@@ -249,13 +253,10 @@ public class ICore extends JavaPlugin implements Listener {
 		this.getCommand("tableflip").setExecutor(new TableflipEmote());
 		this.getCommand("unflip").setExecutor(new UnflipEmote());
 		// this.getCommand("yes").setExecutor(new YesEmote());
-		// Core Command
-		this.getCommand("icore").setExecutor(new CoreCommand());
+		
 		// Voting
-		if (ICore.instance.getConfig().getBoolean("voting.enabled")
-				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
-			this.getCommand("vote").setExecutor(new VoteCommand());
-		}
+		this.getCommand("vote").setExecutor(new VoteCommand());
+		
 		// Suggestions
 		if (ICore.instance.getConfig().getBoolean("github.enabled")) {
 			this.getCommand("suggest").setExecutor(new SuggestCommand());
