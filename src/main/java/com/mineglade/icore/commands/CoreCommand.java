@@ -27,14 +27,14 @@ public class CoreCommand implements CommandExecutor {
 		}
 
 		else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h")) {
-				sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
-						+ "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
-				CommandUtil.helpListEntry(sender, label, "help", "returns a list of all iCore Commands", "icore.help", "help",
-						"h", "");
-				CommandUtil.helpListEntry(sender, label, "support", "ask the staff team for support.", "icore.support",
-						"support", "sp");
-				CommandUtil.helpListEntry(sender, label, "reload", "reloads all iCore configs.", "icore.reload", "reload ",
-						"rl");
+			sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
+					+ "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
+			CommandUtil.helpListEntry(sender, label, "help", "returns a list of all iCore Commands",
+					"icore.command.help", "help", "h", "");
+			CommandUtil.helpListEntry(sender, label, "support", "ask the staff team for support.",
+					"icore.command.support", "support", "sp");
+			CommandUtil.helpListEntry(sender, label, "reload", "reloads all iCore configs.", "icore.command.reload",
+					"reload ", "rl");
 		}
 
 		else if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
@@ -55,7 +55,7 @@ public class CoreCommand implements CommandExecutor {
 								.append("You do not have permission to use this command.").color(ChatColor.RED)
 								.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " support "))
 								.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-										new ComponentBuilder("you need ").color(ChatColor.GRAY).append("icore.reload")
+										new ComponentBuilder("you need ").color(ChatColor.GRAY).append("icore.command.reload")
 												.color(ChatColor.GREEN).append(" to run this command")
 												.color(ChatColor.GRAY).create()))
 								.create());
