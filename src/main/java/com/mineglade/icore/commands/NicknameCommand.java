@@ -7,15 +7,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.PrefixType;
 import com.mineglade.icore.utils.NickNameUtil;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
-import xyz.derkades.derkutils.bukkit.Colors;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import xyz.derkades.derkutils.bukkit.Colors;
 
 public class NickNameCommand implements CommandExecutor {
 
@@ -25,18 +24,18 @@ public class NickNameCommand implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!sender.hasPermission("icore.commands.nickname")) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(ICore.getPrefix())
 					.append(Colors.toComponent(ICore.messages.getString("errors.no-permission")
 							.replace("{command}", "/" + label)))
 					.create());
 		}
 		if (args.length < 1) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(ICore.getPrefix())
 					.append(Colors.toComponent(ICore.messages.getString("nickname.errors.improper-usage")))
 					.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
 					.append("\n")
-					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(ICore.getPrefix())
 					.event((ClickEvent) null)
 					.append("Usage: /" + label + " [target] <nickname>").color(ChatColor.RED)
 					.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
@@ -49,7 +48,7 @@ public class NickNameCommand implements CommandExecutor {
 			if (nickname.equalsIgnoreCase("reset")) {
 				NickNameUtil.resetNickName(player);
 				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.self")))
 						.create());
 				return true;			
@@ -61,7 +60,7 @@ public class NickNameCommand implements CommandExecutor {
 			
 			if (ChatColor.stripColor(nickname).length() > 16) {
 				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.too-long")))
 						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
 						.create());
@@ -71,7 +70,7 @@ public class NickNameCommand implements CommandExecutor {
 			NickNameUtil.setNickName(player, nickname);
 			
 			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(ICore.getPrefix())
 					.append(Colors.toComponent(ICore.messages.getString("nickname.set.self")
 							.replace("{nickname}", nickname)))
 					.create());
@@ -81,7 +80,7 @@ public class NickNameCommand implements CommandExecutor {
 			String permission = "icore.command.nickname.others";
 			if (!sender.hasPermission(permission)) {
 				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("errors.no-permission")
 								.replace("{command}", "/" + label)))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("")
@@ -96,7 +95,7 @@ public class NickNameCommand implements CommandExecutor {
 			if (nickname.equalsIgnoreCase("reset")) {
 				NickNameUtil.resetNickName(target);
 				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.others")
 								.replace("{target}", target.getName())))
 						.create());
@@ -104,7 +103,7 @@ public class NickNameCommand implements CommandExecutor {
 			}
 			if (target == null) {
 				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.target-invalid")))
 						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
 						.create());
@@ -112,7 +111,7 @@ public class NickNameCommand implements CommandExecutor {
 			}
 			if (ChatColor.stripColor(nickname).length() > 16) {
 				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.too-long")))
 						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
 						.create());
@@ -120,7 +119,7 @@ public class NickNameCommand implements CommandExecutor {
 			}
 			if (args.length > 2) {
 				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.no-spaces")))
 						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
 						.create());
@@ -129,7 +128,7 @@ public class NickNameCommand implements CommandExecutor {
 
 			NickNameUtil.setNickName(target, nickname);
 			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(ICore.getPrefix())
 					.append(Colors.toComponent(ICore.messages.getString("nickname.set.others")
 							.replace("{nickname}", nickname)
 							.replace("{target}", target.getName())))
