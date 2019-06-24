@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.PrefixType;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -20,7 +19,7 @@ public class CommandUtil {
 			final String description, final String permission, final String... aliases) {
 		if (sender.hasPermission(permission)) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.PLUGIN))).event((HoverEvent) null)
+					.append(TextComponent.fromLegacyText(ICore.getPrefix())).event((HoverEvent) null)
 					.append("/" + label + " " + subcommand).color(ChatColor.GREEN)
 					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " " + subcommand))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("")
