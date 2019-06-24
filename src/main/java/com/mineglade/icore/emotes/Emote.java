@@ -8,7 +8,7 @@ public enum Emote {
 	LOVE("(づ￣ ³￣)づ\""),
 	MAO("ฅ^•ﻌ•^ฅ"),
 	SHRUG("¯\\_(ツ)_/¯"),
-	TABLEFIP("(╯°□°）╯︵ ┻━┻"),
+	TABLEFLIP("(╯°□°）╯︵ ┻━┻"),
 	UNFLIP("┬─┬ ノ( ゜-゜ノ)");
 	String emote;
 	
