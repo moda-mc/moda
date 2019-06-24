@@ -1,5 +1,6 @@
 package com.mineglade.icore.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -7,34 +8,134 @@ import org.bukkit.entity.Player;
 
 import com.mineglade.icore.ICore;
 import com.mineglade.icore.PrefixType;
+import com.mineglade.icore.utils.NickNameUtil;
 
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
 import xyz.derkades.derkutils.bukkit.Colors;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 
-public class NicknameCommand implements CommandExecutor {
+public class NickNameCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("nicknames can only be set as a player.");
+
+		Player player = (Player) sender;
+		if (!sender.hasPermission("icore.commands.nickname")) {
+			sender.spigot().sendMessage(new ComponentBuilder("")
+					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(Colors.toComponent(ICore.messages.getString("errors.no-permission")
+							.replace("{command}", "/" + label)))
+					.create());
+		}
+		if (args.length < 1) {
+			sender.spigot().sendMessage(new ComponentBuilder("")
+					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(Colors.toComponent(ICore.messages.getString("nickname.errors.improper-usage")))
+					.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+					.append("\n")
+					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.event((ClickEvent) null)
+					.append("Usage: /" + label + " [target] <nickname>").color(ChatColor.RED)
+					.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+					.create());
 			return true;
 		}
-		Player player = (Player) sender;
-		if (args.length == 0) {
-			player.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix(PrefixType.COMMAND))
-					.append("A nickname cannot be blank, please specify a nickname.")
-					.create());
-		}
+
 		if (args.length == 1) {
-			String nick = args[0];
-			player.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix(PrefixType.COMMAND))
-					.append("Your nickname has been set to " + Colors.parseColors(nick) + ".")
+			String nickname = args[0];
+			if (nickname.equalsIgnoreCase("reset")) {
+				NickNameUtil.resetNickName(player);
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.self")))
+						.create());
+				return true;			
+			}
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + ICore.messages.getString("nickname.errors.no-target"));
+				return true;
+			}
+			
+			if (ChatColor.stripColor(nickname).length() > 16) {
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.too-long")))
+						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+						.create());
+				return true;
+			}
+			
+			NickNameUtil.setNickName(player, nickname);
+			
+			sender.spigot().sendMessage(new ComponentBuilder("")
+					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(Colors.toComponent(ICore.messages.getString("nickname.set.self")
+							.replace("{nickname}", nickname)))
 					.create());
 		}
-		
-		return false;
+
+		if (args.length > 1) {
+			String permission = "icore.command.nickname.others";
+			if (!sender.hasPermission(permission)) {
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(Colors.toComponent(ICore.messages.getString("errors.no-permission")
+								.replace("{command}", "/" + label)))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("")
+								.append(Colors.toComponent(
+										"&7you need &a" + permission + "&7 to set other people's nicknames")
+										)
+								.create()))
+						.create());
+			}
+			Player target = Bukkit.getPlayer(args[0]);
+			String nickname = args[1];
+			if (nickname.equalsIgnoreCase("reset")) {
+				NickNameUtil.resetNickName(target);
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.others")
+								.replace("{target}", target.getName())))
+						.create());
+				return true;
+			}
+			if (target == null) {
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.target-invalid")))
+						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+						.create());
+				return true;
+			}
+			if (ChatColor.stripColor(nickname).length() > 16) {
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.too-long")))
+						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+						.create());
+				return true;
+			}
+			if (args.length > 2) {
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.no-spaces")))
+						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+						.create());
+
+			}
+
+			NickNameUtil.setNickName(target, nickname);
+			sender.spigot().sendMessage(new ComponentBuilder("")
+					.append(ICore.getPrefix(PrefixType.PLUGIN))
+					.append(Colors.toComponent(ICore.messages.getString("nickname.set.others")
+							.replace("{nickname}", nickname)
+							.replace("{target}", target.getName())))
+					.create());
+		}
+		return true;
 	}
-	
+
 }

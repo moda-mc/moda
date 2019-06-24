@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.mineglade.icore.ICore;
 
-public class NameColorUtil {
+public class ColorUtil {
 
 	public static String getChatColor(Player player) {
 

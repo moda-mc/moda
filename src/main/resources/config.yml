@@ -27,12 +27,53 @@
 # =====================================================
 # you can use color codes with an & character.
 # &a-f,0-1,k,l,m,n,o
+#
+# for no prefix do ""
 
 prefixes:
-  command: "&8[&bP&8] &7| "
+  plugin: "&8[&bP&8] &7| "
   chat: "&8[&6C&8] &7| "
-  join: "&f[&a+&f] &7| "
-  leave: "&f[&c-&f] &7| "
+
+# =====================================================
+#                         Chat
+# =====================================================
+#
+# Placeholders: 
+#   {player_nickname}: the nickname of the player (if the player has no nickname, it will use %player_displayname%)
+#   {player_displayname}: the display name of the player (other plugin's nicknames)
+#   {player_name}: just the username of the player
+#   {prefix}: the vault prefix (the one you've set wiyh your permissions plugin)
+#   {suffix}: the vault suffix
+#   {name_color}: the player's configured name color (if the player has no name_color this will default to white)
+#   {chat_color}: the player's configured chat color (...)
+#   All PlaceholderAPI placeholders, if it's installed
+
+chat:
+  format: 
+    - text: "{prefix}&r {name_color}{player_nickname}&r {suffix}&r» {chat_color}{message}"
+  join-message: 
+    - text: "&f[&a+&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
+  leave-message: 
+    - text: "&f[&c-&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
+
+# =====================================================
+#                      Statistics
+# =====================================================
+#
+# Placeholders: 
+#   {player_nickname}: the nickname of the player (if the player has no nickname, it will use %player_displayname%)
+#   {player_displayname}: the display name of the player (other plugin's nicknames)
+#   {player_name}: just the username of the player
+#   {prefix}: the vault prefix (the one you've set wiyh your permissions plugin)
+#   {suffix}: the vault suffix
+#   {group}: the vault group
+#   {online}: the total amount players connected to the server
+#   All PlaceholderAPI placeholders, if it's installed
+
+player-statistics: |-
+  &f&lUser Info:
+    &7username: &f{player_name}
+    &7group: &f{group}
 
 # =====================================================
 #                         MySQL

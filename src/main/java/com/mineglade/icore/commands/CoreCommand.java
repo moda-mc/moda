@@ -27,7 +27,7 @@ public class CoreCommand implements CommandExecutor {
 		}
 
 		else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h")) {
-			sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
+			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
 					+ "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
 			CommandUtil.helpListEntry(sender, label, "help", "returns a list of all iCore Commands",
 					"icore.command.help", "help", "h", "");
@@ -39,27 +39,29 @@ public class CoreCommand implements CommandExecutor {
 
 		else if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
 
-			if (sender.hasPermission("icore.command.reload")) {
-				ICore.instance.reloadConfig();
-				sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN
-						+ "all iCore configs have been reloaded.");
-				ICore.instance.initDataBaseConnection();
-				sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN
-						+ "all database connections have been reloaded.");
-				Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, ICore.discord::restart);
-				sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN
-						+ "iCore's JDA hook has been reloaded (Discord).");
-			} else {
+			String permission = "icore.command.reload";
+			if (!sender.hasPermission(permission)) {
 				sender.spigot()
-						.sendMessage(new ComponentBuilder("").append(ICore.getPrefix(PrefixType.COMMAND))
-								.append("You do not have permission to use this command.").color(ChatColor.RED)
-								.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " support "))
-								.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-										new ComponentBuilder("you need ").color(ChatColor.GRAY).append("icore.command.reload")
-												.color(ChatColor.GREEN).append(" to run this command")
-												.color(ChatColor.GRAY).create()))
-								.create());
+				.sendMessage(new ComponentBuilder("").append(ICore.getPrefix(PrefixType.PLUGIN))
+						.append("You do not have permission to use this command.").color(ChatColor.RED)
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " support "))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+								new ComponentBuilder("you need ").color(ChatColor.GRAY)
+										.append(permission).color(ChatColor.GREEN)
+										.append(" to run this command").color(ChatColor.GRAY)
+										.create()))
+						.create());
+				return true;
 			}
+			ICore.instance.reloadConfig();
+			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
+					+ "all iCore configs have been reloaded.");
+			ICore.instance.initDataBaseConnection();
+			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
+					+ "all database connections have been reloaded.");
+			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, ICore.discord::restart);
+			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
+					+ "iCore's JDA hook has been reloaded (Discord).");
 		}
 
 		else if (args[0].equalsIgnoreCase("support") || args[0].equalsIgnoreCase("sp")
@@ -74,10 +76,10 @@ public class CoreCommand implements CommandExecutor {
 								.create());
 			} else {
 				final String description = String.join(" ", ListUtils.removeFirstStringFromArray(args));
-				sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.GREEN
+				sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
 						+ "Your support query has been sent to the staff team.");
 				Bukkit.broadcast(
-						ICore.getPrefix(PrefixType.COMMAND) + "[Support] " + sender.getName() + ": " + description,
+						ICore.getPrefix(PrefixType.PLUGIN) + "[Support] " + sender.getName() + ": " + description,
 						"icore.command.support.receive");
 			}
 		}

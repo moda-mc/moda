@@ -28,7 +28,7 @@ public class VoteCommand implements CommandExecutor {
 
         if (!(ICore.instance.getConfig().getBoolean("mysql.enabled") && ICore.instance.getConfig().getBoolean("voting.enabled"))) {
         	player.spigot().sendMessage(new ComponentBuilder("")
-        			.append((ICore.getPrefix(PrefixType.COMMAND)))
+        			.append((ICore.getPrefix(PrefixType.PLUGIN)))
         			.append(ChatColor.RED + "Voting has not been enabled on this server.")
         			.create());
         	return true;

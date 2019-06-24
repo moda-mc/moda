@@ -20,7 +20,7 @@ public class CommandUtil {
 			final String description, final String permission, final String... aliases) {
 		if (sender.hasPermission(permission)) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.COMMAND))).event((HoverEvent) null)
+					.append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.PLUGIN))).event((HoverEvent) null)
 					.append("/" + label + " " + subcommand).color(ChatColor.GREEN)
 					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " " + subcommand))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("")

@@ -18,7 +18,7 @@ public class BearEmote implements CommandExecutor {
 
 		if (!ICore.instance.getConfig().getBoolean("emotes.enabled")) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix(PrefixType.COMMAND))
+					.append(ICore.getPrefix(PrefixType.PLUGIN))
 					.append("Emotes are disabled for this server.")
 					.create());
 			return true;
@@ -31,7 +31,7 @@ public class BearEmote implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!player.hasPermission("icore.command.emotes.bear")) {
 			player.spigot()
-					.sendMessage(new ComponentBuilder("").append(ICore.getPrefix(PrefixType.COMMAND))
+					.sendMessage(new ComponentBuilder("").append(ICore.getPrefix(PrefixType.PLUGIN))
 							.append("You do not have permission to use this emote.").color(ChatColor.RED)
 							.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 									new ComponentBuilder("you need ").color(ChatColor.GRAY)

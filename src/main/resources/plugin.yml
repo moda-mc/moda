@@ -18,47 +18,20 @@ commands:
     description: "returns the player's ping to the server."
     usage: "/ping"
     aliases: [hi, pong, pung, peng, pang]
+  suggest:
+    description: "opens an issue in the server's github repository."
+    usage: "/suggest <description>"
+
+# Misc commands:
+  nickname:
+    description: "sets a nickname for yourself or a specified player"
+    usage: "/nickname [target] <nickname>"
+    aliases: [nick]
     
 # Vote commands:
   vote:
     description: "returns a list of sites to vote on."
     usage: "/vote"
-    
-# Emote Commands
-  bear:
-    description: "sends a ʕ•ᴥ•ʔ with a provided message"
-    usage: "/bear [message]"
-  flower:
-    description: "sends a (◕‿◕✿) with a provided message"
-    usage: "/bear [message]"
-  gib:
-    description: "sends a ༼ つ ◕_◕ ༽つ with a provided message"
-    usage: "/gib [message]"
-  lenny:
-    description: "sends a ( ͡° ͜ʖ ͡°) with a provided message"
-    usage: "/lenny [message]"
-  love:
-    description: "sends a (づ￣ ³￣)づ with a provided message"
-    usage: "/love [message]"
-  mao:
-    description: "sends a ฅ^•ﻌ•^ฅ with a provided message"
-    usage: "/mao [message]"
-  shrug:
-    description: "sends a ¯\\_(ツ)_/¯ with a provided message"
-    usage: "/shrug [message]"
-  tableflip:
-    description: "sends a (╯°□°）╯︵ ┻━┻ with a provided message"
-    usage: "/tableflip [message]"
-  unflip:
-    description: "sends a ┬─┬ ノ( ゜-゜ノ) with a provided message"
-    usage: "/unflip [message]"
-  yes:
-    description: "sends a •ᴗ• with a provided message"
-    usage: "/yes [message]"
-
-  suggest:
-    description: "suggest a feature to the dedicated GitHub repository"
-    usage: "/suggest"
 
 permissions:
 
@@ -95,54 +68,32 @@ permissions:
   icore.command.color.chat.format:
     description: "allows the user to set their chat formatting"
     default: true
-  icore.command.color.chat.other:
+  icore.command.color.chat.others:
     description: "allows the user to set another player's chat color"
     default: op
-    
+  
   icore.command.color.name:
     description: "allows the user to set their name color"
     default: true
   icore.command.color.name.format:
     description: "allows the user to set their name formatting"
     default: true
-  icore.command.color.name.other:
+  icore.command.color.name.others:
     description: "allows the user to set another player's name color"
     default: op
-
-
-  # Emote commands:
-  icore.command.emotes.bear:
-    description: "allows the user to use /bear"
-    default: true
-  icore.command.emotes.flower:
-    description: "allows the user to use /flower"
-    default: true
-  icore.command.emotes.gib:
-    description: "allows the user to use /gib"
-    default: true
-  icore.command.emotes.lenny:
-    description: "allows the user to use /lenny"
-    default: true
-  icore.command.emotes.love:
-    description: "allows the user to use /love"
-    default: true
-  icore.command.emotes.mao:
-    description: "allows the user to use /mao"
-    default: true
-  icore.command.emotes.shrug:
-    description: "allows the user to use /shrug"
-    default: true
-  icore.command.emotes.tableflip:
-    description: "allows the user to use /tableflip"
-    default: true
-  icore.command.emotes.unflip:
-    description: "allows the user to use /unflip"
-    default: true
-  icore.command.emotes.yes:
-    description: "allows the user to use /yes"
-    default: true
   
-  
+  icore.command.nickname:
+    description: "allows the user to set their nickname"
+    default: op
+  icore.command.nickname.colors:
+    description: "allows the user to set colors in their nickname"
+    default: op
+  icore.command.nickname.format:
+    description: "allows the user to set formatting in their nickname"
+    default: op
+  icore.command.nickname.others:
+    description: "allows the user to set another player's nickname"
+    default: op
   
   # Admin commands:
   icore.command.reload:
@@ -292,8 +243,35 @@ permissions:
   icore.chat.use_colors:
     description: "allows the user to use color-codes in chat."
     default: op
-  
-
-      
-
-  
+    
+# Emotes:
+  icore.emotes.bear:
+    description: "allows the user to use /bear"
+    default: true
+  icore.emotes.flower:
+    description: "allows the user to use /flower"
+    default: true
+  icore.emotes.gib:
+    description: "allows the user to use /gib"
+    default: true
+  icore.emotes.lenny:
+    description: "allows the user to use /lenny"
+    default: true
+  icore.emotes.love:
+    description: "allows the user to use /love"
+    default: true
+  icore.emotes.mao:
+    description: "allows the user to use /mao"
+    default: true
+  icore.emotes.shrug:
+    description: "allows the user to use /shrug"
+    default: true
+  icore.emotes.tableflip:
+    description: "allows the user to use /tableflip"
+    default: true
+  icore.emotes.unflip:
+    description: "allows the user to use /unflip"
+    default: true
+  icore.emotes.yes:
+    description: "allows the user to use /yes"
+    default: true

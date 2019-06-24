@@ -6,42 +6,50 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.PrefixType;
-import com.mineglade.icore.utils.NameColorUtil;
+import com.mineglade.icore.emotes.EmotePlaceholders;
+import com.mineglade.icore.utils.ColorUtil;
+import com.mineglade.icore.utils.NickNameUtil;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.Colors;
+import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
 public class ChatEvent implements Listener {
 
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event) {
 		final Player player = event.getPlayer();
-		final String playerChatColor = NameColorUtil.getChatColor(player);
 
 		if (player.hasPermission("icore.chat.use_colors")) {
 			event.setMessage(Colors.parseColors(event.getMessage()));
 		}
+		for (Placeholder placeholder : EmotePlaceholders.parseEmote(player)) {
+			event.setMessage(placeholder.parse(event.getMessage()));
+		}
+
+		Placeholder playerNickName = new Placeholder("{player_nickname}", NickNameUtil.getNickName(player));
+		Placeholder playerName = new Placeholder("{player_name}", player.getName());
+		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
+		Placeholder message = new Placeholder("{message}", event.getMessage());
+		Placeholder chatColor = new Placeholder("{chat_color}", "&" + ColorUtil.getChatColor(player));
+		Placeholder nameColor = new Placeholder("{name_color}", "&" + ColorUtil.getNameColor(player));
+		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
+		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
+
+		System.out.println(event.getMessage());
+		System.out.println(ColorUtil.getChatColor(player));
+		System.out.println(ColorUtil.getNameColor(player));
+		System.out.println(ICore.chat.getPlayerPrefix(player));
+		System.out.println(ICore.chat.getPlayerSuffix(player));
 
 		for (Player recipient : event.getRecipients()) {
-			recipient.spigot().sendMessage(new ComponentBuilder("")
-					.append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.CHAT)))
-					.append(TextComponent.fromLegacyText(
-							ChatColor.translateAlternateColorCodes('&', ICore.chat.getPlayerPrefix(player) + " ")))
-					.append(player.getDisplayName())
-					.append(TextComponent.fromLegacyText(
-							ChatColor.translateAlternateColorCodes('&', " " + ICore.chat.getPlayerSuffix(player))))
-					.append(TextComponent.fromLegacyText(
-							"» " + Colors.parseColors("&" + playerChatColor) + event.getMessage()), FormatRetention.ALL)
-					.event((HoverEvent) null).create());
-		}
-		
-		
-		event.getRecipients().clear();
-	}
 
+			recipient.spigot()
+					.sendMessage(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.format", player,
+							playerNickName, playerName, playerDisplayName, message, chatColor, nameColor, vaultPrefix,
+							vaultSuffix));
+
+			event.getRecipients().clear();
+		}
+	}
 }

@@ -1,5 +1,7 @@
 package com.mineglade.icore;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,27 +10,19 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.icore.commands.CoreCommand;
+import com.mineglade.icore.commands.NickNameCommand;
 import com.mineglade.icore.commands.PingCommand;
 import com.mineglade.icore.commands.SuggestCommand;
 import com.mineglade.icore.commands.VoteCommand;
-import com.mineglade.icore.commands.emotes.BearEmote;
-import com.mineglade.icore.commands.emotes.FlowerEmote;
-import com.mineglade.icore.commands.emotes.GibEmote;
-import com.mineglade.icore.commands.emotes.LennyEmote;
-import com.mineglade.icore.commands.emotes.LoveEmote;
-import com.mineglade.icore.commands.emotes.MaoEmote;
-import com.mineglade.icore.commands.emotes.ShrugEmote;
-import com.mineglade.icore.commands.emotes.TableflipEmote;
-import com.mineglade.icore.commands.emotes.UnflipEmote;
 import com.mineglade.icore.discord.DiscordListener;
 import com.mineglade.icore.events.ChatEvent;
 import com.mineglade.icore.events.JoinLeaveEvent;
@@ -40,11 +34,11 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import xyz.derkades.derkutils.DatabaseHandler;
+import xyz.derkades.derkutils.FileUtils;
 
 public class ICore extends JavaPlugin implements Listener {
 
 	public static ICore instance;
-	public static FileConfiguration mutedPlayers;
 
 	public static DatabaseHandler db = null;
 	public static Economy economy = null;
@@ -52,6 +46,8 @@ public class ICore extends JavaPlugin implements Listener {
 	public static Chat chat = null;
 	public static DiscordListener discord;
 
+	public static FileConfiguration messages;
+	
 	public ICore() {
 		instance = this;
 	}
@@ -59,11 +55,19 @@ public class ICore extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
-		final PluginDescriptionFile pdFile = this.getDescription();
+		File messagesFile = new File(getDataFolder(), "messages.yaml");
+		if (!messagesFile.exists()) {
+			try {
+				FileUtils.copyOutOfJar(this.getClass(), "/messages.yaml", messagesFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		messages = YamlConfiguration.loadConfiguration(messagesFile);
 		final Logger logger = this.getLogger();
 
 		if (ICore.instance.getConfig().getBoolean("discord.enabled")) {
-			logger.info("Enabling JDA hook (Discord).");
 			discord = new DiscordListener();
 		} else {
 			logger.warning("Discord is not enabled, please set up your config.");
@@ -71,16 +75,12 @@ public class ICore extends JavaPlugin implements Listener {
 
 		if (!this.setupVault()) {
 			logger.severe("Could not set up Vault, is it installed?");
-		} else {
-			logger.info("Succesfully hooked into Vault.");
-		}
+		} 
 		if (ICore.instance.getConfig().getBoolean("mysql.enabled")) {
-			logger.info("Connecting to MySQL Database");
 			this.initDataBaseConnection();
 		} else {
 			logger.warning("MySQL is not enabled, please set up your config.");
 		}
-		logger.info(pdFile.getName() + " has been enabled for version " + pdFile.getVersion());
 
 		this.registerCommands();
 		this.registerEvents();
@@ -93,7 +93,6 @@ public class ICore extends JavaPlugin implements Listener {
 
 	@Override
 	public void onDisable() {
-		final PluginDescriptionFile pdFile = this.getDescription();
 		final Logger logger = this.getLogger();
 
 		if (db != null)
@@ -102,7 +101,6 @@ public class ICore extends JavaPlugin implements Listener {
 				db.getConnection().close();
 			} catch (final SQLException e1) {
 				e1.printStackTrace();
-				Bukkit.getPluginManager().disablePlugin(this);
 			}
 
 		if (discord != null) {
@@ -115,7 +113,6 @@ public class ICore extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
-		logger.info(pdFile.getName() + " has been fully disabled (v" + pdFile.getVersion() + ")");
 	}
 
 	private boolean setupVault() {
@@ -167,12 +164,8 @@ public class ICore extends JavaPlugin implements Listener {
 		}
 		if (type == PrefixType.CHAT) {
 			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.chat", ""));
-		} else if (type == PrefixType.COMMAND) {
-			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.command", ""));
-		} else if (type == PrefixType.JOIN) {
-			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.join", ""));
-		} else if (type == PrefixType.LEAVE) {
-			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.leave", ""));
+		} else if (type == PrefixType.PLUGIN) {
+			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.plugin", ""));
 		} else {
 			throw new AssertionError();
 		}
@@ -210,8 +203,8 @@ public class ICore extends JavaPlugin implements Listener {
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
-				createTableIfNonexistent("playerNickname",
-						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickname` "
+				createTableIfNonexistent("playerNickName",
+						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickName` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `nickname` VARCHAR(256) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
@@ -238,29 +231,18 @@ public class ICore extends JavaPlugin implements Listener {
 	private void registerCommands() {
 		// Core Command
 		this.getCommand("icore").setExecutor(new CoreCommand());
-		
+
 		// Main Commands
 		this.getCommand("ping").setExecutor(new PingCommand());
-		
-		// Emotes
-		this.getCommand("bear").setExecutor(new BearEmote());
-		this.getCommand("flower").setExecutor(new FlowerEmote());
-		this.getCommand("gib").setExecutor(new GibEmote());
-		this.getCommand("lenny").setExecutor(new LennyEmote());
-		this.getCommand("love").setExecutor(new LoveEmote());
-		this.getCommand("mao").setExecutor(new MaoEmote());
-		this.getCommand("shrug").setExecutor(new ShrugEmote());
-		this.getCommand("tableflip").setExecutor(new TableflipEmote());
-		this.getCommand("unflip").setExecutor(new UnflipEmote());
-		// this.getCommand("yes").setExecutor(new YesEmote());
-		
+
+		// Misc Commands
+		this.getCommand("nickname").setExecutor(new NickNameCommand());
+
 		// Voting
 		this.getCommand("vote").setExecutor(new VoteCommand());
-		
+
 		// Suggestions
-		if (ICore.instance.getConfig().getBoolean("github.enabled")) {
-			this.getCommand("suggest").setExecutor(new SuggestCommand());
-		}
+		this.getCommand("suggest").setExecutor(new SuggestCommand());
 	}
 
 	private void registerEvents() {

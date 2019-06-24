@@ -18,7 +18,7 @@ public class ColorCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
 		
 		if (args.length < 1) {
-			sender.sendMessage(ICore.getPrefix(PrefixType.COMMAND) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
+			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
 					+ "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
 			CommandUtil.helpListEntry(sender, label, "name", "Allows you to set your name color", "icore.color.name", args);
 		}

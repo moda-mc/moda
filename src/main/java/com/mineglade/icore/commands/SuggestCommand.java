@@ -24,6 +24,11 @@ public class SuggestCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
+		if (ICore.instance.getConfig().getBoolean("github.enabled")) {
+			sender.sendMessage("This server does not have github enabled.");
+			return true;
+		}
+		
 		Player player = (Player) sender;
 		FileConfiguration config = ICore.instance.getConfig();
 		

@@ -27,7 +27,7 @@ public class PingCommand implements CommandExecutor {
         if (label.equalsIgnoreCase("hi")) {
             player.spigot().sendMessage(
                     new ComponentBuilder("")
-                            .append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.COMMAND)))
+                            .append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.PLUGIN)))
                             .append("Hi there! (").color(ChatColor.GRAY)
                             .append(ping + "ms").color(ChatColor.GREEN)
                             .append(")").color(ChatColor.GRAY)
@@ -35,7 +35,7 @@ public class PingCommand implements CommandExecutor {
         } else {
             player.spigot().sendMessage(
                     new ComponentBuilder("")
-                            .append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.COMMAND)))
+                            .append(TextComponent.fromLegacyText(ICore.getPrefix(PrefixType.PLUGIN)))
                             .append("Your ping to the server is ").color(ChatColor.GRAY)
                             .append(ping + "ms").color(ChatColor.GREEN)
                             .create());

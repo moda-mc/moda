@@ -1,0 +1,15 @@
+errors:
+  no-permission: "&cYou don't have permission to use {command}"
+nickname:
+  errors:
+    improper-usage: "&cPlease provide a nickname or a target."
+    no-target: "&cYou must specify a target."
+    target-invalid: "&cThe target you provided isn't online or doesn't exist."
+    too-long: "&cNicknames can't be longer than 16 characters."
+    no-spaces: "&eA nickname can't contain spaces."
+  reset:
+    self: "&aYou've successfuly reset your nickname"
+    others: "&aYou've successfully reset {target}'s nickname"
+  set:
+    self: "&aYou've successfuly set your nickname to {nickname}"
+    others: "&aYou've successfully set {target}'s nickname to {nickname}"
