@@ -92,20 +92,20 @@ public class NickNameCommand implements CommandExecutor {
 			}
 			Player target = Bukkit.getPlayer(args[0]);
 			String nickname = args[1];
+			if (target == null) {
+				sender.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix())
+						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.target-invalid")))
+						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+						.create());
+				return true;
+			}
 			if (nickname.equalsIgnoreCase("reset")) {
 				NickNameUtil.resetNickName(target);
 				sender.spigot().sendMessage(new ComponentBuilder("")
 						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.others")
 								.replace("{target}", target.getName())))
-						.create());
-				return true;
-			}
-			if (target == null) {
-				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix())
-						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.target-invalid")))
-						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
 						.create());
 				return true;
 			}
