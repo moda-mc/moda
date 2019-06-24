@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.PrefixType;
 import com.mineglade.icore.utils.CommandUtil;
 
 import net.md_5.bungee.api.ChatColor;
@@ -27,7 +26,7 @@ public class CoreCommand implements CommandExecutor {
 		}
 
 		else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h")) {
-			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
+			sender.sendMessage(ICore.getPrefix() + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
 					+ "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
 			CommandUtil.helpListEntry(sender, label, "help", "returns a list of all iCore Commands",
 					"icore.command.help", "help", "h", "");
@@ -42,7 +41,7 @@ public class CoreCommand implements CommandExecutor {
 			String permission = "icore.command.reload";
 			if (!sender.hasPermission(permission)) {
 				sender.spigot()
-				.sendMessage(new ComponentBuilder("").append(ICore.getPrefix(PrefixType.PLUGIN))
+				.sendMessage(new ComponentBuilder("").append(ICore.getPrefix())
 						.append("You do not have permission to use this command.").color(ChatColor.RED)
 						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + label + " support "))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -54,14 +53,16 @@ public class CoreCommand implements CommandExecutor {
 				return true;
 			}
 			ICore.instance.reloadConfig();
-			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
+			sender.sendMessage(ICore.getPrefix() + ChatColor.GREEN
 					+ "all iCore configs have been reloaded.");
 			ICore.instance.initDataBaseConnection();
-			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
+			sender.sendMessage(ICore.getPrefix() + ChatColor.GREEN
 					+ "all database connections have been reloaded.");
-			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, ICore.discord::restart);
-			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
-					+ "iCore's JDA hook has been reloaded (Discord).");
+			if (ICore.discord != null) {
+				Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, ICore.discord::restart);
+				sender.sendMessage(ICore.getPrefix() + ChatColor.GREEN
+						+ "iCore's JDA hook has been reloaded (Discord).");
+			}
 		}
 
 		else if (args[0].equalsIgnoreCase("support") || args[0].equalsIgnoreCase("sp")
@@ -76,10 +77,10 @@ public class CoreCommand implements CommandExecutor {
 								.create());
 			} else {
 				final String description = String.join(" ", ListUtils.removeFirstStringFromArray(args));
-				sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.GREEN
+				sender.sendMessage(ICore.getPrefix() + ChatColor.GREEN
 						+ "Your support query has been sent to the staff team.");
 				Bukkit.broadcast(
-						ICore.getPrefix(PrefixType.PLUGIN) + "[Support] " + sender.getName() + ": " + description,
+						ICore.getPrefix() + "[Support] " + sender.getName() + ": " + description,
 						"icore.command.support.receive");
 			}
 		}
