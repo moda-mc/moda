@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.PrefixType;
 import com.mineglade.icore.utils.CommandUtil;
 
 import net.md_5.bungee.api.ChatColor;
@@ -18,7 +17,7 @@ public class ColorCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
 		
 		if (args.length < 1) {
-			sender.sendMessage(ICore.getPrefix(PrefixType.PLUGIN) + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
+			sender.sendMessage(ICore.getPrefix() + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
 					+ "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
 			CommandUtil.helpListEntry(sender, label, "name", "Allows you to set your name color", "icore.color.name", args);
 		}
