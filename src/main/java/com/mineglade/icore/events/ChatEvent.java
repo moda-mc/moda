@@ -36,12 +36,6 @@ public class ChatEvent implements Listener {
 		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
 		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
 
-		System.out.println(event.getMessage());
-		System.out.println(ColorUtil.getChatColor(player));
-		System.out.println(ColorUtil.getNameColor(player));
-		System.out.println(ICore.chat.getPlayerPrefix(player));
-		System.out.println(ICore.chat.getPlayerSuffix(player));
-
 		for (Player recipient : event.getRecipients()) {
 
 			recipient.spigot()
