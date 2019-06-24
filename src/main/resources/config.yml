@@ -23,19 +23,17 @@
 # https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3)
 
 # =====================================================
-#                       Prefixes
+#                     Plugin Settings
 # =====================================================
 # you can use color codes with an & character.
 # &a-f,0-1,k,l,m,n,o
 #
 # for no prefix do ""
 
-prefixes:
-  plugin: "&8[&bP&8] &7| "
-  chat: "&8[&6C&8] &7| "
+plugin-prefix: "&8[&bP&8] &7| "
 
 # =====================================================
-#                         Chat
+#                          Chat
 # =====================================================
 #
 # Placeholders: 
@@ -50,14 +48,14 @@ prefixes:
 
 chat:
   format: 
-    - text: "{prefix}&r {name_color}{player_nickname}&r {suffix}&r» {chat_color}{message}"
+    - text: "&8[&6C&8] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}&r» {chat_color}{message}"
   join-message: 
     - text: "&f[&a+&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
   leave-message: 
     - text: "&f[&c-&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
 
 # =====================================================
-#                      Statistics
+#                       Statistics
 # =====================================================
 #
 # Placeholders: 
