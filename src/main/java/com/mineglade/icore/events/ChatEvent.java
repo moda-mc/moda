@@ -42,8 +42,7 @@ public class ChatEvent implements Listener {
 					.sendMessage(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.format", player,
 							playerNickName, playerName, playerDisplayName, message, chatColor, nameColor, vaultPrefix,
 							vaultSuffix));
-
-			event.getRecipients().clear();
 		}
+		event.getRecipients().clear();
 	}
 }
