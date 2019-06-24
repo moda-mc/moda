@@ -29,7 +29,7 @@ public class PingCommand implements CommandExecutor {
 							.replace("{command}", "/" + label)))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("")
 							.append(Colors.toComponent(
-									"&7you need &aicore.command.ping&7 to set other people's nicknames")
+									"&7you need &aicore.command.ping&7 to check your ping")
 									)
 							.create()))
 					.create());
@@ -44,7 +44,7 @@ public class PingCommand implements CommandExecutor {
 								.replace("{command}", "/" + label + " [target]")))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("")
 								.append(Colors.toComponent(
-										"&7you need &aicore.command.ping.others&7 to set other people's nicknames")
+										"&7you need &aicore.command.ping.others&7 to check other people's ping")
 										)
 								.create()))
 						.create());
