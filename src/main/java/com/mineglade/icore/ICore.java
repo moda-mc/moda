@@ -158,17 +158,8 @@ public class ICore extends JavaPlugin implements Listener {
 		return false;
 	}
 
-	public static String getPrefix(final PrefixType type) {
-		if (type == null) {
-			throw new IllegalArgumentException();
-		}
-		if (type == PrefixType.CHAT) {
-			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.chat", ""));
-		} else if (type == PrefixType.PLUGIN) {
-			return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("prefixes.plugin", ""));
-		} else {
-			throw new AssertionError();
-		}
+	public static String getPrefix() {
+		return ChatColor.translateAlternateColorCodes('&', instance.getConfig().getString("plugin-prefix", "&7[&fi&bCore&7] "));
 	}
 
 	public void initDataBaseConnection() {

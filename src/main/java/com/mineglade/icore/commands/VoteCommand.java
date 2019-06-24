@@ -1,11 +1,5 @@
 package com.mineglade.icore.commands;
 
-import com.mineglade.icore.ICore;
-import com.mineglade.icore.PrefixType;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +10,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import com.mineglade.icore.ICore;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
@@ -28,7 +27,7 @@ public class VoteCommand implements CommandExecutor {
 
         if (!(ICore.instance.getConfig().getBoolean("mysql.enabled") && ICore.instance.getConfig().getBoolean("voting.enabled"))) {
         	player.spigot().sendMessage(new ComponentBuilder("")
-        			.append((ICore.getPrefix(PrefixType.PLUGIN)))
+        			.append((ICore.getPrefix()))
         			.append(ChatColor.RED + "Voting has not been enabled on this server.")
         			.create());
         	return true;
