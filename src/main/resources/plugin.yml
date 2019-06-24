@@ -44,6 +44,9 @@ permissions:
   icore.command.ping:
     description: "allows the player to use /ping"
     default: true
+  icore.command.ping.others:
+    description: "allows the user to check another player's ping"
+    default: op
     
   # Vote commands:
   icore.command.vote: 
