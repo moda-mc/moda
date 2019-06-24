@@ -33,6 +33,7 @@ public class PingCommand implements CommandExecutor {
 									)
 							.create()))
 					.create());
+			return true;
 		}
 		
 		if (args.length > 0) {
@@ -47,6 +48,7 @@ public class PingCommand implements CommandExecutor {
 										)
 								.create()))
 						.create());
+				return true;
 			}
 			Player target = Bukkit.getPlayer(args[0]);
 			if (target == null) {
