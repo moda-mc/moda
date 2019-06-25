@@ -58,7 +58,7 @@ public class NickNameCommand implements CommandExecutor {
 				return true;
 			}
 			
-			if (ChatColor.stripColor(nickname).length() > 16) {
+			if (ChatColor.stripColor(Colors.parseColors(nickname)).length() > 16) {
 				sender.spigot().sendMessage(new ComponentBuilder("")
 						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.too-long")))
@@ -109,7 +109,7 @@ public class NickNameCommand implements CommandExecutor {
 						.create());
 				return true;
 			}
-			if (ChatColor.stripColor(nickname).length() > 16) {
+			if (ChatColor.stripColor(Colors.parseColors(nickname)).length() > 16) {
 				sender.spigot().sendMessage(new ComponentBuilder("")
 						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.too-long")))
