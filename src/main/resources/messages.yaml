@@ -1,5 +1,7 @@
 errors:
   no-permission: "&cYou don't have permission to use {command}"
+color:
+  name: "&aYour name color has been set to {name-color}"
 nickname:
   errors:
     improper-usage: "&cPlease provide a nickname or a target."

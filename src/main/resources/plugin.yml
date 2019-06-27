@@ -4,7 +4,6 @@ description: "A plugin to run the core of your game server; Chat Formatting, Vot
 version: 0.02-alpha
 authors: [patchtv, Derkades]
 website: https://www.github.com/mineglade/icore
-api-version: 1.13
 depend: [Vault, PlaceholderAPI]
 softdepend: [SuperVanish, Votifier]
 
@@ -23,6 +22,9 @@ commands:
     usage: "/suggest <description>"
 
 # Misc commands:
+  color: 
+    description: "set your name and/or chat color for yourself or a specified player"
+    usage: "/color [target]" 
   nickname:
     description: "sets a nickname for yourself or a specified player"
     usage: "/nickname [target] <nickname>"
@@ -65,6 +67,10 @@ permissions:
     default: op
     
   # Misc commands
+  icore.command.color:
+    description: "allows the user to use /color"
+    default: true
+  
   icore.command.color.chat:
     description: "allows the user to set their chat color"
     default: true

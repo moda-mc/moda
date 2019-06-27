@@ -5,47 +5,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.mineglade.icore.ICore;
-import com.mineglade.icore.utils.CommandUtil;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import com.mineglade.icore.menus.ColorPickerMenu;
 
 public class ColorCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
 		
-		if (args.length < 1) {
-			sender.sendMessage(ICore.getPrefix() + ChatColor.DARK_GRAY + "==== " + ChatColor.GREEN
-					+ "All iCore Commands" + ChatColor.DARK_GRAY + " ====");
-			CommandUtil.helpListEntry(sender, label, "name", "Allows you to set your name color", "icore.color.name", args);
-		}
-		
-		if (args[0] == "name") {
-
-			return true;
-		}
-		
-		else if (args[0] == "chat") {
-			if (!(sender instanceof Player)) {
-				
+		if (sender instanceof Player) {
+			Player player = (Player) sender;
+			if (args.length < 1) {
+				new ColorPickerMenu(player, player).open();
 			}
-			return true;
+		} else {
+			sender.sendMessage("this command is not functional for the console yet.");
 		}
-		
-		else {
-			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append("You need to specify a type of color")
-					.create());
-			return false;
-		}
-		
+		return true;
 	}
 	
 }
-
-
-
-// 
-// command: /color <chat|name> [player] <color>

@@ -9,8 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.utils.ColorUtil;
-import com.mineglade.icore.utils.NickNameUtil;
+import com.mineglade.icore.utils.PlayerData;
 
 import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
@@ -24,6 +23,7 @@ public class JoinLeaveEvent implements Listener {
 		Placeholder user = new Placeholder("%player%", event.getPlayer().getDisplayName());
 		Placeholder online = new Placeholder("%online%", Bukkit.getOnlinePlayers().size() + "");
 		final Player player = event.getPlayer();
+		PlayerData data = new PlayerData(player);
 
 		if (ICore.isVanished(player)) {
 			return;
@@ -31,10 +31,10 @@ public class JoinLeaveEvent implements Listener {
 
 		FileConfiguration config = ICore.instance.getConfig();
 
-		Placeholder playerNickName = new Placeholder("{player_nickname}", NickNameUtil.getNickName(player));
+		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
 		Placeholder playerName = new Placeholder("{player_name}", player.getName());
 		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
-		Placeholder chatColor = new Placeholder("{name_color}", "&" + ColorUtil.getNameColor(player));
+		Placeholder chatColor = new Placeholder("{name_color}", "&" + data.getNameColor());
 		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
 		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
 
@@ -50,11 +50,12 @@ public class JoinLeaveEvent implements Listener {
 		event.setQuitMessage("");
 
 		final Player player = event.getPlayer();
+		PlayerData data = new PlayerData(player);
 
-		Placeholder playerNickName = new Placeholder("{player_nickname}", NickNameUtil.getNickName(player));
+		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
 		Placeholder playerName = new Placeholder("{player_name}", player.getName());
 		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
-		Placeholder chatColor = new Placeholder("{name_color}", "&" + ColorUtil.getNameColor(player));
+		Placeholder chatColor = new Placeholder("{name_color}", "&" + data.getNameColor());
 		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
 		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
 

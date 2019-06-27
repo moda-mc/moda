@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.utils.NickNameUtil;
+import com.mineglade.icore.utils.PlayerData;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
@@ -59,7 +59,8 @@ public class PingCommand implements CommandExecutor {
 						.create());
 				return true;
 			}
-			String targetNickName = NickNameUtil.getNickName(target);
+			PlayerData data = new PlayerData(target);
+			String targetNickName = data.getNickName();
 			final int ping = ReflectionUtil.getPing(target);
 			player.spigot().sendMessage(new ComponentBuilder("")
 					.append(ICore.getPrefix())

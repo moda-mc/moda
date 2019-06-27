@@ -18,6 +18,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.mineglade.icore.commands.ColorCommand;
 import com.mineglade.icore.commands.CoreCommand;
 import com.mineglade.icore.commands.NickNameCommand;
 import com.mineglade.icore.commands.PingCommand;
@@ -227,6 +228,7 @@ public class ICore extends JavaPlugin implements Listener {
 		this.getCommand("ping").setExecutor(new PingCommand());
 
 		// Misc Commands
+		this.getCommand("color").setExecutor(new ColorCommand());
 		this.getCommand("nickname").setExecutor(new NickNameCommand());
 
 		// Voting

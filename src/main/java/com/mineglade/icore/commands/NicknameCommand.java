@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.utils.NickNameUtil;
+import com.mineglade.icore.utils.PlayerData;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -22,6 +22,7 @@ public class NickNameCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		Player player = (Player) sender;
+		
 		if (!sender.hasPermission("icore.commands.nickname")) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
 					.append(ICore.getPrefix())
@@ -44,9 +45,10 @@ public class NickNameCommand implements CommandExecutor {
 		}
 
 		if (args.length == 1) {
+			PlayerData data = new PlayerData(player);
 			String nickname = args[0];
 			if (nickname.equalsIgnoreCase("reset")) {
-				NickNameUtil.resetNickName(player);
+				data.resetNickName();
 				sender.spigot().sendMessage(new ComponentBuilder("")
 						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.self")))
@@ -67,7 +69,7 @@ public class NickNameCommand implements CommandExecutor {
 				return true;
 			}
 			
-			NickNameUtil.setNickName(player, nickname);
+			data.setNickName(nickname);
 			
 			sender.spigot().sendMessage(new ComponentBuilder("")
 					.append(ICore.getPrefix())
@@ -100,8 +102,10 @@ public class NickNameCommand implements CommandExecutor {
 						.create());
 				return true;
 			}
+			
+			PlayerData data = new PlayerData(target);
 			if (nickname.equalsIgnoreCase("reset")) {
-				NickNameUtil.resetNickName(target);
+				data.resetNickName();
 				sender.spigot().sendMessage(new ComponentBuilder("")
 						.append(ICore.getPrefix())
 						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.others")
@@ -126,7 +130,7 @@ public class NickNameCommand implements CommandExecutor {
 
 			}
 
-			NickNameUtil.setNickName(target, nickname);
+			data.setNickName(nickname);
 			sender.spigot().sendMessage(new ComponentBuilder("")
 					.append(ICore.getPrefix())
 					.append(Colors.toComponent(ICore.messages.getString("nickname.set.others")
