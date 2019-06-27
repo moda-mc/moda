@@ -73,7 +73,7 @@ public class PlayerData {
 				return "r";
 			}
 		} else {
-			return dataFile.getString("color.chat", "r");
+			return dataFile.getString("color.chat-color", "r");
 		}
 	}
 
@@ -94,7 +94,47 @@ public class PlayerData {
 				}
 			});
 		} else {
-			dataFile.set("color.chat", color);
+			dataFile.set("color.chat-color", color);
+		}
+	}
+	
+	public void setChatFormat(String color) {
+		if (mysql) {
+			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
+				try {
+					PreparedStatement statement = ICore.db.prepareStatement(
+							"INSERT INTO playerChatFormat (uuid, color) VALUES (?, ?) ON DUPLICATE KEY UPDATE color=?",
+							player.getUniqueId(), color, color);
+					statement.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			});
+		} else {
+			dataFile.set("color.chat-format", color);
+		}
+	}
+	
+	public String getChatFormat() {
+
+		if (mysql) {
+			try {
+				PreparedStatement statement = ICore.db
+						.prepareStatement("SELECT `color` FROM `playerChatFormat` WHERE uuid=?", player.getUniqueId());
+				ResultSet result = statement.executeQuery();
+
+				if (result.next()) {
+					return result.getString("color");
+				} else {
+					return "r";
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "r";
+			}
+		} else {
+			return dataFile.getString("color.chat-format", "r");
 		}
 	}
 
