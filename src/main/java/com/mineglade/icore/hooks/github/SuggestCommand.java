@@ -1,4 +1,4 @@
-package com.mineglade.icore.commands;
+package com.mineglade.icore.hooks.github;
 
 import java.io.IOException;
 import java.util.stream.Collectors;

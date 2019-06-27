@@ -1,4 +1,4 @@
-package com.mineglade.icore.emotes;
+package com.mineglade.icore.chat.emotes;
 
 public enum Emote {
 	BEAR("ʕ•ᴥ•ʔ"),

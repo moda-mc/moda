@@ -1,11 +1,10 @@
-package com.mineglade.icore.commands;
+package com.mineglade.icore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.mineglade.icore.ICore;
 import com.mineglade.icore.utils.CommandUtil;
 
 import net.md_5.bungee.api.ChatColor;

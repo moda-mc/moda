@@ -1,4 +1,4 @@
-package com.mineglade.icore.commands;
+package com.mineglade.icore.chat.nicknames;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

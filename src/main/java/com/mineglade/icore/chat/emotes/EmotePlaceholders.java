@@ -1,4 +1,4 @@
-package com.mineglade.icore.emotes;
+package com.mineglade.icore.chat.emotes;
 
 import java.util.ArrayList;
 import java.util.List;

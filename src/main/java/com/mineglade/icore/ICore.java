@@ -18,17 +18,15 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mineglade.icore.commands.ColorCommand;
-import com.mineglade.icore.commands.CoreCommand;
-import com.mineglade.icore.commands.NickNameCommand;
-import com.mineglade.icore.commands.PingCommand;
-import com.mineglade.icore.commands.SuggestCommand;
-import com.mineglade.icore.commands.VoteCommand;
-import com.mineglade.icore.discord.DiscordListener;
-import com.mineglade.icore.events.ChatEvent;
-import com.mineglade.icore.events.JoinLeaveEvent;
-import com.mineglade.icore.events.VoteEvent;
-import com.mineglade.icore.tasks.VoteReminder;
+import com.mineglade.icore.chat.ChatEvent;
+import com.mineglade.icore.chat.JoinLeaveEvent;
+import com.mineglade.icore.chat.colors.ColorCommand;
+import com.mineglade.icore.chat.nicknames.NickNameCommand;
+import com.mineglade.icore.hooks.discord.DiscordListener;
+import com.mineglade.icore.hooks.github.SuggestCommand;
+import com.mineglade.icore.votes.VoteCommand;
+import com.mineglade.icore.votes.VoteEvent;
+import com.mineglade.icore.votes.VoteReminder;
 
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;

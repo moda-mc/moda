@@ -1,4 +1,4 @@
-package com.mineglade.icore.discord;
+package com.mineglade.icore.hooks.discord;
 
 import javax.security.auth.login.LoginException;
 

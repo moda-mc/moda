@@ -1,4 +1,4 @@
-package com.mineglade.icore.events;
+package com.mineglade.icore.chat;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.mineglade.icore.ICore;
-import com.mineglade.icore.emotes.EmotePlaceholders;
+import com.mineglade.icore.chat.emotes.EmotePlaceholders;
 import com.mineglade.icore.utils.PlayerData;
 
 import xyz.derkades.derkutils.bukkit.Chat;

@@ -1,4 +1,4 @@
-package com.mineglade.icore.commands;
+package com.mineglade.icore.votes;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

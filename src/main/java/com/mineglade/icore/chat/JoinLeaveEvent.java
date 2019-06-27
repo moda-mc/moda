@@ -1,4 +1,4 @@
-package com.mineglade.icore.events;
+package com.mineglade.icore.chat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
