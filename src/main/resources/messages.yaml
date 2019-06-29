@@ -1,7 +1,23 @@
 errors:
   no-permission: "&cYou don't have permission to use {command}"
 color:
-  name: "&aYour name color has been set to {name-color}"
+  errors:
+    no-color-permissions: "&cYou don't have permissions for the {color}"
+    target-invalid: "&cThe target you provided isn't online or doesn't exist."
+  name:
+    color: 
+      set: "&7Your name color has been set to {color}"
+      reset: "&7Your name color has been reset"
+    format:
+      set: "&7Your name format has been set to {color}"
+      reset: "&7Your name format has been reset"
+  chat: 
+    color:
+      set: "&7Your chat color has been set to {color}"
+      reset: "&7Your chat color has been reset"
+    format:
+      set: "&7Your chat format has been set to {color}"
+      reset: "&7Your chat format has been reset"
 nickname:
   errors:
     improper-usage: "&cPlease provide a nickname or a target."
