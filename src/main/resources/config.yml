@@ -44,15 +44,41 @@ plugin-prefix: "&8[&bP&8] &7| "
 #   {suffix}: the vault suffix
 #   {name_color}: the player's configured name color (if the player has no name_color this will default to white)
 #   {chat_color}: the player's configured chat color (...)
+#   {player-statistcs}: a list of useful player statistics (used for hover on chat)
 #   All PlaceholderAPI placeholders, if it's installed
+# 
+# All Color Codes:
+# https://minecraft.tools/en/color-code.php
 
 chat:
+
+# Colors:
+  default-name-color: "7"
+  default-chat-color: "7"
+
+# Chat Formatting
   format: 
-    - text: "&8[&6C&8] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}&r» {chat_color}{message}"
+    - text: "&8[&6C&8] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}&r"
+      hover: "{player-statistics}"
+      suggest_command: "/w {player_name} "
+    - text: "» {chat_color}{message}"
+
+# Join & Leave events
   join-message: 
     - text: "&f[&a+&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
   leave-message: 
     - text: "&f[&c-&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
+  
+# Message of the Day
+  motd:
+    - text: "\n&8[&bP&8] &7| Hey there, "
+    - text: "&a{player}"
+      hover: "&7That's your name, right?"
+    - text: "&7!\n&8[&bP&8] &7| There are currently &a{online}&7 players online."
+      suggest_command: "/list"
+    - text: "\n&8[&bP&8] &7| &f&nClick here to join the discord.\n"
+      url: "https://d.minegla.de/"
+  
 
 # =====================================================
 #                       Statistics
@@ -69,7 +95,7 @@ chat:
 #   All PlaceholderAPI placeholders, if it's installed
 
 player-statistics: |-
-  &f&lUser Info:
+  &f&lUser Info:&r
     &7username: &f{player_name}
     &7group: &f{group}
 
@@ -118,24 +144,6 @@ github:
 discord:
   enabled: false 
   token: "your-token" 
-
-# =====================================================
-#                  Message Of The Day
-# =====================================================
-#
-# Placeholders: 
-#   %player%: the displayname of the player.
-#   %online%: the total amount players connected to the server.
-#   All PlaceholderAPI placeholders, if it's installed.
-
-motd:
-  - text: "\n&8[&bP&8] &7| Hey there, "
-  - text: "&a%player%"
-    hover: "&7That's your name, right?"
-  - text: "&7!\n&8[&bP&8] &7| There are currently &a%online%&7 players online."
-    suggest_command: "/list"
-  - text: "\n&8[&bP&8] &7| &f&nClick here to join the discord.\n"
-    url: "https://d.minegla.de/"
 
 # =====================================================
 #                        Voting
