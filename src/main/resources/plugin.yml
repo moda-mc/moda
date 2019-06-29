@@ -1,7 +1,7 @@
 main: com.mineglade.icore.ICore
 name: iCore
 description: "A plugin to run the core of your game server; Chat Formatting, Vote Listener, Discord Chat Relay, Nicknames"
-version: 0.02-alpha
+version: 0.03-alpha
 authors: [patchtv, Derkades]
 website: https://www.github.com/mineglade/icore
 depend: [Vault, PlaceholderAPI]
@@ -99,6 +99,9 @@ permissions:
     default: op
   icore.command.nickname.format:
     description: "allows the user to set formatting in their nickname"
+    default: op
+  icore.command.nickname.format.all:
+    description: "allows the user to set formatting like magic/obfuscated in their nickname"
     default: op
   icore.command.nickname.others:
     description: "allows the user to set another player's nickname"
@@ -284,3 +287,13 @@ permissions:
   icore.emotes.yes:
     description: "allows the user to use /yes"
     default: true
+    
+  # Permission Wildcards:
+  icore.command.nickname.*:
+    description: "contains all nickname-related permissions"
+    default: false
+    children:
+      icore.command.nickname: true
+      icore.command.nickname.others: true
+      icore.command.nickname.colors: true
+      icore.command.nickname.format.all: true
