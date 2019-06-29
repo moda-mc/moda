@@ -178,6 +178,11 @@ public class ICore extends JavaPlugin implements Listener {
 						this.getConfig().getInt("mysql.port"), this.getConfig().getString("mysql.database"),
 						this.getConfig().getString("mysql.user"), this.getConfig().getString("mysql.password"));
 
+				createTableIfNonexistent("playerUserName", 
+						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerUserName` "
+								+ "(`uuid` VARCHAR(100) NOT NULL," + " `username` VARCHAR(16) NOT NULL,"
+								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
+				
 				createTableIfNonexistent("votes",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`votes` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `votes` INT NOT NULL,"
