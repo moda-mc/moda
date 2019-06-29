@@ -1,7 +1,6 @@
 package com.mineglade.icore.chat;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.mineglade.icore.ICore;
 import com.mineglade.icore.utils.PlayerData;
 
+import net.md_5.bungee.api.ChatColor;
 import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
@@ -18,58 +18,65 @@ public class JoinLeaveEvent implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		event.setJoinMessage("");
-
-		Placeholder user = new Placeholder("%player%", event.getPlayer().getDisplayName());
-		Placeholder online = new Placeholder("%online%", Bukkit.getOnlinePlayers().size() + "");
 		final Player player = event.getPlayer();
 		PlayerData data = new PlayerData(player);
+
+		event.setJoinMessage("");
+		data.setLastUsername();
+		player.setDisplayName(ChatColor.stripColor(data.getNickName()));
+
+		// Player placeholders
+		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
+		Placeholder playerName = new Placeholder("{player_name}", player.getName());
+		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
+		Placeholder playerNameColor = new Placeholder("{name_color}", data.getNameColor() + "");
+		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
+		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
+
+		// Global placeholders
+		Placeholder onlinePlayerCount = new Placeholder("{online}", Bukkit.getOnlinePlayers().size() + "");
 
 		if (ICore.isVanished(player)) {
 			return;
 		}
 
-		FileConfiguration config = ICore.instance.getConfig();
+		// Join message:
+		Bukkit.spigot()
+				.broadcast(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.join-message", player,
+						playerNickName, playerName, playerDisplayName, playerNameColor, vaultPrefix, vaultSuffix,
+						onlinePlayerCount));
 
-		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
-		Placeholder playerName = new Placeholder("{player_name}", player.getName());
-		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
-		Placeholder chatColor = new Placeholder("{name_color}", "&" + data.getNameColor());
-		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
-		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
-
-		Bukkit.spigot().broadcast(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.join-message",
-				player, playerNickName, playerName, playerDisplayName, chatColor, vaultPrefix, vaultSuffix));
-
-		player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "motd", player, user, online));
+		// MOTD (visible to the player that just joined only)
+		player.spigot()
+				.sendMessage(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.motd", player,
+						playerNickName, playerName, playerDisplayName, playerNameColor, vaultPrefix, vaultSuffix,
+						onlinePlayerCount));
 
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		event.setQuitMessage("");
-
 		final Player player = event.getPlayer();
 		PlayerData data = new PlayerData(player);
 
+		event.setQuitMessage("");
+		data.setLastUsername();
+
+		// Player placeholders
 		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
 		Placeholder playerName = new Placeholder("{player_name}", player.getName());
 		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
-		Placeholder chatColor = new Placeholder("{name_color}", "&" + data.getNameColor());
+		Placeholder playerNameColor = new Placeholder("{name_color}", data.getNameColor() + "");
 		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
 		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
 
-		Bukkit.spigot().broadcast(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.leave-message",
-				player, playerNickName, playerName, playerDisplayName, chatColor, vaultPrefix, vaultSuffix));
+		// Global placeholders
+		Placeholder onlinePlayerCount = new Placeholder("{online}", Bukkit.getOnlinePlayers().size() + "");
 
-//		Bukkit.spigot()
-//				.broadcast(new ComponentBuilder("").append(ICore.getPrefix(PrefixType.LEAVE))
-//						.append(TextComponent.fromLegacyText(
-//								ChatColor.translateAlternateColorCodes('&', ICore.chat.getPlayerPrefix(player) + " ")))
-//						.append(player.getDisplayName()).color(ChatColor.RED)
-//						.append(TextComponent.fromLegacyText(
-//								ChatColor.translateAlternateColorCodes('&', " " + ICore.chat.getPlayerSuffix(player))))
-//						.create());
+		Bukkit.spigot()
+				.broadcast(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.leave-message",
+						player, playerNickName, playerName, playerDisplayName, playerNameColor, vaultPrefix,
+						vaultSuffix, onlinePlayerCount));
 
 	}
 }
