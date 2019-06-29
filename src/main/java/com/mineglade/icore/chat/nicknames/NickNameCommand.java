@@ -20,15 +20,13 @@ public class NickNameCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-		Player player = (Player) sender;
-		
-		if (!sender.hasPermission("icore.commands.nickname")) {
+		if (!sender.hasPermission("icore.command.nickname")) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
 					.append(ICore.getPrefix())
 					.append(Colors.toComponent(ICore.messages.getString("errors.no-permission")
 							.replace("{command}", "/" + label)))
 					.create());
+			return true;
 		}
 		if (args.length < 1) {
 			sender.spigot().sendMessage(new ComponentBuilder("")
@@ -45,6 +43,11 @@ public class NickNameCommand implements CommandExecutor {
 		}
 
 		if (args.length == 1) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + ICore.messages.getString("nickname.errors.no-target"));
+				return true;
+			}
+			Player player = (Player) sender;
 			PlayerData data = new PlayerData(player);
 			String nickname = args[0];
 			if (nickname.equalsIgnoreCase("reset")) {
@@ -54,10 +57,6 @@ public class NickNameCommand implements CommandExecutor {
 						.append(Colors.toComponent(ICore.messages.getString("nickname.reset.self")))
 						.create());
 				return true;			
-			}
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + ICore.messages.getString("nickname.errors.no-target"));
-				return true;
 			}
 			
 			if (ChatColor.stripColor(Colors.parseColors(nickname)).length() > 16) {
@@ -91,6 +90,7 @@ public class NickNameCommand implements CommandExecutor {
 										)
 								.create()))
 						.create());
+				return true;
 			}
 			Player target = Bukkit.getPlayer(args[0]);
 			String nickname = args[1];
