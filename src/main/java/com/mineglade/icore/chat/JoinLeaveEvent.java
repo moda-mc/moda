@@ -73,6 +73,7 @@ public class JoinLeaveEvent implements Listener {
 		// Global placeholders
 		Placeholder onlinePlayerCount = new Placeholder("{online}", Bukkit.getOnlinePlayers().size() + "");
 
+		// Quit message
 		Bukkit.spigot()
 				.broadcast(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.leave-message",
 						player, playerNickName, playerName, playerDisplayName, playerNameColor, vaultPrefix,
