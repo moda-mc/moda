@@ -27,21 +27,22 @@ public class ChatEvent implements Listener {
 			event.setMessage(placeholder.parse(event.getMessage()));
 		}
 
+		Placeholder playerStatistics = new Placeholder("{player-statistics}", ICore.instance.getConfig().getString("player-statistics"));
 		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
 		Placeholder playerName = new Placeholder("{player_name}", player.getName());
 		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
 		Placeholder message = new Placeholder("{message}", event.getMessage());
-		Placeholder chatColor = new Placeholder("{chat_color}", "&" + data.getChatColor());
-		Placeholder nameColor = new Placeholder("{name_color}", "&" + data.getNameColor());
+		Placeholder chatColor = new Placeholder("{chat_color}", data.getChatColor() + "");
+		Placeholder nameColor = new Placeholder("{name_color}", data.getNameColor() + "");
 		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
 		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
 
 		for (Player recipient : event.getRecipients()) {
 
 			recipient.spigot()
-					.sendMessage(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.format", player,
-							playerNickName, playerName, playerDisplayName, message, chatColor, nameColor, vaultPrefix,
-							vaultSuffix));
+					.sendMessage(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.format", player, 
+							playerStatistics, playerNickName, playerName, playerDisplayName, message, chatColor, nameColor, 
+							vaultPrefix, vaultSuffix));
 		}
 		event.getRecipients().clear();
 	}
