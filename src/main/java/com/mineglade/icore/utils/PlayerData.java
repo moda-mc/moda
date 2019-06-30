@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,19 +20,21 @@ import net.md_5.bungee.api.ChatColor;
 import xyz.derkades.derkutils.bukkit.Colors;
 
 /**
- * handles all player data in either mysql or a yaml file. 
+ * handles all player data in either mysql or a yaml file.
+ * 
  * @author MineGlade
  */
 public class PlayerData {
 
 	private Player player;
-	
+
 	private boolean mysql = ICore.instance.getConfig().getBoolean("mysql.enabled");
 	private FileConfiguration dataFile;
 	private File dataFileFile;
-	
+
 	/**
 	 * establishes player, writes and establishes datafilefile.
+	 * 
 	 * @param player
 	 */
 	public PlayerData(Player player) {
@@ -41,7 +46,13 @@ public class PlayerData {
 			this.dataFile = YamlConfiguration.loadConfiguration(dataFileFile);
 		}
 	}
-	
+
+	public PlayerData(File file) {
+		this.player = null;
+		dataFileFile = file;
+		this.dataFile = YamlConfiguration.loadConfiguration(dataFileFile);
+	}
+
 	/**
 	 * saves playerdata file.
 	 */
@@ -52,9 +63,10 @@ public class PlayerData {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * gets chat-color character from mysql or playerdata file.
+	 * 
 	 * @return ChatColor object
 	 */
 	public ChatColor getChatColor() {
@@ -68,7 +80,8 @@ public class PlayerData {
 				if (result.next()) {
 					return ChatColor.getByChar(result.getString("color").charAt(0));
 				} else {
-					return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-chat-color").charAt(0));
+					return ChatColor
+							.getByChar(ICore.instance.getConfig().getString("chat.default-chat-color").charAt(0));
 				}
 
 			} catch (SQLException e) {
@@ -76,14 +89,17 @@ public class PlayerData {
 				return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-chat-color").charAt(0));
 			}
 		} else {
-			return ChatColor.getByChar(dataFile.getString("color.chat-color", 
-					ICore.instance.getConfig().getString("chat.default-chat-color")).charAt(0));
+			return ChatColor.getByChar(dataFile
+					.getString("color.chat-color", ICore.instance.getConfig().getString("chat.default-chat-color"))
+					.charAt(0));
 		}
 	}
 
 	/**
 	 * sets a chat-color character in the mysql or playerdata file.
-	 * @param color <br>&nbsp;&nbsp;example: <code>c</code>
+	 * 
+	 * @param color <br>
+	 *              &nbsp;&nbsp;example: <code>c</code>
 	 */
 	public void setChatColor(char color) {
 		if (mysql) {
@@ -102,7 +118,7 @@ public class PlayerData {
 			this.save();
 		}
 	}
-	
+
 	/**
 	 * removes chat-color entry from mysql or playerdata file.
 	 */
@@ -110,8 +126,7 @@ public class PlayerData {
 		if (mysql) {
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 				try {
-					PreparedStatement statement = ICore.db.prepareStatement(
-							"DELETE FROM playerChatColor WHERE uuid=?",
+					PreparedStatement statement = ICore.db.prepareStatement("DELETE FROM playerChatColor WHERE uuid=?",
 							player.getUniqueId());
 					statement.execute();
 				} catch (SQLException e) {
@@ -126,6 +141,7 @@ public class PlayerData {
 
 	/**
 	 * gets chat-format character from mysql or playerdata file.
+	 * 
 	 * @return
 	 */
 	public ChatColor getChatFormat() {
@@ -138,7 +154,8 @@ public class PlayerData {
 				if (result.next()) {
 					return ChatColor.getByChar(result.getString("color").charAt(0));
 				} else {
-					return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-chat-format").charAt(0));
+					return ChatColor
+							.getByChar(ICore.instance.getConfig().getString("chat.default-chat-format").charAt(0));
 				}
 
 			} catch (SQLException e) {
@@ -146,14 +163,17 @@ public class PlayerData {
 				return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-chat-format").charAt(0));
 			}
 		} else {
-			return ChatColor.getByChar(dataFile.getString("color.chat-format", 
-					ICore.instance.getConfig().getString("chat.default-chat-format")).charAt(0));
+			return ChatColor.getByChar(dataFile
+					.getString("color.chat-format", ICore.instance.getConfig().getString("chat.default-chat-format"))
+					.charAt(0));
 		}
 	}
-	
+
 	/**
 	 * sets a chat-format character in the mysql or playerdata file.
-	 * @param color <br>&nbsp;&nbsp;example: <code>c</code>
+	 * 
+	 * @param color <br>
+	 *              &nbsp;&nbsp;example: <code>c</code>
 	 */
 	public void setChatFormat(String color) {
 		if (mysql) {
@@ -180,8 +200,7 @@ public class PlayerData {
 		if (mysql) {
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 				try {
-					PreparedStatement statement = ICore.db.prepareStatement(
-							"DELETE FROM playerChatFormat WHERE uuid=?",
+					PreparedStatement statement = ICore.db.prepareStatement("DELETE FROM playerChatFormat WHERE uuid=?",
 							player.getUniqueId());
 					statement.execute();
 				} catch (SQLException e) {
@@ -196,6 +215,7 @@ public class PlayerData {
 
 	/**
 	 * gets name-color from mysql or playerdata file.
+	 * 
 	 * @return ChatColor object
 	 */
 	public ChatColor getNameColor() {
@@ -208,7 +228,8 @@ public class PlayerData {
 				if (result.next()) {
 					return ChatColor.getByChar(result.getString("color").charAt(0));
 				} else {
-					return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-name-color").charAt(0));
+					return ChatColor
+							.getByChar(ICore.instance.getConfig().getString("chat.default-name-color").charAt(0));
 				}
 
 			} catch (SQLException e) {
@@ -216,14 +237,17 @@ public class PlayerData {
 				return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-name-color").charAt(0));
 			}
 		} else {
-			return ChatColor.getByChar(dataFile.getString("color.name-color", 
-					ICore.instance.getConfig().getString("chat.default-name-color")).charAt(0));
+			return ChatColor.getByChar(dataFile
+					.getString("color.name-color", ICore.instance.getConfig().getString("chat.default-name-color"))
+					.charAt(0));
 		}
 	}
-	
+
 	/**
 	 * sets a name-color character in the mysql or playerdata file.
-	 * @param color <br>&nbsp;&nbsp;example: <code>c</code>
+	 * 
+	 * @param color <br>
+	 *              &nbsp;&nbsp;example: <code>c</code>
 	 */
 	public void setNameColor(char color) {
 		if (mysql) {
@@ -242,7 +266,7 @@ public class PlayerData {
 			this.save();
 		}
 	}
-	
+
 	/**
 	 * removes the name-color entry from mysql or playerdata file.
 	 */
@@ -250,8 +274,7 @@ public class PlayerData {
 		if (mysql) {
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 				try {
-					PreparedStatement statement = ICore.db.prepareStatement(
-							"DELETE FROM playerNameColor WHERE uuid=?",
+					PreparedStatement statement = ICore.db.prepareStatement("DELETE FROM playerNameColor WHERE uuid=?",
 							player.getUniqueId());
 					statement.execute();
 				} catch (SQLException e) {
@@ -263,10 +286,11 @@ public class PlayerData {
 			this.save();
 		}
 	}
-	
+
 	/**
 	 * gets chat-format from mysql or playerdata file.
-	 * @return ChatColor object 
+	 * 
+	 * @return ChatColor object
 	 */
 	public ChatColor getNameFormat() {
 		if (ICore.instance.getConfig().getBoolean("mysql.enabled")) {
@@ -278,7 +302,8 @@ public class PlayerData {
 				if (result.next()) {
 					return ChatColor.getByChar(result.getString("color").charAt(0));
 				} else {
-					return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-name-format").charAt(0));
+					return ChatColor
+							.getByChar(ICore.instance.getConfig().getString("chat.default-name-format").charAt(0));
 				}
 
 			} catch (SQLException e) {
@@ -286,15 +311,18 @@ public class PlayerData {
 				return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-name-format").charAt(0));
 			}
 		} else {
-			return ChatColor.getByChar(dataFile.getString("color.name-format", 
-					ICore.instance.getConfig().getString("chat.default-name-format")).charAt(0));
+			return ChatColor.getByChar(dataFile
+					.getString("color.name-format", ICore.instance.getConfig().getString("chat.default-name-format"))
+					.charAt(0));
 		}
 
 	}
-	
+
 	/**
 	 * sets a name-format character in the mysql or playerdata file.
-	 * @param color <br>&nbsp;&nbsp;example: <code>c</code>
+	 * 
+	 * @param color <br>
+	 *              &nbsp;&nbsp;example: <code>c</code>
 	 */
 	public void setNameFormat(String color) {
 		if (mysql) {
@@ -313,7 +341,7 @@ public class PlayerData {
 			this.save();
 		}
 	}
-	
+
 	/**
 	 * removes the name-format entry from mysql or playerdata file.
 	 */
@@ -321,8 +349,7 @@ public class PlayerData {
 		if (mysql) {
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 				try {
-					PreparedStatement statement = ICore.db.prepareStatement(
-							"DELETE FROM playerNameFormat WHERE uuid=?",
+					PreparedStatement statement = ICore.db.prepareStatement("DELETE FROM playerNameFormat WHERE uuid=?",
 							player.getUniqueId());
 					statement.execute();
 				} catch (SQLException e) {
@@ -336,13 +363,40 @@ public class PlayerData {
 	}
 
 	/**
-	 * sets a nickname in the mysql or playerdata file. (maximum of 16 characters, ignoring color codes).
-	 * @param nickname <br>&nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
+	 * sets a nickname in the mysql or playerdata file. (maximum of 16 characters,
+	 * ignoring color codes).
+	 * 
+	 * @param nickname <br>
+	 *                 &nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
+	 * @return
 	 */
-	public void setNickName(String nickname) {
+	public void setNickName(String nickname, Consumer<Boolean> callback) {
 
 		if (mysql) {
+
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
+				ResultSet result;
+				try {
+					PreparedStatement checkStatement = ICore.db.prepareStatement(
+							"SELECT FROM 'nickname' FROM 'playerNickName' WHERE nickname=?", nickname);
+					result = checkStatement.executeQuery();
+					if (!result.next()) {
+						PreparedStatement setStatement = ICore.db.prepareStatement(
+								"INSERT INTO playerNickName (uuid, nickname) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname=?",
+								player.getUniqueId(), nickname, nickname);
+						setStatement.execute();
+						Bukkit.getScheduler().runTask(ICore.instance, () -> {
+							callback.accept(true);
+						});
+					} else {
+						Bukkit.getScheduler().runTask(ICore.instance, () -> {
+							callback.accept(false);
+						});
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
 				try {
 					PreparedStatement statement = ICore.db.prepareStatement(
 							"INSERT INTO playerNickName (uuid, nickname) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname=?",
@@ -353,15 +407,40 @@ public class PlayerData {
 				}
 			});
 		} else {
-			dataFile.set("nickname", nickname);
+			boolean nicknameExists = false;
+			if (!ChatColor.stripColor(nickname).equals(ChatColor.stripColor(getLastUsername()))
+					&& !ChatColor.stripColor(Colors.parseColors(nickname))
+							.equals(ChatColor.stripColor(Colors.parseColors(getNickName())))) {
+				for (PlayerData file : getAllDataFiles()) {
+					String existingNickName = ChatColor.stripColor(Colors.parseColors(file.getNickName()));
+					String existingName = file.getLastUsername();
+					if (existingNickName.equals(ChatColor.stripColor(Colors.parseColors(nickname)))
+							|| existingName.equals(ChatColor.stripColor(Colors.parseColors(nickname)))) {
+						nicknameExists = true;
+						break;
+					}
+				}
+			}
+			if (!nicknameExists || player.hasPermission("icore.command.nickname.existing")) {
+				dataFile.set("nickname", nickname);
+				player.setDisplayName(ChatColor.stripColor(nickname));
+				save();
+				callback.accept(true);
+			} else {
+				System.out.println(Colors.parseColors(
+						getNickName() + "&c tried setting their nickname to " + nickname + "&c but it was already taken."));
+				callback.accept(false);
+			}
 		}
-		player.setDisplayName(ChatColor.stripColor(nickname));
 
 	}
 
 	/**
-	 * gets a nickname from the mysql or playerdata file. (maximum of 16 characters, ignoring color codes).
-	 * @return iCore nickname <br>&nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
+	 * gets a nickname from the mysql or playerdata file. (maximum of 16 characters,
+	 * ignoring color codes).
+	 * 
+	 * @return iCore nickname <br>
+	 *         &nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
 	 */
 	public String getNickName() {
 
@@ -382,7 +461,8 @@ public class PlayerData {
 				return player.getDisplayName();
 			}
 		} else {
-			return dataFile.getString("nickname", player.getDisplayName());
+			return dataFile.getString("nickname", getLastUsername());
+
 		}
 	}
 
@@ -403,14 +483,15 @@ public class PlayerData {
 			});
 		} else {
 			dataFile.set("nickname", null);
-			this.save();
+			save();
 		}
 		player.setDisplayName(player.getName());
-		;
 	}
 
 	/**
-	 * gets the last username a player connected to the server with from the playerdatabase.
+	 * gets the last username a player connected to the server with from the
+	 * playerdatabase.
+	 * 
 	 * @return Minecraft username
 	 */
 	public String getLastUsername() {
@@ -431,12 +512,15 @@ public class PlayerData {
 				return player.getName();
 			}
 		} else {
-			return dataFile.getString("last-login.username", player.getName());
+			return dataFile.getString("last-login.username");
+
 		}
 	}
-	
+
 	/**
-	 * sets the username a player is currently connected to the server with to the playerdatabase.
+	 * sets the username a player is currently connected to the server with to the
+	 * playerdatabase.
+	 * 
 	 * @param username (player.getName())
 	 */
 	public void setLastUsername() {
@@ -453,21 +537,36 @@ public class PlayerData {
 			});
 		} else {
 			dataFile.set("last-login.username", player.getName());
+			save();
 		}
 	}
-	
+
 	/**
-	 * gets the IP-address the player last connected to the server with from the playerdatabase.
+	 * gets the IP-address the player last connected to the server with from the
+	 * playerdatabase.
+	 * 
 	 * @return IP-address
 	 */
 	public String getLastConnectionAddress() {
 		return "temp";
 	}
-	
+
 	/**
-	 * Sets the IP-address the player is currently connected to the server with in the playerdatabase.
+	 * Sets the IP-address the player is currently connected to the server with in
+	 * the playerdatabase.
 	 */
 	public void setLastConnectionAddress() {
-		
+
+	}
+
+	public static List<PlayerData> getAllDataFiles() {
+		List<PlayerData> dataFileList = new ArrayList<>();
+		File dataFileFileFolder = new File(ICore.instance.getDataFolder(), "playerdata");
+		dataFileFileFolder.mkdirs();
+		for (File file : dataFileFileFolder.listFiles()) {
+			PlayerData data = new PlayerData(file);
+			dataFileList.add(data);
+		}
+		return dataFileList;
 	}
 }

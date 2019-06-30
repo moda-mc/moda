@@ -68,13 +68,23 @@ public class NickNameCommand implements CommandExecutor {
 				return true;
 			}
 			
-			data.setNickName(nickname);
+			data.setNickName(nickname, (bool) -> {
+				if (bool) {
+					sender.spigot().sendMessage(new ComponentBuilder("")
+							.append(ICore.getPrefix())
+							.append(Colors.toComponent(ICore.messages.getString("nickname.set.self")
+									.replace("{nickname}", nickname)))
+							.create());
+				} else {
+					sender.spigot().sendMessage(new ComponentBuilder("")
+							.append(ICore.getPrefix())
+							.append(Colors.toComponent(ICore.messages.getString("nickname.errors.exists")
+									.replace("{nickname}", nickname)))
+							.create());
+				}
+			});
 			
-			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix())
-					.append(Colors.toComponent(ICore.messages.getString("nickname.set.self")
-							.replace("{nickname}", nickname)))
-					.create());
+			
 		}
 
 		if (args.length > 1) {
@@ -130,13 +140,23 @@ public class NickNameCommand implements CommandExecutor {
 
 			}
 
-			data.setNickName(nickname);
-			sender.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix())
-					.append(Colors.toComponent(ICore.messages.getString("nickname.set.others")
-							.replace("{nickname}", nickname)
-							.replace("{target}", target.getName())))
-					.create());
+			data.setNickName(nickname, (bool) -> {
+				if (bool) {
+					sender.spigot().sendMessage(new ComponentBuilder("")
+							.append(ICore.getPrefix())
+							.append(Colors.toComponent(ICore.messages.getString("nickname.set.others")
+									.replace("{nickname}", nickname)
+									.replace("{target}", target.getName())))
+							.create());
+				} else {
+					sender.spigot().sendMessage(new ComponentBuilder("")
+							.append(ICore.getPrefix())
+							.append(Colors.toComponent(ICore.messages.getString("nickname.errors.exists")
+									.replace("{nickname}", nickname)))
+							.create());
+				}
+			});
+			
 		}
 		return true;
 	}

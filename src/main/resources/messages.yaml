@@ -25,6 +25,7 @@ nickname:
     target-invalid: "&cThe target you provided isn't online or doesn't exist."
     too-long: "&cNicknames can't be longer than 16 characters."
     no-spaces: "&eA nickname can't contain spaces."
+    exists: "&cThat name &7({nickname}&7)&c is already in use."
   reset:
     self: "&aYou've successfuly reset your nickname"
     others: "&aYou've successfully reset {target}'s nickname"
