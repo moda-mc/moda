@@ -36,8 +36,6 @@ public class VoteCommand implements CommandExecutor {
             player.sendMessage("the /vote top command is not functional yet, please be patient.");
         }
         else {
-
-            
             Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
             	final int voteCount;
             
