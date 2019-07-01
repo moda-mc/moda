@@ -13,6 +13,10 @@ commands:
     description: "core command for iCore"
     usage: "/icore help"
     aliases: [ic]
+  iteleport:
+    description: "teleport command that works with nicknames"
+    usage: "/iteleport [subject] [target]"
+    aliases: [itp, tpi]
   ping:
     description: "returns the player's ping to the server."
     usage: "/ping"
