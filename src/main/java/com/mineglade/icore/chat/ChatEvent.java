@@ -36,9 +36,8 @@ public class ChatEvent implements Listener {
 		Placeholder nameColor = new Placeholder("{name_color}", data.getNameColor() + "");
 		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
 		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
-
+		
 		for (Player recipient : event.getRecipients()) {
-
 			recipient.spigot()
 					.sendMessage(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.format", player, 
 							playerStatistics, playerNickName, playerName, playerDisplayName, message, chatColor, nameColor, 
