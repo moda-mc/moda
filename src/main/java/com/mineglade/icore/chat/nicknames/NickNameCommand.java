@@ -1,6 +1,7 @@
 package com.mineglade.icore.chat.nicknames;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,7 @@ import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import xyz.derkades.derkutils.bukkit.Colors;
+import xyz.derkades.derkutils.bukkit.UUIDFetcher;
 
 public class NickNameCommand implements CommandExecutor {
 
@@ -102,16 +104,20 @@ public class NickNameCommand implements CommandExecutor {
 						.create());
 				return true;
 			}
-			Player target = Bukkit.getPlayer(args[0]);
-			String nickname = args[1];
-			if (target == null) {
-				sender.spigot().sendMessage(new ComponentBuilder("")
-						.append(ICore.getPrefix())
-						.append(Colors.toComponent(ICore.messages.getString("nickname.errors.target-invalid")))
-						.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
-						.create());
-				return true;
+			
+			OfflinePlayer target;
+			try {
+				target = Bukkit.getOfflinePlayer(UUIDFetcher.getUUID(args[0]));
+			} catch (IllegalArgumentException e) {
+					sender.spigot().sendMessage(new ComponentBuilder("")
+							.append(ICore.getPrefix())
+							.append(Colors.toComponent(ICore.messages.getString("nickname.errors.target-invalid")))
+							.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
+							.create());
+					return true;
 			}
+			
+			String nickname = args[1];
 			
 			PlayerData data = new PlayerData(target);
 			if (nickname.equalsIgnoreCase("reset")) {

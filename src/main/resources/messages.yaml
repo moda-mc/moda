@@ -22,7 +22,7 @@ nickname:
   errors:
     improper-usage: "&cPlease provide a nickname or a target."
     no-target: "&cYou must specify a target."
-    target-invalid: "&cThe target you provided isn't online or doesn't exist."
+    target-invalid: "&cThe target you provided doesn't exist."
     too-long: "&cNicknames can't be longer than 16 characters."
     no-spaces: "&eA nickname can't contain spaces."
     exists: "&cThat name &7({nickname}&7)&c is already in use."
@@ -35,7 +35,7 @@ nickname:
 teleport:
   errors:
     no-target: "&cPlease provide a player you wish to teleport to."
-    target-invalid: "&c{target} is either doesn't exist or is not online."
+    target-invalid: "&c{target} either doesn't exist or is not online."
   success: 
     self: "&aYou've successfully teleported to {target}"
     others: "&aYou've successfuly teleported {subject} to {target}"

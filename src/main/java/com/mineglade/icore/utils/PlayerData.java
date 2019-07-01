@@ -375,7 +375,6 @@ public class PlayerData {
 	public void setNickName(CommandSender sender, String nickname, Consumer<Boolean> callback) {
 
 		if (mysql) {
-
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 				ResultSet nickNameResult;
 				ResultSet userNameResult;
@@ -386,7 +385,7 @@ public class PlayerData {
 							"SELECT `username` FROM `playerUserName` WHERE LOWER(username)=LOWER(?)", ChatColor.stripColor(Colors.parseColors(nickname)));
 					nickNameResult = checkNickNameStatement.executeQuery();
 					userNameResult = checkUserNameStatement.executeQuery();
-					if (!nickNameResult.next() && !userNameResult.next()) {
+					if ((!nickNameResult.next() && !userNameResult.next()) || sender.hasPermission("icore.command.nickname.existing")) {
 						PreparedStatement setStatement = ICore.db.prepareStatement(
 								"INSERT INTO playerNickName (uuid, nickname) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname=?",
 								player.getUniqueId(), nickname, nickname);
@@ -409,6 +408,9 @@ public class PlayerData {
 					&& !ChatColor.stripColor(Colors.parseColors(nickname))
 							.equals(ChatColor.stripColor(Colors.parseColors(getNickName())))) {
 				for (PlayerData file : getAllDataFiles()) {
+					if ((player.getUniqueId() + ".yaml").equals(file.getFileName())) {
+						break;
+					}
 					String existingNickName = ChatColor.stripColor(Colors.parseColors(file.getNickName()));
 					String existingName = file.getLastUsername();
 					if (existingNickName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))
@@ -418,7 +420,7 @@ public class PlayerData {
 					}
 				}
 			}
-			if (!nicknameExists || sender.hasPermission("icore.command.nickname.existing")) {
+			if (sender.hasPermission("icore.command.nickname.existing") || !nicknameExists) {
 				dataFile.set("nickname", nickname);
 				if (player.isOnline()) {
 					Player onlinePlayer = (Player) player;
@@ -572,6 +574,10 @@ public class PlayerData {
 
 	}
 
+	public String getFileName() {
+		return dataFileFile.getName();		
+	}
+	
 	public static List<PlayerData> getAllDataFiles() {
 		List<PlayerData> dataFileList = new ArrayList<>();
 		File dataFileFileFolder = new File(ICore.instance.getDataFolder(), "playerdata");
