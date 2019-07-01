@@ -68,7 +68,7 @@ public class NickNameCommand implements CommandExecutor {
 				return true;
 			}
 			
-			data.setNickName(nickname, (bool) -> {
+			data.setNickName(player, nickname, (bool) -> {
 				if (bool) {
 					sender.spigot().sendMessage(new ComponentBuilder("")
 							.append(ICore.getPrefix())
@@ -140,7 +140,7 @@ public class NickNameCommand implements CommandExecutor {
 
 			}
 
-			data.setNickName(nickname, (bool) -> {
+			data.setNickName(sender, nickname, (bool) -> {
 				if (bool) {
 					sender.spigot().sendMessage(new ComponentBuilder("")
 							.append(ICore.getPrefix())

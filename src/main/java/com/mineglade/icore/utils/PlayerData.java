@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,7 +28,7 @@ import xyz.derkades.derkutils.bukkit.Colors;
  */
 public class PlayerData {
 
-	private Player player;
+	private OfflinePlayer player;
 
 	private boolean mysql = ICore.instance.getConfig().getBoolean("mysql.enabled");
 	private FileConfiguration dataFile;
@@ -37,7 +39,7 @@ public class PlayerData {
 	 * 
 	 * @param player
 	 */
-	public PlayerData(Player player) {
+	public PlayerData(OfflinePlayer player) {
 		this.player = player;
 		if (!mysql) {
 			File dataFileFileFolder = new File(ICore.instance.getDataFolder(), "playerdata");
@@ -370,17 +372,21 @@ public class PlayerData {
 	 *                 &nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
 	 * @return
 	 */
-	public void setNickName(String nickname, Consumer<Boolean> callback) {
+	public void setNickName(CommandSender sender, String nickname, Consumer<Boolean> callback) {
 
 		if (mysql) {
 
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
-				ResultSet result;
+				ResultSet nickNameResult;
+				ResultSet userNameResult;
 				try {
-					PreparedStatement checkStatement = ICore.db.prepareStatement(
-							"SELECT FROM 'nickname' FROM 'playerNickName' WHERE nickname=?", nickname);
-					result = checkStatement.executeQuery();
-					if (!result.next()) {
+					PreparedStatement checkNickNameStatement = ICore.db.prepareStatement(
+							"SELECT `nickname` FROM `playerNickName` WHERE LOWER(nickname)=LOWER(?)", ChatColor.stripColor(Colors.parseColors(nickname)));
+					PreparedStatement checkUserNameStatement = ICore.db.prepareStatement(
+							"SELECT `username` FROM `playerUserName` WHERE LOWER(username)=LOWER(?)", ChatColor.stripColor(Colors.parseColors(nickname)));
+					nickNameResult = checkNickNameStatement.executeQuery();
+					userNameResult = checkUserNameStatement.executeQuery();
+					if (!nickNameResult.next() && !userNameResult.next()) {
 						PreparedStatement setStatement = ICore.db.prepareStatement(
 								"INSERT INTO playerNickName (uuid, nickname) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname=?",
 								player.getUniqueId(), nickname, nickname);
@@ -396,15 +402,6 @@ public class PlayerData {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-
-				try {
-					PreparedStatement statement = ICore.db.prepareStatement(
-							"INSERT INTO playerNickName (uuid, nickname) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname=?",
-							player.getUniqueId(), nickname, nickname);
-					statement.execute();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
 			});
 		} else {
 			boolean nicknameExists = false;
@@ -414,16 +411,19 @@ public class PlayerData {
 				for (PlayerData file : getAllDataFiles()) {
 					String existingNickName = ChatColor.stripColor(Colors.parseColors(file.getNickName()));
 					String existingName = file.getLastUsername();
-					if (existingNickName.equals(ChatColor.stripColor(Colors.parseColors(nickname)))
-							|| existingName.equals(ChatColor.stripColor(Colors.parseColors(nickname)))) {
+					if (existingNickName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))
+							|| existingName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))) {
 						nicknameExists = true;
 						break;
 					}
 				}
 			}
-			if (!nicknameExists || player.hasPermission("icore.command.nickname.existing")) {
+			if (!nicknameExists || sender.hasPermission("icore.command.nickname.existing")) {
 				dataFile.set("nickname", nickname);
-				player.setDisplayName(ChatColor.stripColor(nickname));
+				if (player.isOnline()) {
+					Player onlinePlayer = (Player) player;
+					onlinePlayer.setDisplayName(ChatColor.stripColor(nickname));	
+				}
 				save();
 				callback.accept(true);
 			} else {
@@ -453,12 +453,22 @@ public class PlayerData {
 				if (result.next()) {
 					return Colors.parseColors(result.getString("nickname"));
 				} else {
-					return player.getDisplayName();
+					if (player.isOnline()) {
+						Player onlinePlayer = (Player) player;
+						return onlinePlayer.getDisplayName();
+					} else {
+						return "";
+					}
 				}
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return player.getDisplayName();
+				if (player.isOnline()) {
+					Player onlinePlayer = (Player) player;
+					return onlinePlayer.getDisplayName();
+				} else {
+					return "";
+				}
 			}
 		} else {
 			return dataFile.getString("nickname", getLastUsername());
@@ -485,7 +495,10 @@ public class PlayerData {
 			dataFile.set("nickname", null);
 			save();
 		}
-		player.setDisplayName(player.getName());
+		if (player.isOnline()) {
+			Player onlinePlayer = (Player) player;
+			onlinePlayer.setDisplayName(onlinePlayer.getName());
+		}
 	}
 
 	/**
