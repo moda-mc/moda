@@ -72,7 +72,7 @@ chat:
 # Message of the Day
   motd:
     - text: "\n&8[&bP&8] &7| Hey there, "
-    - text: "&a{player}"
+    - text: "&a{player_nickname}"
       hover: "&7That's your name, right?"
     - text: "&7!\n&8[&bP&8] &7| There are currently &a{online}&7 players online."
       suggest_command: "/list"
