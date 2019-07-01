@@ -64,6 +64,10 @@ public class CoreCommand implements CommandExecutor {
 			}
 		}
 
+		else if (args[0].equalsIgnoreCase("tp")) {
+			Bukkit.dispatchCommand(sender, "/iteleport " + String.join(" ", ListUtils.removeFirstStringFromArray(args)));
+		}
+		
 		else if (args[0].equalsIgnoreCase("support") || args[0].equalsIgnoreCase("sp")
 				|| args[0].equalsIgnoreCase("helpivefallenandicantgetup")) {
 			if (args.length < 2) {

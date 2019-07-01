@@ -24,6 +24,7 @@ import com.mineglade.icore.chat.colors.ColorCommand;
 import com.mineglade.icore.chat.nicknames.NickNameCommand;
 import com.mineglade.icore.hooks.discord.DiscordListener;
 import com.mineglade.icore.hooks.github.SuggestCommand;
+import com.mineglade.icore.teleport.TeleportCommand;
 import com.mineglade.icore.votes.VoteCommand;
 import com.mineglade.icore.votes.VoteEvent;
 import com.mineglade.icore.votes.VoteReminder;
@@ -226,8 +227,9 @@ public class ICore extends JavaPlugin implements Listener {
 	private void registerCommands() {
 		// Core Command
 		this.getCommand("icore").setExecutor(new CoreCommand());
-
+		
 		// Main Commands
+		this.getCommand("iteleport").setExecutor(new TeleportCommand());
 		this.getCommand("ping").setExecutor(new PingCommand());
 
 		// Misc Commands
