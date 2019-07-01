@@ -84,7 +84,8 @@ public class ColorPickerMenu extends IconMenu{
 				return false;
 			} else {
 				IColor color = IColor.fromName(event.getName());
-				if (!player.hasPermission(color.getPermission(IColorType.NAME))) {
+				System.out.println(color.getPermission(IColorType.CHAT));
+				if (!player.hasPermission(color.getPermission(IColorType.CHAT))) {
 					player.spigot().sendMessage(new ComponentBuilder("")
 							.append(ICore.getPrefix())
 							.append(Colors.toComponent(ICore.messages.getString("color.errors.no-permission")
