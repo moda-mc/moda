@@ -2,6 +2,7 @@ package com.mineglade.icore.chat;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -15,7 +16,7 @@ import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
 public class ChatEvent implements Listener {
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onChat(AsyncPlayerChatEvent event) {
 		final Player player = event.getPlayer();
 		PlayerData data = new PlayerData(player);
@@ -36,7 +37,7 @@ public class ChatEvent implements Listener {
 		Placeholder nameColor = new Placeholder("{name_color}", data.getNameColor() + "");
 		Placeholder vaultPrefix = new Placeholder("{prefix}", ICore.chat.getPlayerPrefix(player));
 		Placeholder vaultSuffix = new Placeholder("{suffix}", ICore.chat.getPlayerSuffix(player));
-		
+
 		for (Player recipient : event.getRecipients()) {
 			recipient.spigot()
 					.sendMessage(Chat.toComponentWithPapiPlaceholders(ICore.instance.getConfig(), "chat.format", player, 
