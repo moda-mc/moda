@@ -375,12 +375,15 @@ public class PlayerData {
 	public void setNickName(CommandSender sender, String nickname, Consumer<Boolean> callback) {
 
 		Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
-			
+
 			boolean nickNameExists = false;
 			// Checking if the nickname already exists
 
-			// Don't even start checking if the sender has the permission to set an existing nickname.
-			if (!sender.hasPermission("icore.command.nickname.existing")) {
+			// Don't even start checking if the sender has the permission to set an existing
+			// nickname.
+			if (!sender.hasPermission("icore.command.nickname.existing")
+					&& !Colors.stripColors(nickname).equalsIgnoreCase(Colors.stripColors(getNickName()))
+					&& !Colors.stripColors(nickname).equalsIgnoreCase(getLastUsername())) {
 				// MySQL check
 				if (mysql) {
 					try {
@@ -388,8 +391,10 @@ public class PlayerData {
 								"SELECT `nickname`,`username` FROM `playerNickName`,`playerUserName`");
 						ResultSet nameResults = nameStatement.executeQuery();
 						while (nameResults.next()) {
-							if (Colors.stripColors(nameResults.getString("nickname")).equalsIgnoreCase(Colors.stripColors(nickname))
-									|| nameResults.getString("username").equalsIgnoreCase(Colors.stripColors(nickname))) {
+							if (Colors.stripColors(nameResults.getString("nickname"))
+									.equalsIgnoreCase(Colors.stripColors(nickname))
+									|| nameResults.getString("username")
+											.equalsIgnoreCase(Colors.stripColors(nickname))) {
 								nickNameExists = true;
 								break;
 							}
@@ -398,30 +403,29 @@ public class PlayerData {
 						e.printStackTrace();
 						return;
 					}
-				} 
-				
+				}
+
 				// flatfile check
-				else { 
-					if (!Colors.stripColors(nickname).equalsIgnoreCase(Colors.stripColors(getNickName()))
-							&& !Colors.stripColors(nickname).equalsIgnoreCase(getLastUsername())) {
-						for (PlayerData file : getAllDataFiles()) {
-							if ((player.getUniqueId() + ".yaml").equals(file.getFileName())) {
-								break;
-							}
-							String existingNickName = ChatColor.stripColor(Colors.parseColors(file.getNickName()));
-							String existingName = file.getLastUsername();
-							if (existingNickName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))
-									|| existingName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))) {
-								nickNameExists = true;
-								break;
-							}
+				else {
+
+					for (PlayerData file : getAllDataFiles()) {
+						if ((player.getUniqueId() + ".yaml").equals(file.getFileName())) {
+							break;
+						}
+						String existingNickName = ChatColor.stripColor(Colors.parseColors(file.getNickName()));
+						String existingName = file.getLastUsername();
+						if (existingNickName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))
+								|| existingName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))) {
+							nickNameExists = true;
+							break;
 						}
 					}
+
 				}
 			}
-			
+
 			// Setting the nickname
-			
+
 			// Only if the nickname doesn't exist.
 			if (!nickNameExists) {
 				if (mysql) {
@@ -431,7 +435,7 @@ public class PlayerData {
 								player.getUniqueId(), nickname, nickname);
 						setStatement.execute();
 					} catch (SQLException e) {
-						
+
 					}
 				} else {
 					dataFile.set("nickname", nickname);
@@ -442,8 +446,8 @@ public class PlayerData {
 					onlinePlayer.setDisplayName(ChatColor.stripColor(nickname));
 				}
 				callback.accept(!nickNameExists);
-			} 
-			
+			}
+
 			// If the nickname does exist:
 			else {
 				callback.accept(!nickNameExists);
