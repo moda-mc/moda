@@ -15,7 +15,7 @@ import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
 public class ChatEvent implements Listener {
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onChat(AsyncPlayerChatEvent event) {
 		final Player player = event.getPlayer();
 		PlayerData data = new PlayerData(player);
