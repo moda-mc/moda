@@ -60,7 +60,6 @@ public class ICore extends JavaPlugin implements Listener {
 			try {
 				FileUtils.copyOutOfJar(this.getClass(), "/messages.yaml", messagesFile);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
