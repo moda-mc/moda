@@ -368,22 +368,31 @@ public class PlayerData {
 	 * sets a nickname in the mysql or playerdata file. (maximum of 16 characters,
 	 * ignoring color codes).
 	 * 
-	 * @param nickname <br>
+	 * @param nickName <br>
 	 *                 &nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
 	 * @return
 	 */
-	public void setNickName(CommandSender sender, String nickname, Consumer<Boolean> callback) {
+	public void setNickName(CommandSender sender, String nickName, Consumer<Boolean> callback) {
 
 		Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 
+			String lastUserName;
+			String storedNickName;
+			try {
+				lastUserName = getLastUserName();
+				storedNickName = getNickName();
+			} catch (PlayerNotLoggedException e) {
+				lastUserName = "";
+				storedNickName = "";
+			}
 			boolean nickNameExists = false;
 			// Checking if the nickname already exists
 
 			// Don't even start checking if the sender has the permission to set an existing
 			// nickname.
 			if (!sender.hasPermission("icore.command.nickname.existing")
-					&& !Colors.stripColors(nickname).equalsIgnoreCase(Colors.stripColors(getNickName()))
-					&& !Colors.stripColors(nickname).equalsIgnoreCase(getLastUsername())) {
+					&& !Colors.stripColors(nickName).equalsIgnoreCase(Colors.stripColors(storedNickName))
+					&& !Colors.stripColors(nickName).equalsIgnoreCase(lastUserName)) {
 				// MySQL check
 				if (mysql) {
 					try {
@@ -392,9 +401,9 @@ public class PlayerData {
 						ResultSet nameResults = nameStatement.executeQuery();
 						while (nameResults.next()) {
 							if (Colors.stripColors(nameResults.getString("nickname"))
-									.equalsIgnoreCase(Colors.stripColors(nickname))
+									.equalsIgnoreCase(Colors.stripColors(nickName))
 									|| nameResults.getString("username")
-											.equalsIgnoreCase(Colors.stripColors(nickname))) {
+											.equalsIgnoreCase(Colors.stripColors(nickName))) {
 								nickNameExists = true;
 								break;
 							}
@@ -412,10 +421,10 @@ public class PlayerData {
 						if ((player.getUniqueId() + ".yaml").equals(file.getFileName())) {
 							break;
 						}
-						String existingNickName = ChatColor.stripColor(Colors.parseColors(file.getNickName()));
-						String existingName = file.getLastUsername();
-						if (existingNickName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))
-								|| existingName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickname)))) {
+						String existingNickName = ChatColor.stripColor(Colors.parseColors(storedNickName));
+						String existingName = lastUserName;
+						if (existingNickName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickName)))
+								|| existingName.equalsIgnoreCase(ChatColor.stripColor(Colors.parseColors(nickName)))) {
 							nickNameExists = true;
 							break;
 						}
@@ -432,18 +441,18 @@ public class PlayerData {
 					try {
 						PreparedStatement setStatement = ICore.db.prepareStatement(
 								"INSERT INTO playerNickName (uuid, nickname) VALUES (?, ?) ON DUPLICATE KEY UPDATE nickname=?",
-								player.getUniqueId(), nickname, nickname);
+								player.getUniqueId(), nickName, nickName);
 						setStatement.execute();
 					} catch (SQLException e) {
 
 					}
 				} else {
-					dataFile.set("nickname", nickname);
+					dataFile.set("nickname", nickName);
 					save();
 				}
 				if (player.isOnline()) {
 					Player onlinePlayer = (Player) player;
-					onlinePlayer.setDisplayName(ChatColor.stripColor(nickname));
+					onlinePlayer.setDisplayName(ChatColor.stripColor(nickName));
 				}
 				callback.accept(!nickNameExists);
 			}
@@ -462,8 +471,9 @@ public class PlayerData {
 	 * 
 	 * @return iCore nickname <br>
 	 *         &nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
+	 * @throws PlayerNotLoggedException 
 	 */
-	public String getNickName() {
+	public String getNickName() throws PlayerNotLoggedException {
 
 		if (mysql) {
 			try {
@@ -478,7 +488,7 @@ public class PlayerData {
 						Player onlinePlayer = (Player) player;
 						return onlinePlayer.getDisplayName();
 					} else {
-						return "";
+						return getLastUserName();
 					}
 				}
 
@@ -488,11 +498,11 @@ public class PlayerData {
 					Player onlinePlayer = (Player) player;
 					return onlinePlayer.getDisplayName();
 				} else {
-					return "";
+					return getLastUserName();
 				}
 			}
 		} else {
-			return dataFile.getString("nickname", getLastUsername());
+			return dataFile.getString("nickname", getLastUserName());
 
 		}
 	}
@@ -527,8 +537,12 @@ public class PlayerData {
 	 * playerdatabase.
 	 * 
 	 * @return Minecraft username
+	 * @throws PlayerNotLoggedException 
 	 */
-	public String getLastUsername() {
+	public String getLastUserName() throws PlayerNotLoggedException {
+		if (player.isOnline()) {
+			return player.getName();
+		}
 		if (mysql) {
 			try {
 				PreparedStatement statement = ICore.db
@@ -538,7 +552,7 @@ public class PlayerData {
 				if (result.next()) {
 					return result.getString("username");
 				} else {
-					return player.getName();
+					throw new PlayerNotLoggedException(player.getUniqueId() + "has never played on this server before.");
 				}
 
 			} catch (SQLException e) {
@@ -546,8 +560,11 @@ public class PlayerData {
 				return player.getName();
 			}
 		} else {
-			return dataFile.getString("last-login.username");
-
+			if (!player.hasPlayedBefore()) {
+				throw new PlayerNotLoggedException(player.getUniqueId() + "has never played on this server before.");
+			} else {
+				return dataFile.getString("last-login.username");
+			}
 		}
 	}
 
@@ -557,20 +574,20 @@ public class PlayerData {
 	 * 
 	 * @param username (player.getName())
 	 */
-	public void setLastUsername() {
+	public void setLastUsername(String userName) {
 		if (mysql) {
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 				try {
 					PreparedStatement statement = ICore.db.prepareStatement(
 							"INSERT INTO playerUserName (uuid, username) VALUES (?, ?) ON DUPLICATE KEY UPDATE username=?",
-							player.getUniqueId(), player.getName(), player.getName());
+							player.getUniqueId(), userName, userName);
 					statement.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			});
 		} else {
-			dataFile.set("last-login.username", player.getName());
+			dataFile.set("last-login.username", userName);
 			save();
 		}
 	}

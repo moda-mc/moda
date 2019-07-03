@@ -9,6 +9,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import com.mineglade.icore.ICore;
 import com.mineglade.icore.chat.emotes.EmotePlaceholders;
 import com.mineglade.icore.utils.PlayerData;
+import com.mineglade.icore.utils.PlayerNotLoggedException;
 
 import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.Colors;
@@ -29,7 +30,13 @@ public class ChatEvent implements Listener {
 		}
 
 		Placeholder playerStatistics = new Placeholder("{player-statistics}", ICore.instance.getConfig().getString("player-statistics"));
-		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
+		Placeholder playerNickName;
+		try {
+			playerNickName = new Placeholder("{player_nickname}", data.getNickName());
+		} catch (PlayerNotLoggedException e) {
+			e.printStackTrace();
+			playerNickName = new Placeholder("{player_nickname}", player.getDisplayName());
+		}
 		Placeholder playerName = new Placeholder("{player_name}", player.getName());
 		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
 		Placeholder message = new Placeholder("{message}", event.getMessage());

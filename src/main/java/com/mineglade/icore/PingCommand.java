@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mineglade.icore.utils.PlayerData;
+import com.mineglade.icore.utils.PlayerNotLoggedException;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
@@ -59,15 +60,21 @@ public class PingCommand implements CommandExecutor {
 				return true;
 			}
 			PlayerData data = new PlayerData(target);
-			String targetNickName = data.getNickName();
-			final int ping = ReflectionUtil.getPing(target);
-			player.spigot().sendMessage(new ComponentBuilder("")
-					.append(ICore.getPrefix())
-					.append(Colors.toComponent(ICore.messages.getString("ping.responses.others.ping")
-							.replace("{ping}", ping + "")
-							.replace("{target_nickname}", targetNickName)))
-					.create());
-			return true;
+			String targetNickName;
+			try {
+				targetNickName = data.getNickName();
+				final int ping = ReflectionUtil.getPing(target);
+				player.spigot().sendMessage(new ComponentBuilder("")
+						.append(ICore.getPrefix())
+						.append(Colors.toComponent(ICore.messages.getString("ping.responses.others.ping")
+								.replace("{ping}", ping + "")
+								.replace("{target_nickname}", targetNickName)))
+						.create());
+				return true;
+			} catch (PlayerNotLoggedException e) {
+				e.printStackTrace();
+			}
+			
 		}
 
         final int ping = ReflectionUtil.getPing(player);

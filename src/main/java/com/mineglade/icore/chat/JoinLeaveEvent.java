@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.mineglade.icore.ICore;
 import com.mineglade.icore.utils.PlayerData;
+import com.mineglade.icore.utils.PlayerNotLoggedException;
 
 import net.md_5.bungee.api.ChatColor;
 import xyz.derkades.derkutils.bukkit.Chat;
@@ -18,15 +19,26 @@ public class JoinLeaveEvent implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
+		
 		final Player player = event.getPlayer();
 		PlayerData data = new PlayerData(player);
 
 		event.setJoinMessage("");
-		data.setLastUsername();
-		player.setDisplayName(ChatColor.stripColor(data.getNickName()));
+		data.setLastUsername(player.getName());
+		try {
+			player.setDisplayName(ChatColor.stripColor(data.getNickName()));
+		} catch (PlayerNotLoggedException e) {
+			e.printStackTrace();
+		}
 
 		// Player placeholders
-		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
+		Placeholder playerNickName;
+		try {
+			playerNickName = new Placeholder("{player_nickname}", data.getNickName());
+		} catch (PlayerNotLoggedException e) {
+			e.printStackTrace();
+			playerNickName = new Placeholder("{player_nickname}", player.getName());
+		}
 		Placeholder playerName = new Placeholder("{player_name}", player.getName());
 		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
 		Placeholder playerNameColor = new Placeholder("{name_color}", data.getNameColor() + "");
@@ -60,10 +72,16 @@ public class JoinLeaveEvent implements Listener {
 		PlayerData data = new PlayerData(player);
 
 		event.setQuitMessage("");
-		data.setLastUsername();
+		data.setLastUsername(player.getName());
 
 		// Player placeholders
-		Placeholder playerNickName = new Placeholder("{player_nickname}", data.getNickName());
+		Placeholder playerNickName;
+		try {
+			playerNickName = new Placeholder("{player_nickname}", data.getNickName());
+		} catch (PlayerNotLoggedException e) {
+			e.printStackTrace();
+			playerNickName = new Placeholder("{player_nickname}", player.getDisplayName());
+		}
 		Placeholder playerName = new Placeholder("{player_name}", player.getName());
 		Placeholder playerDisplayName = new Placeholder("{player_displayname}", player.getDisplayName());
 		Placeholder playerNameColor = new Placeholder("{name_color}", data.getNameColor() + "");

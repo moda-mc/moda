@@ -1,6 +1,7 @@
 package com.mineglade.icore.chat.colors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import xyz.derkades.derkutils.bukkit.Colors;
+import xyz.derkades.derkutils.bukkit.UUIDFetcher;
 
 public class ColorCommand implements CommandExecutor {
 
@@ -23,7 +25,7 @@ public class ColorCommand implements CommandExecutor {
 			if (args.length < 1) {
 				new ColorMenu(player, player).open();
 			} else {
-				Player target = Bukkit.getPlayer(args[0]);
+				OfflinePlayer target = Bukkit.getOfflinePlayer(UUIDFetcher.getUUID(args[0]));
 				if (target == null) {
 					sender.spigot().sendMessage(new ComponentBuilder("")
 							.append(ICore.getPrefix())

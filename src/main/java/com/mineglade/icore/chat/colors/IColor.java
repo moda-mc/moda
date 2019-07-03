@@ -21,7 +21,7 @@ public enum IColor {
 	GREEN('a', "Green", "&7Set your %s color to &%sGreen&7.", Material.CONCRETE_POWDER, 5),
 	LIGHT_PURPLE('d', "Pink", "&7Set your %s color to &%sPink&7.", Material.CONCRETE, 2),
 	RED('c', "Red", "&7Set your %s color to &%sRed&7.", Material.CONCRETE_POWDER, 14),
-	YELLOW('e', "Yellow", "&7Set your %s color to &%sYellow", Material.CONCRETE, 1);
+	YELLOW('e', "Yellow", "&7Set your %s color to &%sYellow", Material.CONCRETE, 4);
 	
 	private char colorCode;
 	private String name;
