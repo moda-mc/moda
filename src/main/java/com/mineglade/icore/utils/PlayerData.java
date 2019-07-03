@@ -552,7 +552,7 @@ public class PlayerData {
 				if (result.next()) {
 					return result.getString("username");
 				} else {
-					throw new PlayerNotLoggedException(player.getUniqueId() + "has never played on this server before.");
+					throw new PlayerNotLoggedException(player.getUniqueId() + " has never played on this server before.");
 				}
 
 			} catch (SQLException e) {

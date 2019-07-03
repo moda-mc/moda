@@ -62,7 +62,7 @@ public class ColorMenu extends IconMenu {
 						} else {
 							items.put(2, new ItemBuilder(Material.NAME_TAG)
 									.coloredName("&6Name Color")
-									.coloredLore("&e&oSet " + ChatColor.GOLD + target.getName() + "&e&o's name color!")
+									.coloredLore("&e&oSet " + ChatColor.GOLD + data.getNickName() + "&e&o's name color!")
 									.create());
 						}
 						if (!player.hasPermission("icore.command.color.chat.others") && !targetExempt) {
@@ -73,11 +73,10 @@ public class ColorMenu extends IconMenu {
 						} else {
 							items.put(6, new ItemBuilder(Material.BOOK_AND_QUILL)
 									.coloredName("&6Chat Color")
-									.coloredLore("&e&oSet " + ChatColor.GOLD + target.getName() + "&e&o's chat color!")
+									.coloredLore("&e&oSet " + ChatColor.GOLD + data.getNickName() + "&e&o's chat color!")
 									.create());
 						}
 					}
-					super.refreshItems();
 				} catch (PlayerNotLoggedException e) {
 					items.put(4, new ItemBuilder(Material.BARRIER)
 							.coloredName("&4&lERROR")
@@ -85,6 +84,7 @@ public class ColorMenu extends IconMenu {
 									"&cwho has never played on the server before.")
 							.create());
 				}
+				super.refreshItems();
 			});
 			
 		});

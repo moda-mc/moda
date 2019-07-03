@@ -5,7 +5,7 @@ color:
 
   errors:
     no-permissions: "&cYou don't have permissions for &f{color}&7."
-    target-invalid: "&cThe &ftarget&c you provided isn't online or doesn't exist."
+    target-invalid: "&cThe &ftarget&c you provided doesn't exist."
 
   name-color: 
     set: 

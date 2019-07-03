@@ -25,16 +25,16 @@ public class ColorCommand implements CommandExecutor {
 			if (args.length < 1) {
 				new ColorMenu(player, player).open();
 			} else {
+				try {
 				OfflinePlayer target = Bukkit.getOfflinePlayer(UUIDFetcher.getUUID(args[0]));
-				if (target == null) {
+				new ColorMenu(player, target).open();
+				} catch (IllegalArgumentException e) {
 					sender.spigot().sendMessage(new ComponentBuilder("")
 							.append(ICore.getPrefix())
 							.append(Colors.toComponent(ICore.messages.getString("color.errors.target-invalid")))
 							.event(new ClickEvent(Action.SUGGEST_COMMAND, "/" + label + " "))
 							.create());
-					return true;
 				}
-				new ColorMenu(player, target).open();
 			}
 		} else {
 			sender.sendMessage("this command is not functional for the console yet.");

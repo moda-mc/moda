@@ -4,8 +4,7 @@ description: "A plugin to run the core of your game server; Chat Formatting, Vot
 version: 0.03-alpha
 authors: [patchtv, Derkades]
 website: https://www.github.com/mineglade/icore
-depend: [Vault, PlaceholderAPI]
-softdepend: [SuperVanish, Votifier]
+softdepend: [SuperVanish, Votifier, PlaceholderAPI, Vault]
 
 commands:
 # Basic commands:
