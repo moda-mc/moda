@@ -1,0 +1,58 @@
+# =====================================================
+#                        Voting
+# =====================================================
+# Only Turn this on after you've entered all the information for MySQL.
+#
+# Placeholders: 
+#   %player%: the username of the player who has voted.
+#   %votes%: the total amount of votes someone has (fetched from the mysql database)
+#   %vote-site%: the site that the player has voted for your server on.
+#   All PlaceholderAPI placeholders, if it's installed.
+
+database-readonly: false # If this is set to true, the votelistener will not write votes to the database on !this! server.
+
+# NO PLACEHOLDERAPI PLACEHOLDERS SUPPORTED (Votifier doesn't support this)
+rewards: 
+  - "econ deposit %player% 35"
+
+# NO PLACEHOLDERAPI PLACEHOLDERS SUPPORTED (Votifier doesn't support this)
+broadcast-message: 
+  - text: "&8[&bP&8] &7| &a%player% &7has voted on &a%vote-site%!"
+    hover: "&fClick here to vote as well!"
+    suggest_command: "/vote"
+
+# PlaceHolderAPI Placeholders can be used below.
+vote-sites: 
+  - text: "&8[&bP&8] &7| ======= &aVoting Sites&7 ======="
+
+  - text: "\n&8[&bP&8] &7| The server owner has forgotten to add their own vote-sites list,\n&8[&bP&8] &7| so here is a list of sites to vote on for &fMine&aGlade"
+
+  - text: "\n&8[&bP&8] &7| &71. &aminecraft-server-list"
+    hover: "vote for us on minecraft-server-list.com!"
+    url: "https://minecraft-server-list.com/server/416687/vote/"
+
+  - text: "\n&8[&bP&8] &7| &72. &aminecraft-mp"
+    hover: "vote for us on minecraft-mp.com!"
+    url: "https://minecraft-mp.com/server/222832/vote/"
+
+  - text: "\n&8[&bP&8] &7| &73. &aminecraftservers"
+    hover: "vote for us on minecraftservers.org!"
+    url: "https://minecraftservers.org/vote/439188"
+
+  - text: "\n&8[&bP&8] &7| &74. &atopg"
+    hover: "vote for us on topg.org!"
+    url: "https://topg.org/Minecraft/in-513647"
+
+  - text: "\n&8[&bP&8] &7| &75. &amccommunity"
+    hover: "vote for us on mccommunity.net!"
+    url: "https://mccommunity.net/server/106-MineGlade/vote/"
+  - text: "\n"
+  - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
+    
+reminder:
+  interval: 30 # how long between two vote reminders, in minutes
+  delay: 30 # how long before the vote reminder appears for the first time, in minutes
+  message:
+    - text: "&8[&bP&8] &7| Remember to vote for us! You currently have &a%votes% &7votes."
+      hover: "&fClick here to vote"
+      suggest_command: "/vote"

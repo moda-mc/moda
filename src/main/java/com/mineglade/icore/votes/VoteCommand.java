@@ -3,10 +3,10 @@ package com.mineglade.icore.votes;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,12 +18,17 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
-public class VoteCommand implements CommandExecutor {
+public class VoteCommand extends Command {
 
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+	protected VoteCommand() {
+		super("vote", "returns a list of sites to vote on.", "/vote", new ArrayList<>());
+	}
 
-        Player player = (Player) sender;
-        FileConfiguration config = ICore.instance.getConfig();
+	@Override
+	public boolean execute(final CommandSender sender, final String label, final String[] args) {
+
+        final Player player = (Player) sender;
+        final FileConfiguration config = ICore.instance.getConfig();
 
         if (!(ICore.instance.getConfig().getBoolean("mysql.enabled") && ICore.instance.getConfig().getBoolean("voting.enabled"))) {
         	player.spigot().sendMessage(new ComponentBuilder("")
@@ -38,29 +43,29 @@ public class VoteCommand implements CommandExecutor {
         else {
             Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
             	final int voteCount;
-            
+
             	try {
-            		PreparedStatement statement = ICore.db.prepareStatement("SELECT `votes` FROM `votes` WHERE uuid=?", player.getUniqueId());
-					ResultSet result = statement.executeQuery(); 
-					
+            		final PreparedStatement statement = ICore.db.prepareStatement("SELECT `votes` FROM `votes` WHERE uuid=?", player.getUniqueId());
+					final ResultSet result = statement.executeQuery();
+
 					if (result.next()) {
 						voteCount = result.getInt("votes");
-					} 
+					}
 					else {
 						voteCount = 0;
 					}
-					
-				} catch (SQLException e) {
+
+				} catch (final SQLException e) {
 					e.printStackTrace();
 					return;
 				}
-            
+
             	Bukkit.getScheduler().runTask(ICore.instance, () -> {
-            		Placeholder votes = new Placeholder("%votes%", voteCount + "");
+            		final Placeholder votes = new Placeholder("%votes%", voteCount + "");
                     player.spigot().sendMessage(Chat.toComponentWithPapiPlaceholders(config, "voting.vote-sites", player, votes));
             	});
             });
-            
+
         }
 
 

@@ -7,28 +7,27 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.mineglade.icore.ICore;
 
 import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 
-public class VoteReminder extends BukkitRunnable {
+public class VoteReminder implements Runnable {
 
 	@Override
 	public void run() {
 
-		FileConfiguration config = ICore.instance.getConfig();
-		for (Player player : Bukkit.getOnlinePlayers()) {
+		final FileConfiguration config = ICore.instance.getConfig();
+		for (final Player player : Bukkit.getOnlinePlayers()) {
 
 			Bukkit.getScheduler().runTaskAsynchronously(ICore.instance, () -> {
 				final int voteCount;
 
 				try {
-					PreparedStatement statement = ICore.db.prepareStatement("SELECT `votes` FROM `votes` WHERE uuid=?",
+					final PreparedStatement statement = ICore.db.prepareStatement("SELECT `votes` FROM `votes` WHERE uuid=?",
 							player.getUniqueId());
-					ResultSet result = statement.executeQuery();
+					final ResultSet result = statement.executeQuery();
 
 					if (result.next()) {
 						voteCount = result.getInt("votes");
@@ -36,13 +35,13 @@ public class VoteReminder extends BukkitRunnable {
 						voteCount = 0;
 					}
 
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					e.printStackTrace();
 					return;
 				}
 
 				Bukkit.getScheduler().runTask(ICore.instance, () -> {
-					Placeholder votes = new Placeholder("%votes%", voteCount + "");
+					final Placeholder votes = new Placeholder("%votes%", voteCount + "");
 					player.spigot().sendMessage(
 							Chat.toComponentWithPapiPlaceholders(config, "voting.reminder.message", player, votes));
 				});

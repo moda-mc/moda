@@ -32,11 +32,6 @@ commands:
     description: "sets a nickname for yourself or a specified player"
     usage: "/nickname [target] <nickname>"
     aliases: [nick]
-    
-# Vote commands:
-  vote:
-    description: "returns a list of sites to vote on."
-    usage: "/vote"
 
 permissions:
 

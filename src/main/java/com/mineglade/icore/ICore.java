@@ -25,9 +25,7 @@ import com.mineglade.icore.chat.nicknames.NickNameCommand;
 import com.mineglade.icore.hooks.discord.DiscordListener;
 import com.mineglade.icore.hooks.github.SuggestCommand;
 import com.mineglade.icore.teleport.TeleportCommand;
-import com.mineglade.icore.votes.VoteCommand;
 import com.mineglade.icore.votes.VoteEvent;
-import com.mineglade.icore.votes.VoteReminder;
 
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
@@ -47,7 +45,7 @@ public class ICore extends JavaPlugin implements Listener {
 	public static DiscordListener discord;
 
 	public static FileConfiguration messages;
-	
+
 	public ICore() {
 		instance = this;
 	}
@@ -55,11 +53,11 @@ public class ICore extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
-		File messagesFile = new File(getDataFolder(), "messages.yaml");
+		final File messagesFile = new File(this.getDataFolder(), "messages.yaml");
 		if (!messagesFile.exists()) {
 			try {
 				FileUtils.copyOutOfJar(this.getClass(), "/messages.yaml", messagesFile);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -74,7 +72,7 @@ public class ICore extends JavaPlugin implements Listener {
 
 		if (!this.setupVault()) {
 			logger.severe("Could not set up Vault, is it installed?");
-		} 
+		}
 		if (ICore.instance.getConfig().getBoolean("mysql.enabled")) {
 			this.initDataBaseConnection();
 		} else {
@@ -83,10 +81,14 @@ public class ICore extends JavaPlugin implements Listener {
 
 		this.registerCommands();
 		this.registerEvents();
-		if (ICore.instance.getConfig().getBoolean("voting.enabled")
-				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
-			new VoteReminder().runTaskTimer(this, 20 * 60 * ICore.instance.getConfig().getLong("voting.reminder.delay"),
-					20 * 60 * ICore.instance.getConfig().getLong("voting.reminder.interval"));
+
+		for (final Module module : Module.MODULES) {
+			try {
+				module.enable();
+			} catch (final Exception e) {
+				this.getLogger().severe("An error occured while enabling " + module.getName());
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -112,6 +114,15 @@ public class ICore extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
+
+		for (final Module module : Module.MODULES) {
+			try {
+				module.disable();
+			} catch (final Exception e) {
+				this.getLogger().severe("An error occured while disabling " + module.getName());
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private boolean setupVault() {
@@ -123,7 +134,7 @@ public class ICore extends JavaPlugin implements Listener {
 				.getRegistration(Economy.class);
 
 		if (rspEcon == null) {
-			getLogger().severe("[VaultError] no Economy plugin found, is it installed?");
+			this.getLogger().severe("[VaultError] no Economy plugin found, is it installed?");
 			return false;
 		}
 		economy = rspEcon.getProvider();
@@ -132,7 +143,7 @@ public class ICore extends JavaPlugin implements Listener {
 				.getRegistration(Permission.class);
 
 		if (rspPerm == null) {
-			getLogger().severe("[VaultError] no Permission plugin found, is it installed?");
+			this.getLogger().severe("[VaultError] no Permission plugin found, is it installed?");
 			return false;
 		}
 		permission = rspPerm.getProvider();
@@ -141,7 +152,7 @@ public class ICore extends JavaPlugin implements Listener {
 				.getRegistration(Chat.class);
 
 		if (rspChat == null) {
-			getLogger().severe("[VaultError] no Chat plugin found, is it installed?");
+			this.getLogger().severe("[VaultError] no Chat plugin found, is it installed?");
 			return false;
 		}
 		chat = rspChat.getProvider();
@@ -178,27 +189,27 @@ public class ICore extends JavaPlugin implements Listener {
 						this.getConfig().getInt("mysql.port"), this.getConfig().getString("mysql.database"),
 						this.getConfig().getString("mysql.user"), this.getConfig().getString("mysql.password"));
 
-				createTableIfNonexistent("playerUserName", 
+				this.createTableIfNonexistent("playerUserName",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerUserName` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `username` VARCHAR(16) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-				
-				createTableIfNonexistent("votes",
+
+				this.createTableIfNonexistent("votes",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`votes` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `votes` INT NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
-				createTableIfNonexistent("playerChatColor",
+				this.createTableIfNonexistent("playerChatColor",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerChatColor` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
-				createTableIfNonexistent("playerNameColor",
+				this.createTableIfNonexistent("playerNameColor",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNameColor` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
-				createTableIfNonexistent("playerNickName",
+				this.createTableIfNonexistent("playerNickName",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickName` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `nickname` VARCHAR(256) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
@@ -211,7 +222,7 @@ public class ICore extends JavaPlugin implements Listener {
 		});
 	}
 
-	private void createTableIfNonexistent(String table, String sql) throws SQLException {
+	private void createTableIfNonexistent(final String table, final String sql) throws SQLException {
 		final DatabaseMetaData meta = db.getConnection().getMetaData();
 		final ResultSet result = meta.getTables(null, null, table, null);
 
@@ -226,7 +237,7 @@ public class ICore extends JavaPlugin implements Listener {
 	private void registerCommands() {
 		// Core Command
 		this.getCommand("icore").setExecutor(new CoreCommand());
-		
+
 		// Main Commands
 		this.getCommand("iteleport").setExecutor(new TeleportCommand());
 		this.getCommand("ping").setExecutor(new PingCommand());
@@ -234,9 +245,6 @@ public class ICore extends JavaPlugin implements Listener {
 		// Misc Commands
 		this.getCommand("color").setExecutor(new ColorCommand());
 		this.getCommand("nickname").setExecutor(new NickNameCommand());
-
-		// Voting
-		this.getCommand("vote").setExecutor(new VoteCommand());
 
 		// Suggestions
 		this.getCommand("suggest").setExecutor(new SuggestCommand());
