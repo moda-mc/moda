@@ -33,6 +33,20 @@ public class Votes extends Module {
 		final long interval = this.config.getInt("reminder.interval") * 60 * 20;
 		final long delay = this.config.getInt("reminder.delay") * 60 * 20;
 		this.scheduler.interval(delay, interval, new VoteReminder());
+
+		this.scheduler.async(() -> {
+			try {
+				ICore.createTableIfNonexistent("votes",
+						"CREATE TABLE `" + this.plugin.getConfig().getString("mysql.database") + "`.`votes` "
+								+ "(`uuid` VARCHAR(100) NOT NULL," + " `votes` INT NOT NULL,"
+								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
+
+			} catch (final SQLException e) {
+				e.printStackTrace();
+				this.disable();
+				return;
+			}
+		});
 	}
 
 	@Override

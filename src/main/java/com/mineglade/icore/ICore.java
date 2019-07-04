@@ -188,27 +188,22 @@ public class ICore extends JavaPlugin implements Listener {
 						this.getConfig().getInt("mysql.port"), this.getConfig().getString("mysql.database"),
 						this.getConfig().getString("mysql.user"), this.getConfig().getString("mysql.password"));
 
-				this.createTableIfNonexistent("playerUserName",
+				createTableIfNonexistent("playerUserName",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerUserName` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `username` VARCHAR(16) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
-				this.createTableIfNonexistent("votes",
-						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`votes` "
-								+ "(`uuid` VARCHAR(100) NOT NULL," + " `votes` INT NOT NULL,"
-								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-
-				this.createTableIfNonexistent("playerChatColor",
+				createTableIfNonexistent("playerChatColor",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerChatColor` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
-				this.createTableIfNonexistent("playerNameColor",
+				createTableIfNonexistent("playerNameColor",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNameColor` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
 
-				this.createTableIfNonexistent("playerNickName",
+				createTableIfNonexistent("playerNickName",
 						"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickName` "
 								+ "(`uuid` VARCHAR(100) NOT NULL," + " `nickname` VARCHAR(256) NOT NULL,"
 								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
@@ -221,7 +216,7 @@ public class ICore extends JavaPlugin implements Listener {
 		});
 	}
 
-	private void createTableIfNonexistent(final String table, final String sql) throws SQLException {
+	public static void createTableIfNonexistent(final String table, final String sql) throws SQLException {
 		final DatabaseMetaData meta = db.getConnection().getMetaData();
 		final ResultSet result = meta.getTables(null, null, table, null);
 
