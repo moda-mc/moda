@@ -24,6 +24,12 @@ public class Votes extends Module {
 
 	@Override
 	public void onEnable() {
+		if (!ICore.instance.getConfig().getBoolean("mysql.enabled")) {
+			this.logger.severe("The voting module doesn't work without mysql enabled.");
+			this.disable();
+			return;
+		}
+
 		final long interval = this.config.getInt("reminder.interval") * 60 * 20;
 		final long delay = this.config.getInt("reminder.delay") * 60 * 20;
 		this.scheduler.interval(delay, interval, new VoteReminder());
