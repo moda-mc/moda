@@ -25,7 +25,6 @@ import com.mineglade.icore.chat.nicknames.NickNameCommand;
 import com.mineglade.icore.hooks.discord.DiscordListener;
 import com.mineglade.icore.hooks.github.SuggestCommand;
 import com.mineglade.icore.teleport.TeleportCommand;
-import com.mineglade.icore.votes.VoteEvent;
 
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
@@ -254,9 +253,5 @@ public class ICore extends JavaPlugin implements Listener {
 		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(new ChatEvent(), this);
 		pm.registerEvents(new JoinLeaveEvent(), this);
-		if (ICore.instance.getConfig().getBoolean("voting.enabled")
-				&& ICore.instance.getConfig().getBoolean("mysql.enabled")) {
-			pm.registerEvents(new VoteEvent(), this);
-		}
 	}
 }

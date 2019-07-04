@@ -17,7 +17,6 @@ public class VoteReminder implements Runnable {
 
 	@Override
 	public void run() {
-
 		final FileConfiguration config = ICore.instance.getConfig();
 		for (final Player player : Bukkit.getOnlinePlayers()) {
 
