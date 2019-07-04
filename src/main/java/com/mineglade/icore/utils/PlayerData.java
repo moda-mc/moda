@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.icore.ICore;
 
@@ -30,12 +31,15 @@ public class PlayerData {
 
 	private OfflinePlayer player;
 
+	private JavaPlugin iCore = ICore.instance;
 	private boolean mysql = ICore.instance.getConfig().getBoolean("mysql.enabled");
 	private FileConfiguration dataFile;
 	private File dataFileFile;
+	
+	private boolean debug = ICore.instance.getConfig().getBoolean("debug");
 
 	/**
-	 * establishes player, writes and establishes datafilefile.
+	 * establishes player, writes and establishes dataFilefile.
 	 * 
 	 * @param player
 	 */
@@ -49,6 +53,11 @@ public class PlayerData {
 		}
 	}
 
+	/**
+	 * Instance of PlayerData file.
+	 * 
+	 * @param file
+	 */
 	public PlayerData(File file) {
 		this.player = null;
 		dataFileFile = file;
@@ -72,7 +81,7 @@ public class PlayerData {
 	 * @return ChatColor object
 	 */
 	public ChatColor getChatColor() {
-
+		ChatColor chatColor; 
 		if (mysql) {
 			try {
 				PreparedStatement statement = ICore.db
@@ -80,21 +89,28 @@ public class PlayerData {
 				ResultSet result = statement.executeQuery();
 
 				if (result.next()) {
-					return ChatColor.getByChar(result.getString("color").charAt(0));
+					chatColor = ChatColor.getByChar(result.getString("color").charAt(0));
 				} else {
-					return ChatColor
-							.getByChar(ICore.instance.getConfig().getString("chat.default-chat-color").charAt(0));
+					chatColor = ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-chat-color").charAt(0));
 				}
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-chat-color").charAt(0));
+				chatColor = ChatColor.getByChar(ICore.instance.getConfig().getString("chat.default-chat-color").charAt(0));
 			}
 		} else {
-			return ChatColor.getByChar(dataFile
-					.getString("color.chat-color", ICore.instance.getConfig().getString("chat.default-chat-color"))
+			chatColor = ChatColor.getByChar(dataFile.getString("color.chat-color", ICore.instance.getConfig()
+							.getString("chat.default-chat-color"))
 					.charAt(0));
 		}
+		if (debug) {
+			try {
+				iCore.getLogger().info(getNickName() + "'s chat-color is " + chatColor.getName());
+			} catch (PlayerNotLoggedException e) {
+				e.printStackTrace();
+			}
+		}
+		return chatColor;
 	}
 
 	/**
@@ -212,6 +228,13 @@ public class PlayerData {
 		} else {
 			dataFile.set("color.chat-format", null);
 			this.save();
+		}
+		if (debug) {
+			try {
+				System.out.println(getNickName() + "'s Chat format has been reset.");
+			} catch (PlayerNotLoggedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

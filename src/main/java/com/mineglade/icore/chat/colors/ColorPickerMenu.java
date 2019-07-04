@@ -153,10 +153,10 @@ public class ColorPickerMenu extends IconMenu {
 				}
 			} else {
 				if (event.getName().contains("Reset")) {
-					data.resetNameColor();
+					data.resetChatColor();
 					try {
 						player.sendMessage(ICore.getPrefix() + Colors.parseColors(ICore.messages
-								.getString("color.self.name-color.reset.others").replace("{target}", data.getNickName())));
+								.getString("color.name-color.reset.others").replace("{target}", data.getNickName())));
 					} catch (PlayerNotLoggedException e) {
 						throw new IdiotException();
 					}
