@@ -5,12 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mineglade</groupId>
-	<artifactId>icore</artifactId>
-	<version>0.03-alpha</version>
+	<artifactId>Moda</artifactId>
+	<version>0.04-alpha</version>
 	<packaging>jar</packaging>
 
-	<name>icore</name>
-	<url>https://github.com/mineglade/iCore</url>
+	<name>Moda</name>
+	<url>https://github.com/mineglade/Moda</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
