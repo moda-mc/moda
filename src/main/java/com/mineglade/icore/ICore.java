@@ -6,6 +6,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -44,6 +46,8 @@ public class ICore extends JavaPlugin implements Listener {
 	public static DiscordListener discord;
 
 	public static FileConfiguration messages;
+
+	private static final List<Module> ENABLED_MODULES = new ArrayList<>();
 
 	public ICore() {
 		instance = this;
@@ -84,8 +88,9 @@ public class ICore extends JavaPlugin implements Listener {
 		for (final Module module : Module.MODULES) {
 			try {
 				module.enable();
+				ENABLED_MODULES.add(module);
 			} catch (final Exception e) {
-				this.getLogger().severe("An error occured while enabling " + module.getName());
+				this.getLogger().severe("An error occured while enabling internal module '" + module.getName() + "'");
 				e.printStackTrace();
 			}
 		}
@@ -114,11 +119,11 @@ public class ICore extends JavaPlugin implements Listener {
 			}
 		}
 
-		for (final Module module : Module.MODULES) {
+		for (final Module module : ENABLED_MODULES) {
 			try {
 				module.disable();
 			} catch (final Exception e) {
-				this.getLogger().severe("An error occured while disabling " + module.getName());
+				this.getLogger().severe("An error occured while disabling module '" + module.getName() + "'");
 				e.printStackTrace();
 			}
 		}
@@ -248,5 +253,15 @@ public class ICore extends JavaPlugin implements Listener {
 		final PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(new ChatEvent(), this);
 		pm.registerEvents(new JoinLeaveEvent(), this);
+	}
+
+	public static void registerModule(final Module module) {
+		try {
+			module.enable();
+			ENABLED_MODULES.add(module);
+		} catch (final Exception e) {
+			ICore.instance.getLogger().severe("An error occured while enabling external module '" + module.getName() + "'");
+			e.printStackTrace();
+		}
 	}
 }
