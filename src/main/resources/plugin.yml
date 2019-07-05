@@ -1,9 +1,9 @@
 main: com.mineglade.icore.ICore
-name: iCore
+name: Moda
 description: "A plugin to run the core of your game server; Chat Formatting, Vote Listener, Discord Chat Relay, Nicknames"
 version: 0.03-alpha
 authors: [patchtv, Derkades]
-website: https://www.github.com/mineglade/icore
+website: https://www.github.com/mineglade/Moda
 softdepend: [SuperVanish, Votifier, PlaceholderAPI, Vault]
 
 commands:

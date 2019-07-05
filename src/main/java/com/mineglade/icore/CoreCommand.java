@@ -15,6 +15,8 @@ import xyz.derkades.derkutils.ListUtils;
 
 public class CoreCommand implements CommandExecutor {
 
+	// TODO refactor everything to Moda in stead of iCore
+	
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command command, final String label,
 			final String[] args) {
