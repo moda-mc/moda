@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,6 +29,7 @@ import com.mineglade.moda.hooks.discord.DiscordListener;
 import com.mineglade.moda.hooks.github.SuggestCommand;
 import com.mineglade.moda.modules.Module;
 import com.mineglade.moda.teleport.TeleportCommand;
+import com.mineglade.moda.utils.storage.StorageType;
 
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
@@ -65,7 +67,7 @@ public class Moda extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
-		
+
 		messages = YamlConfiguration.loadConfiguration(messagesFile);
 		final Logger logger = this.getLogger();
 
@@ -166,6 +168,20 @@ public class Moda extends JavaPlugin implements Listener {
 		return true;
 	}
 
+	public StorageType getStorageType() {
+		final String configString = this.getConfig().getString("storage.type", "file").toUpperCase();
+		try {
+			return StorageType.valueOf(configString);
+		} catch (final IllegalArgumentException e) {
+			this.getLogger().severe(String.format("Invalid storage type specified: %s. Choose from: %s",
+					configString,
+					String.join(", ", (String[]) Arrays.asList(StorageType.values()).stream()
+							.map((s) -> s.toString().toLowerCase()).toArray())));
+			Bukkit.getPluginManager().disablePlugin(this);
+			return null;
+		}
+	}
+
 	public static boolean isVanished(final Player player) {
 		for (final MetadataValue meta : player.getMetadata("vanished")) {
 			if (meta.asBoolean())
@@ -223,6 +239,7 @@ public class Moda extends JavaPlugin implements Listener {
 		});
 	}
 
+	@Deprecated
 	public static void createTableIfNonexistent(final String table, final String sql) throws SQLException {
 		final DatabaseMetaData meta = db.getConnection().getMetaData();
 		final ResultSet result = meta.getTables(null, null, table, null);
@@ -236,7 +253,7 @@ public class Moda extends JavaPlugin implements Listener {
 	}
 
 	private void registerCommands() {
-		
+
 		// Core Command
 		this.getCommand("icore").setExecutor(new CoreCommand());
 

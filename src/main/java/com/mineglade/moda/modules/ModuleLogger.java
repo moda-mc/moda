@@ -9,9 +9,9 @@ public class ModuleLogger {
 	private final Logger logger;
 	private final String name;
 
-	ModuleLogger(final Logger logger, final String name){
+	ModuleLogger(final Logger logger, final Module module){
 		this.logger = logger;
-		this.name = name;
+		this.name = module.getName();
 	}
 
 	public void debug(final String message, final Object... args) {
