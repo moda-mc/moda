@@ -11,6 +11,8 @@ import org.bukkit.scheduler.BukkitTask;
 import com.mineglade.moda.Moda;
 import com.mineglade.moda.modules.IMessage;
 import com.mineglade.moda.modules.Module;
+import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
+import com.mineglade.moda.utils.storage.FileStorageHandler;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 
@@ -18,35 +20,17 @@ import xyz.derkades.derkutils.bukkit.Chat;
 import xyz.derkades.derkutils.bukkit.PlaceholderUtil.Placeholder;
 import xyz.derkades.derkutils.bukkit.UUIDFetcher;
 
-public class Votes extends Module {
+public class Votes extends Module<VotesStorageHandler> {
 
 	private BukkitTask voteReminder;
 
 	@Override
 	public void onEnable() {
-		if (!Moda.instance.getConfig().getBoolean("mysql.enabled")) {
-			this.logger.severe("The voting module doesn't work without mysql enabled.");
-			this.disable();
-			return;
-		}
-
+		
 		final long interval = this.config.getInt("reminder.interval") * 60 * 20;
 		final long delay = this.config.getInt("reminder.delay") * 60 * 20;
 		this.scheduler.interval(delay, interval, new VoteReminder());
 
-		this.scheduler.async(() -> {
-			try {
-				Moda.createTableIfNonexistent("votes",
-						"CREATE TABLE `" + this.plugin.getConfig().getString("mysql.database") + "`.`votes` "
-								+ "(`uuid` VARCHAR(100) NOT NULL," + " `votes` INT NOT NULL,"
-								+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-
-			} catch (final SQLException e) {
-				e.printStackTrace();
-				this.disable();
-				return;
-			}
-		});
 	}
 
 	@Override
@@ -89,6 +73,16 @@ public class Votes extends Module {
 	@Override
 	public IMessage[] getMessages() {
 		return VotesMessage.values();
+	}
+
+	@Override
+	public FileStorageHandler getFileStorageHandler() {
+		return null;
+	}
+
+	@Override
+	public DatabaseStorageHandler getDatabaseStorageHandler() {
+		return null;
 	}
 
 }
