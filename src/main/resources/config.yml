@@ -30,7 +30,7 @@
 #
 # for no prefix do ""
 
-plugin-prefix: "&8[&bP&8] &7| "
+plugin-prefix: "&8[&bM&8] &7| "
 
 # =====================================================
 #                          Chat

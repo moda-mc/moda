@@ -1,6 +1,6 @@
 main: com.mineglade.moda.Moda
 name: Moda
-description: "A plugin to run the core of your game server; Chat Formatting, Vote Listener, Discord Chat Relay, Nicknames"
+description: "A fully modular core plugin for spigot."
 version: 0.03-alpha
 authors: [patchtv, Derkades]
 website: https://www.github.com/mineglade/Moda
