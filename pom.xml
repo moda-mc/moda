@@ -6,7 +6,7 @@
 
 	<groupId>com.mineglade</groupId>
 	<artifactId>Moda</artifactId>
-	<version>0.04-alpha</version>
+	<version>alpha</version>
 	<packaging>jar</packaging>
 
 	<name>Moda</name>
