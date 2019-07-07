@@ -1,7 +1,6 @@
 package com.mineglade.moda.modules;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 
 import org.bukkit.Bukkit;
@@ -16,15 +15,15 @@ import org.bukkit.plugin.Plugin;
 import com.mineglade.moda.Moda;
 import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
 import com.mineglade.moda.utils.storage.FileStorageHandler;
-import com.mineglade.moda.utils.storage.StorageHandler;
+import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 import com.mineglade.moda.utils.storage.StorageType;
 import com.mineglade.moda.votes.Votes;
 
 import xyz.derkades.derkutils.FileUtils;
 
-public abstract class Module implements Listener {
+public abstract class Module<T extends ModuleStorageHandler> implements Listener {
 
-	public static final Module[] MODULES = {
+	public static final Module<? extends ModuleStorageHandler>[] MODULES = new Module<?>[]{
 			new Votes(),
 	};
 
@@ -33,7 +32,7 @@ public abstract class Module implements Listener {
 	protected FileConfiguration config;
 	protected LangFile lang;
 	protected Scheduler scheduler;
-	protected StorageHandler storage;
+	protected T storage;
 
 	public Module() {
 		this.plugin = Moda.instance;
@@ -61,7 +60,8 @@ public abstract class Module implements Listener {
 		return new File(this.plugin.getDataFolder(), this.getName());
 	}
 
-	public final void enable() throws IOException {
+	@SuppressWarnings("unchecked")
+	public final void enable() throws Exception {
 		// Initialize logger
 		this.logger = new ModuleLogger(Moda.instance.getLogger(), this);
 
@@ -114,10 +114,10 @@ public abstract class Module implements Listener {
 			final DatabaseStorageHandler handler = this.getDatabaseStorageHandler();
 			handler.setDatabaseHandler(Moda.db);
 			handler.setup();
-			this.storage = handler;
+			this.storage = (T) handler;
 		} else if (storageType == StorageType.FILE) {
 			final FileStorageHandler handler = this.getFileStorageHandler();
-			this.storage = handler;
+			this.storage = (T) handler;
 
 			// Save config periodically
 			this.scheduler.interval(5*60*20, 5*60*20, () -> {
