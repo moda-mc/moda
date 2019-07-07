@@ -74,16 +74,11 @@ public class Moda extends JavaPlugin implements Listener {
 		if (Moda.instance.getConfig().getBoolean("discord.enabled")) {
 			discord = new DiscordListener();
 		} else {
-			logger.warning("Discord is not enabled, please set up your config.");
+			logger.warning("Discord is not enabled");
 		}
 
-		if (!this.setupVault()) {
-			logger.severe("Could not set up Vault, is it installed?");
-		}
 		if (Moda.instance.getConfig().getBoolean("mysql.enabled")) {
 			this.initDataBaseConnection();
-		} else {
-			logger.warning("MySQL is not enabled, please set up your config.");
 		}
 
 		this.registerCommands();
