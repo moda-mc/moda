@@ -1,6 +1,6 @@
 package com.mineglade.moda.votes;
 
-import com.mineglade.moda.IMessage;
+import com.mineglade.moda.modules.IMessage;
 
 public enum VotesMessage implements IMessage {
 

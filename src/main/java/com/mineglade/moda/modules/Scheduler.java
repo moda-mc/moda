@@ -1,4 +1,4 @@
-package com.mineglade.moda;
+package com.mineglade.moda.modules;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
+
+import com.mineglade.moda.Moda;
 
 public class Scheduler {
 

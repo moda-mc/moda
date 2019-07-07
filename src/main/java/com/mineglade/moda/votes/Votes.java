@@ -9,8 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.mineglade.moda.Moda;
-import com.mineglade.moda.IMessage;
-import com.mineglade.moda.Module;
+import com.mineglade.moda.modules.IMessage;
+import com.mineglade.moda.modules.Module;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 

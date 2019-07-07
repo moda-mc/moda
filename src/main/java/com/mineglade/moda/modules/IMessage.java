@@ -1,4 +1,4 @@
-package com.mineglade.moda;
+package com.mineglade.moda.modules;
 
 public interface IMessage {
 

@@ -26,6 +26,7 @@ import com.mineglade.moda.chat.colors.ColorCommand;
 import com.mineglade.moda.chat.nicknames.NickNameCommand;
 import com.mineglade.moda.hooks.discord.DiscordListener;
 import com.mineglade.moda.hooks.github.SuggestCommand;
+import com.mineglade.moda.modules.Module;
 import com.mineglade.moda.teleport.TeleportCommand;
 
 import net.md_5.bungee.api.ChatColor;

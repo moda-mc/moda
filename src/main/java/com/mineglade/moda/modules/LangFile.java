@@ -1,4 +1,4 @@
-package com.mineglade.moda;
+package com.mineglade.moda.modules;
 
 import java.util.HashMap;
 import java.util.Map;

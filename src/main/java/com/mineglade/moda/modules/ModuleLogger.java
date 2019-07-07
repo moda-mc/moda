@@ -1,6 +1,8 @@
-package com.mineglade.moda;
+package com.mineglade.moda.modules;
 
 import java.util.logging.Logger;
+
+import com.mineglade.moda.Moda;
 
 public class ModuleLogger {
 

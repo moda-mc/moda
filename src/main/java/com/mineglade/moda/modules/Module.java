@@ -1,4 +1,4 @@
-package com.mineglade.moda;
+package com.mineglade.moda.modules;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,13 +12,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import com.mineglade.moda.Moda;
 import com.mineglade.moda.votes.Votes;
 
 import xyz.derkades.derkutils.FileUtils;
 
 public abstract class Module implements Listener {
 
-	static final Module[] MODULES = {
+	public static final Module[] MODULES = {
 			new Votes(),
 	};
 
