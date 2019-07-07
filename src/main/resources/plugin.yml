@@ -1,4 +1,4 @@
-main: com.mineglade.icore.ICore
+main: com.mineglade.moda.Moda
 name: Moda
 description: "A plugin to run the core of your game server; Chat Formatting, Vote Listener, Discord Chat Relay, Nicknames"
 version: 0.03-alpha

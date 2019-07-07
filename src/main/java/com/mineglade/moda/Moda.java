@@ -64,6 +64,7 @@ public class Moda extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
+		
 		messages = YamlConfiguration.loadConfiguration(messagesFile);
 		final Logger logger = this.getLogger();
 
@@ -234,6 +235,7 @@ public class Moda extends JavaPlugin implements Listener {
 	}
 
 	private void registerCommands() {
+		
 		// Core Command
 		this.getCommand("icore").setExecutor(new CoreCommand());
 
