@@ -13,7 +13,7 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 
 	protected DatabaseHandler db;
 
-	public DatabaseStorageHandler(final Module module) {
+	public DatabaseStorageHandler(final Module<?> module) {
 		super(module);
 	}
 
