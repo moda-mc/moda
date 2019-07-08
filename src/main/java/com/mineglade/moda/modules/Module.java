@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import com.mineglade.moda.Moda;
+import com.mineglade.moda.modules.chat.ChatModule;
 import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
 import com.mineglade.moda.utils.storage.FileStorageHandler;
 import com.mineglade.moda.utils.storage.ModuleStorageHandler;
@@ -25,6 +26,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 	public static final Module<? extends ModuleStorageHandler>[] MODULES = new Module<?>[]{
 			new Votes(),
+			new ChatModule(),
 	};
 
 	protected Moda plugin;
@@ -68,7 +70,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		// Check dependencies
 		for (final String dependencyString : this.getPluginDependencies()) {
 			final Plugin dependency = Bukkit.getPluginManager().getPlugin(dependencyString);
-			if (dependency == null || !dependency.isEnabled()) {
+			if ((dependency == null) || !dependency.isEnabled()) {
 				this.logger.severe("This module could not be enabled, because it requires the plugin " + dependencyString);
 				return;
 			}
@@ -82,7 +84,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 		// Load config file
 		final File configOutputFile = new File(this.getDataFolder(), "config.yaml");
-		FileUtils.copyOutOfJar(this.getClass(), "/modules/" + this.getName() + "config.yaml", configOutputFile);
+		FileUtils.copyOutOfJar(this.getClass(), "/modules/" + this.getName().toLowerCase() + "/config.yaml", configOutputFile);
 		this.config = YamlConfiguration.loadConfiguration(configOutputFile);
 
 		// Load language file
@@ -91,7 +93,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		this.lang = new LangFile(langFileFileConfiguration, this.getMessages());
 
 		// Register commands
-		if (this.getCommands() != null && this.getCommands().length > 0) {
+		if ((this.getCommands() != null) && (this.getCommands().length > 0)) {
 			try {
 				final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 				field.setAccessible(true);

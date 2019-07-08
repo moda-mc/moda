@@ -9,14 +9,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.mineglade.moda.Moda;
+import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 
 public class Scheduler {
 
 	public static final Map<String, List<BukkitTask>> RUNNING_TASKS = new HashMap<>();
 
-	private final Module module;
+	private final Module<? extends ModuleStorageHandler> module;
 
-	public Scheduler(final Module module) {
+	public Scheduler(final Module<? extends ModuleStorageHandler> module) {
 		this.module = module;
 	}
 
@@ -51,7 +52,7 @@ public class Scheduler {
 		RUNNING_TASKS.put(this.module.getName(), tasks);
 	}
 
-	public static void cancelAllTasks(final Module module) {
+	public static void cancelAllTasks(final Module<? extends ModuleStorageHandler> module) {
 		if (!RUNNING_TASKS.containsKey(module.getName())) {
 			return;
 		}

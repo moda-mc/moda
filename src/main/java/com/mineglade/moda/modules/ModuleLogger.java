@@ -3,13 +3,14 @@ package com.mineglade.moda.modules;
 import java.util.logging.Logger;
 
 import com.mineglade.moda.Moda;
+import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 
 public class ModuleLogger {
 
 	private final Logger logger;
 	private final String name;
 
-	ModuleLogger(final Logger logger, final Module module){
+	ModuleLogger(final Logger logger, final Module<? extends ModuleStorageHandler> module){
 		this.logger = logger;
 		this.name = module.getName();
 	}
