@@ -74,7 +74,6 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			if ((dependency == null) || !dependency.isEnabled()) {
 				//this.logger.severe("This module could not be enabled, because it requires the plugin " + dependencyString);
 				throw new UnknownDependencyException("This module could not be enabled, because it requires the plugin " + dependencyString);
-				return;
 			}
 		}
 
