@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.UnknownDependencyException;
 
 import com.mineglade.moda.Moda;
 import com.mineglade.moda.modules.chat.ChatModule;
@@ -71,7 +72,8 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		for (final String dependencyString : this.getPluginDependencies()) {
 			final Plugin dependency = Bukkit.getPluginManager().getPlugin(dependencyString);
 			if ((dependency == null) || !dependency.isEnabled()) {
-				this.logger.severe("This module could not be enabled, because it requires the plugin " + dependencyString);
+				//this.logger.severe("This module could not be enabled, because it requires the plugin " + dependencyString);
+				throw new UnknownDependencyException("This module could not be enabled, because it requires the plugin " + dependencyString);
 				return;
 			}
 		}
@@ -103,7 +105,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 					map.register(Moda.instance.getName(), command);
 				}
 			} catch (final IllegalAccessException | NoSuchFieldException | SecurityException e) {
-				e.printStackTrace();
+				throw new RuntimeException();
 			}
 		}
 
