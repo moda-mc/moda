@@ -6,9 +6,20 @@ import org.bukkit.command.CommandSender;
 
 public class ModaCommand implements CommandExecutor {
 
+	String prefix = Moda.getPrefix();
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return false;
+		
+		if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("help"))) {
+			
+		}
+		
+		
+		
+		return true;
 	}
+	
+	
 
 }
