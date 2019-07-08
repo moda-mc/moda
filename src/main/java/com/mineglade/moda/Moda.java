@@ -1,5 +1,6 @@
 package com.mineglade.moda;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,14 +62,10 @@ public class Moda extends JavaPlugin implements Listener {
 		 *
 		 * this.registerCommands(); this.registerEvents();
 		 */
+
+		// Register all internal modules
 		for (final Module<? extends ModuleStorageHandler> module : Module.MODULES) {
-			try {
-				module.enable();
-				ENABLED_MODULES.add(module);
-			} catch (final Exception e) {
-				this.getLogger().severe("An error occured while enabling internal module '" + module.getName() + "'");
-				e.printStackTrace();
-			}
+			Moda.registerModule(module, true);
 		}
 	}
 
@@ -215,14 +213,29 @@ public class Moda extends JavaPlugin implements Listener {
 //		pm.registerEvents(new JoinLeaveEvent(), this);
 //	}
 
-	public static void registerModule(final Module<? extends ModuleStorageHandler> module) {
+	private static void registerModule(final Module<? extends ModuleStorageHandler> module, final boolean internal) {
 		try {
-			module.enable();
-			ENABLED_MODULES.add(module);
+			final File modulesConfigFile = new File(Moda.instance.getDataFolder(), "modules.yaml");
+			final FileConfiguration modulesConfig = YamlConfiguration.loadConfiguration(modulesConfigFile);
+			if (!modulesConfig.contains(module.getName())) {
+				Moda.instance.getLogger().info(String.format("New module installed: '%s'", module.getName()));
+				modulesConfig.set(module.getName(), internal); // Enable internal modules by default, disable external modules by default
+				modulesConfig.save(modulesConfigFile);
+			}
+
+			if (modulesConfig.getBoolean(module.getName())) {
+				module.enable();
+				ENABLED_MODULES.add(module);
+			}
 		} catch (final Exception e) {
-			Moda.instance.getLogger()
-					.severe("An error occured while enabling external module '" + module.getName() + "'");
+			final String type = internal ? "internal" : "external";
+			Moda.instance.getLogger().severe(String.format(
+					"An error occured while enabling %s module '%s'", type, module.getName()));
 			e.printStackTrace();
 		}
+	}
+
+	public static void registerModule(final Module<? extends ModuleStorageHandler> module) {
+		registerModule(module, false);
 	}
 }
