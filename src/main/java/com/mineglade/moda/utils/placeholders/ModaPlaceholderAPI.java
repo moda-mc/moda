@@ -16,7 +16,7 @@ public class ModaPlaceholderAPI {
 	public static String parsePlaceholders(String string, final Player player) {
 		for (final Map.Entry<String, Function<Player, Object>> placeholderEntry : PLACEHOLDERS.entrySet()) {
 			if (string.contains(formatPlaceholder(placeholderEntry.getKey()))) {
-				string = string.replace(formatPlaceholder(placeholderEntry.getKey()), placeholderEntry.getValue().get(player).toString());
+				string = string.replace(formatPlaceholder(placeholderEntry.getKey()), placeholderEntry.getValue().apply(player).toString());
 			}
 		}
 		return string;
