@@ -84,7 +84,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 		// Load config file
 		final File configOutputFile = new File(this.getDataFolder(), "config.yaml");
-		FileUtils.copyOutOfJar(this.getClass(), "/modules/" + this.getName().toLowerCase() + "/config.yaml", configOutputFile);
+		FileUtils.copyOutOfJar(this.getClass(), "/modules/" + this.getName() + "/config.yaml", configOutputFile);
 		this.config = YamlConfiguration.loadConfiguration(configOutputFile);
 
 		// Load language file

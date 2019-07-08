@@ -56,30 +56,6 @@ chat:
   default-name-color: "7"
   default-chat-color: "7"
 
-# Chat Formatting
-  format: 
-    - text: "&8[&6C&8] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}&r"
-      hover: "{player-statistics}"
-      suggest_command: "/w {player_name} "
-    - text: "» {chat_color}{message}"
-
-# Join & Leave events
-  join-message: 
-    - text: "&f[&a+&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
-  leave-message: 
-    - text: "&f[&c-&f] &7| {prefix}&r {name_color}{player_nickname}&r {suffix}"
-  
-# Message of the Day
-  motd:
-    - text: "\n&8[&bP&8] &7| Hey there, "
-    - text: "&a{player_nickname}"
-      hover: "&7That's your name, right?"
-    - text: "&7!\n&8[&bP&8] &7| There are currently &a{online}&7 players online."
-      suggest_command: "/list"
-    - text: "\n&8[&bP&8] &7| &f&nClick here to join the discord.\n"
-      url: "https://d.minegla.de/"
-  
-
 # =====================================================
 #                       Statistics
 # =====================================================

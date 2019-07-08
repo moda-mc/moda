@@ -1,5 +1,7 @@
 package com.mineglade.moda.utils;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import com.mineglade.moda.utils.placeholders.ModaPlaceholderAPI;
 
 import net.md_5.bungee.api.chat.BaseComponent;
