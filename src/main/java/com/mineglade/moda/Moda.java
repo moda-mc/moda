@@ -219,7 +219,7 @@ public class Moda extends JavaPlugin implements Listener {
 			final FileConfiguration modulesConfig = YamlConfiguration.loadConfiguration(modulesConfigFile);
 			if (!modulesConfig.contains(module.getName())) {
 				Moda.instance.getLogger().info(String.format("New module installed: '%s'", module.getName()));
-				modulesConfig.set(module.getName(), internal); // Enable internal modules by default, disable external modules by default
+				modulesConfig.set(module.getName(), !internal); // Disable internal modules by default, enable external modules by default
 				modulesConfig.save(modulesConfigFile);
 			}
 
