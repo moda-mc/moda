@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.mineglade.moda.modules.IMessage;
 import com.mineglade.moda.modules.Module;
@@ -55,7 +56,7 @@ public class ChatModule extends Module<ChatStorageHandler> {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onChat(final AsyncPlayerChatEvent event) {
 		final Player player = event.getPlayer();
 
@@ -76,5 +77,12 @@ public class ChatModule extends Module<ChatStorageHandler> {
 									message, vaultPrefix, vaultSuffix, vaultGroup)));
 		}
 		event.getRecipients().clear();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onJoin(final PlayerJoinEvent event) {
+		final Player player = event.getPlayer();
+
+
 	}
 }
