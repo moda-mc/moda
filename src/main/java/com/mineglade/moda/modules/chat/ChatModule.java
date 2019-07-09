@@ -7,6 +7,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.mineglade.moda.modules.IMessage;
 import com.mineglade.moda.modules.Module;
+import com.mineglade.moda.modules.chat.storage.ChatDatabaseStorageHandler;
+import com.mineglade.moda.modules.chat.storage.ChatFileStorageHandler;
 import com.mineglade.moda.modules.chat.storage.ChatStorageHandler;
 import com.mineglade.moda.utils.placeholders.ModaPlaceholderAPI;
 import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
@@ -34,12 +36,12 @@ public class ChatModule extends Module<ChatStorageHandler> {
 
 	@Override
 	public FileStorageHandler getFileStorageHandler() {
-		return null;
+		return new ChatFileStorageHandler(this);
 	}
 
 	@Override
 	public DatabaseStorageHandler getDatabaseStorageHandler() {
-		return null;
+		return new ChatDatabaseStorageHandler(this);
 	}
 
 	@Override
