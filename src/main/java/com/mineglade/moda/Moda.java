@@ -65,6 +65,21 @@ public class Moda extends JavaPlugin implements Listener {
 		 * this.registerCommands(); this.registerEvents();
 		 */
 
+		if (this.getStorageType().equals(StorageType.MYSQL)) {
+			try {
+				db = new DatabaseHandler(this.getConfig().getString("mysql.host"),
+						this.getConfig().getInt("mysql.port"),
+						this.getConfig().getString("mysql.database"),
+						this.getConfig().getString("mysql.user"),
+						this.getConfig().getString("mysql.password"));
+			} catch (final SQLException e) {
+				this.getLogger().severe("Initializing MySQL failed. Please configure MySQL properly or switch to file storage.");
+				e.printStackTrace();
+				Bukkit.getPluginManager().disablePlugin(this);
+				return;
+			}
+		}
+
 		// Register core command
 		this.getCommand("moda").setExecutor(new ModaCommand());
 

@@ -1,136 +1,182 @@
-# Plugin Configuration for iCore (by MineGlade)
-# =====================================================
-#                      Description
-# =====================================================
-# This plugin is a general all-purposes plugin designed
-# specifically for MineGlade (https://minegla.de/).
-# In stead of keeping the plugin custom and private,
-# we've decided to make it open-source and free-to-use
-# for other servers.
+# Prefix for all messages send by Moda and its modules
+prefix: "&8[&bM&8] &7| "
+
+storage:
+  # can be 'file' or 'mysql'. if mysql, configure mysql below.
+  type: file
+  
+#mysql:
+#  host: "localhost"
+#  port: 3306
+#  database: "db"
+#  user: "root"
+#  password: "password"
+
+debug: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Plugin Configuration for iCore (by MineGlade)
+## =====================================================
+##                      Description
+## =====================================================
+## This plugin is a general all-purposes plugin designed
+## specifically for MineGlade (https://minegla.de/).
+## In stead of keeping the plugin custom and private,
+## we've decided to make it open-source and free-to-use
+## for other servers.
+##
+## We appreciate everyone using the plugin, and we hope
+## you'll be able to learn something from it.
 #
-# We appreciate everyone using the plugin, and we hope
-# you'll be able to learn something from it.
-
-# =====================================================
-#                       Licensing
-# =====================================================
-# 
-# This plugin (iCore) is licensed under GPL v3.0
-# Derivative works have to be published under the same
-# license, and reference the original (iCore).
-# 
-# https://github.com/MineGlade/iCore/blob/development/LICENSE
-# https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3)
-
-# =====================================================
-#                     Plugin Settings
-# =====================================================
-# you can use color codes with an & character.
-# &a-f,0-1,k,l,m,n,o
+## =====================================================
+##                       Licensing
+## =====================================================
+## 
+## This plugin (iCore) is licensed under GPL v3.0
+## Derivative works have to be published under the same
+## license, and reference the original (iCore).
+## 
+## https://github.com/MineGlade/iCore/blob/development/LICENSE
+## https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3)
 #
-# for no prefix do ""
-
-plugin-prefix: "&8[&bM&8] &7| "
-
-# =====================================================
-#                          Chat
-# =====================================================
+## =====================================================
+##                     Plugin Settings
+## =====================================================
+## you can use color codes with an & character.
+## &a-f,0-1,k,l,m,n,o
+##
+## for no prefix do ""
 #
-# Placeholders: 
-#   {player_nickname}: the nickname of the player (if the player has no nickname, it will use %player_displayname%)
-#   {player_displayname}: the display name of the player (other plugin's nicknames)
-#   {player_name}: just the username of the player
-#   {prefix}: the vault prefix (the one you've set wiyh your permissions plugin)
-#   {suffix}: the vault suffix
-#   {name_color}: the player's configured name color (if the player has no name_color this will default to white)
-#   {chat_color}: the player's configured chat color (...)
-#   {player-statistcs}: a list of useful player statistics (used for hover on chat)
-#   All PlaceholderAPI placeholders, if it's installed
-# 
-# All Color Codes:
-# https://minecraft.tools/en/color-code.php
-
-chat:
-
-# Colors:
-  default-name-color: "7"
-  default-chat-color: "7"
-
-# =====================================================
-#                       Statistics
-# =====================================================
+#plugin-prefix: "&8[&bM&8] &7| "
 #
-# Placeholders: 
-#   {player_nickname}: the nickname of the player (if the player has no nickname, it will use %player_displayname%)
-#   {player_displayname}: the display name of the player (other plugin's nicknames)
-#   {player_name}: just the username of the player
-#   {prefix}: the vault prefix (the one you've set wiyh your permissions plugin)
-#   {suffix}: the vault suffix
-#   {group}: the vault group
-#   {online}: the total amount players connected to the server
-#   All PlaceholderAPI placeholders, if it's installed
-
-player-statistics: |-
-  &f&lUser Info:&r
-    &7username: &f{player_name}
-    &7group: &f{group}
-
-# =====================================================
-#                         MySQL
-# =====================================================
-# Only Turn this on after you've entered all the information.
-# Used for storing votes, nicknames, other user data.
-
-mysql:
-  enabled: false
-  host: "localhost"
-  port: 3306
-  database: "db"
-  user: "root"
-  password: "password"
-
-# =====================================================
-#                        GitHub
-# =====================================================
-# Only Turn this on after you've entered all the information.
+## =====================================================
+##                          Chat
+## =====================================================
+##
+## Placeholders: 
+##   {player_nickname}: the nickname of the player (if the player has no nickname, it will use %player_displayname%)
+##   {player_displayname}: the display name of the player (other plugin's nicknames)
+##   {player_name}: just the username of the player
+##   {prefix}: the vault prefix (the one you've set wiyh your permissions plugin)
+##   {suffix}: the vault suffix
+##   {name_color}: the player's configured name color (if the player has no name_color this will default to white)
+##   {chat_color}: the player's configured chat color (...)
+##   {player-statistcs}: a list of useful player statistics (used for hover on chat)
+##   All PlaceholderAPI placeholders, if it's installed
+## 
+## All Color Codes:
+## https://minecraft.tools/en/color-code.php
 #
-# Placeholders:
-#   %url%: The url that the ticket can be found on.
-
-github:
-  enabled: false
-  username: "username" 
-  password: "password"
-  repository: "Username/Repository"
-  labels:
-    - "enhancement"
-    #- "your-label"
-  response: 
-    - text: "&8[&bP&8] &7| &nClick here to view your suggestion\n"
-      url: "%url%"
-      hover: "your suggestion can be found on \n%url%"
-
-# =====================================================
-#                     Discord Bot
-# =====================================================
-# KEEP YOUR BOT TOKEN PRIVATE AT ALL TIMES!
-# THIS TOKEN ALLOWS FULL ACCESS TO YOUR BOT USER!
-# Only turn this on after you've entered your bot's token. (https://discordapp.com/developers/applications/)
-
-discord:
-  enabled: false 
-  token: "your-token" 
-
-# =====================================================
-#                       Emotes
-# =====================================================
-# iCore has a selection of emotes a player can use with
-# commands. a list of emotes can be found on the [wiki]
-
-emotes:
-  enabled: true
-
-# =====================================================
-#                       The End
-# =====================================================
-# Yes, for real! You've reached the end of the configuration file!
+#chat:
+#
+## Colors:
+#  default-name-color: "7"
+#  default-chat-color: "7"
+#
+## =====================================================
+##                       Statistics
+## =====================================================
+##
+## Placeholders: 
+##   {player_nickname}: the nickname of the player (if the player has no nickname, it will use %player_displayname%)
+##   {player_displayname}: the display name of the player (other plugin's nicknames)
+##   {player_name}: just the username of the player
+##   {prefix}: the vault prefix (the one you've set wiyh your permissions plugin)
+##   {suffix}: the vault suffix
+##   {group}: the vault group
+##   {online}: the total amount players connected to the server
+##   All PlaceholderAPI placeholders, if it's installed
+#
+#player-statistics: |-
+#  &f&lUser Info:&r
+#    &7username: &f{player_name}
+#    &7group: &f{group}
+#
+## =====================================================
+##                         MySQL
+## =====================================================
+## Only Turn this on after you've entered all the information.
+## Used for storing votes, nicknames, other user data.
+#
+#mysql:
+#  enabled: false
+#  host: "localhost"
+#  port: 3306
+#  database: "db"
+#  user: "root"
+#  password: "password"
+#
+## =====================================================
+##                        GitHub
+## =====================================================
+## Only Turn this on after you've entered all the information.
+##
+## Placeholders:
+##   %url%: The url that the ticket can be found on.
+#
+#github:
+#  enabled: false
+#  username: "username" 
+#  password: "password"
+#  repository: "Username/Repository"
+#  labels:
+#    - "enhancement"
+#    #- "your-label"
+#  response: 
+#    - text: "&8[&bP&8] &7| &nClick here to view your suggestion\n"
+#      url: "%url%"
+#      hover: "your suggestion can be found on \n%url%"
+#
+## =====================================================
+##                     Discord Bot
+## =====================================================
+## KEEP YOUR BOT TOKEN PRIVATE AT ALL TIMES!
+## THIS TOKEN ALLOWS FULL ACCESS TO YOUR BOT USER!
+## Only turn this on after you've entered your bot's token. (https://discordapp.com/developers/applications/)
+#
+#discord:
+#  enabled: false 
+#  token: "your-token" 
+#
+## =====================================================
+##                       Emotes
+## =====================================================
+## iCore has a selection of emotes a player can use with
+## commands. a list of emotes can be found on the [wiki]
+#
+#emotes:
+#  enabled: true
+#
+## =====================================================
+##                       The End
+## =====================================================
+## Yes, for real! You've reached the end of the configuration file!
