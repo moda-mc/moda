@@ -133,12 +133,12 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		}
 	}
 
-	public final void disable() {
+	public final void disable() throws Exception {
 		HandlerList.unregisterAll(this);
 		Scheduler.cancelAllTasks(this);
 
 		if (this.storage instanceof FileStorageHandler) {
-			((FileStorageHandler) this.storage).save();
+			((FileStorageHandler) this.storage).saveBlocking();
 		}
 
 		this.logger.debug("Disabled");

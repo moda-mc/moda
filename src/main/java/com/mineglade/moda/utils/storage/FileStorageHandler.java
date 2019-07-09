@@ -1,6 +1,7 @@
 package com.mineglade.moda.utils.storage;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,11 +28,14 @@ public abstract class FileStorageHandler extends StorageHandler {
 	}
 
 	public BukkitFuture<NoParameter> save() {
-		final BukkitFuture<NoParameter> future = new BukkitFuture<>(Moda.instance, () ->  {
+		return new BukkitFuture<>(Moda.instance, () ->  {
 			this.file.save(this.fileFile);
 			return null;
 		});
-		return future;
+	}
+
+	public void saveBlocking() throws IOException {
+		this.file.save(this.fileFile);
 	}
 
 }
