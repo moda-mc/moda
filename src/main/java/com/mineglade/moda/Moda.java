@@ -10,11 +10,13 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.moda.hooks.discord.DiscordListener;
 import com.mineglade.moda.modules.Module;
+import com.mineglade.moda.utils.placeholders.ModaPlaceholderAPI;
 import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 import com.mineglade.moda.utils.storage.StorageType;
 
@@ -62,6 +64,12 @@ public class Moda extends JavaPlugin implements Listener {
 		 *
 		 * this.registerCommands(); this.registerEvents();
 		 */
+
+		// Register core command
+		this.getCommand("moda").setExecutor(new ModaCommand());
+
+		// Add base placeholders.
+		this.addCorePlaceholders();
 
 		// Register all internal modules
 		for (final Module<? extends ModuleStorageHandler> module : Module.MODULES) {
@@ -212,6 +220,14 @@ public class Moda extends JavaPlugin implements Listener {
 //		pm.registerEvents(new ChatEvent(), this);
 //		pm.registerEvents(new JoinLeaveEvent(), this);
 //	}
+
+	private void addCorePlaceholders() {
+		ModaPlaceholderAPI.addPlaceholder("PLAYER", Player::getName);
+		ModaPlaceholderAPI.addPlaceholder("ONLINE", player -> Bukkit.getServer().getOnlinePlayers().size());
+		ModaPlaceholderAPI.addPlaceholder("DISPLAYNAME", Player::getDisplayName);
+
+
+	}
 
 	private static void registerModule(final Module<? extends ModuleStorageHandler> module, final boolean internal) {
 		try {
