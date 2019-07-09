@@ -28,6 +28,7 @@
 					<include>*.yml</include>
 					<include>*.yaml</include>
 				</includes>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 
@@ -53,19 +54,19 @@
 					<relocations>
 						<relocation>
 							<pattern>net.dv8tion.jda</pattern>
-							<shadedPattern>com.mineglade.icore.lib.jda</shadedPattern>
+							<shadedPattern>com.mineglade.moda.lib.jda</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>com.iwepbb.crypto</pattern>
-							<shadedPattern>com.mineglade.icore.lib.crypto</shadedPattern>
+							<shadedPattern>com.mineglade.moda.lib.crypto</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>xyz.derkades.derkutils</pattern>
-							<shadedPattern>com.mineglade.icore.lib.derkutils</shadedPattern>
+							<shadedPattern>com.mineglade.moda.lib.derkutils</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>com.google.gson</pattern>
-							<shadedPattern>com.mineglade.icore.lib.gson</shadedPattern>
+							<shadedPattern>com.mineglade.moda.lib.gson</shadedPattern>
 						</relocation>
 					</relocations>
 
