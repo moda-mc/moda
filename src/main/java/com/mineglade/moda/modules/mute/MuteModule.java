@@ -2,6 +2,11 @@ package com.mineglade.moda.modules.mute;
 
 import com.mineglade.moda.modules.IMessage;
 import com.mineglade.moda.modules.Module;
+import com.mineglade.moda.modules.mute.commands.CommandMute;
+import com.mineglade.moda.modules.mute.commands.CommandUnmute;
+import com.mineglade.moda.modules.mute.storage.MuteDatabaseStorageHandler;
+import com.mineglade.moda.modules.mute.storage.MuteFileStorageHandler;
+import com.mineglade.moda.modules.mute.storage.MuteStorageHandler;
 import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
 import com.mineglade.moda.utils.storage.FileStorageHandler;
 

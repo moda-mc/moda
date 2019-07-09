@@ -1,4 +1,4 @@
-package com.mineglade.moda.modules.mute;
+package com.mineglade.moda.modules.mute.storage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
