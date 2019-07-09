@@ -28,6 +28,7 @@
 					<include>*.yml</include>
 					<include>*.yaml</include>
 				</includes>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 
