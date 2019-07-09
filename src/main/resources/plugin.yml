@@ -5,7 +5,7 @@ description: "A fully modular core plugin for spigot."
 website: https://www.github.com/mineglade/Moda
 authors: [patchtv, Derkades]
 
-version: "@project.version@"
+version: '@project.version@'
 
 softdepend: [Votifier, PlaceholderAPI, Vault]
 
