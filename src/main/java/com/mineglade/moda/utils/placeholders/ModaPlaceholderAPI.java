@@ -33,19 +33,17 @@ public class ModaPlaceholderAPI {
 		final BaseComponent[] newComponents = new BaseComponent[components.length];
 		for (int i = 0; i < components.length; i++) {
 			final BaseComponent originalComponent = components[i];
-			final String text = originalComponent.toPlainText();
+			String text = originalComponent.toPlainText();
 			System.out.println("text: " + text);
 			for (final Map.Entry<String, Function<Player, Object>> placeholderEntry : PLACEHOLDERS.entrySet()) {
 				System.out.println("contains " + placeholderEntry.getKey() + "?    " + text.contains(placeholderEntry.getKey()));
 				if (text.contains(placeholderEntry.getKey())) {
-					final String newText = text.replace(placeholderEntry.getKey(), placeholderEntry.getValue().apply(player).toString());
-					final BaseComponent component = new TextComponent(newText);
-					component.copyFormatting(originalComponent);
-					newComponents[i] = component;
-				} else {
-					newComponents[i] = components[i];
+					text = text.replace(placeholderEntry.getKey(), placeholderEntry.getValue().apply(player).toString());
 				}
 			}
+			final BaseComponent component = new TextComponent(text);
+			component.copyFormatting(originalComponent);
+			newComponents[i] = component;
 		}
 		return newComponents;
 	}
