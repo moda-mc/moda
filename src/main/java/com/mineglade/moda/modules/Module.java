@@ -15,6 +15,7 @@ import org.bukkit.plugin.UnknownDependencyException;
 
 import com.mineglade.moda.Moda;
 import com.mineglade.moda.modules.chat.ChatModule;
+import com.mineglade.moda.modules.mute.MuteModule;
 import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
 import com.mineglade.moda.utils.storage.FileStorageHandler;
 import com.mineglade.moda.utils.storage.ModuleStorageHandler;
@@ -28,6 +29,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 	public static final Module<? extends ModuleStorageHandler>[] MODULES = new Module<?>[]{
 			new Votes(),
 			new ChatModule(),
+			new MuteModule(),
 	};
 
 	protected Moda plugin;
