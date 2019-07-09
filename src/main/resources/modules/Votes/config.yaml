@@ -42,13 +42,13 @@ vote-sites:
   - text: "\n&8[&bP&8] &7| &74. &atopg"
     hover: "vote for us on topg.org!"
     url: "https://topg.org/Minecraft/in-513647"
-
-  - text: "\n&8[&bP&8] &7| &75. &amccommunity"
-    hover: "vote for us on mccommunity.net!"
-    url: "https://mccommunity.net/server/106-MineGlade/vote/"
-  - text: "\n"
-  - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
     
+  - text: "\n"
+  
+  - text: "\n&8[&bP&8] &7| &7For every vote you receive &a¢35&7."
+  
+  - text: "\n&8[&bP&8] &7| You currently have &a%votes% &7votes."
+  
 reminder:
   interval: 30 # how long between two vote reminders, in minutes
   delay: 30 # how long before the vote reminder appears for the first time, in minutes
