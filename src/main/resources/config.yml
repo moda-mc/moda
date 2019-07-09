@@ -1,16 +1,57 @@
-# Prefix for all messages send by Moda and its modules
+# Plugin Configuration for Moda (by MineGlade)
+# =====================================================
+#                      Description
+# =====================================================
+# This plugin is a fully Modular core for your 
+# bukkit/spigot server. Most modules are designed to 
+# intricately work well together to provide the user 
+# with an amazing experience.
+
+# turn on or off modules quickly in the modules.yaml
+
+# we've decided to make Moda open-source and free for
+# everyone.
+
+# If you're a developer and would like to develop your
+# own module, please refer to the wiki:
+# https://github.com/MineGlade/Moda/wiki/Module-development
+
+# We appreciate everyone using the plugin, and we hope
+# you'll be able to learn something from it.
+
+# =====================================================
+#                       Licensing
+# =====================================================
+# 
+# This plugin (Moda) is licensed under GPL v3.0
+# Derivative works have to be published under the same
+# license, and reference the original (Moda).
+# 
+# https://github.com/MineGlade/Moda/blob/development/LICENSE
+# https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3)
+
+# =====================================================
+#                     Plugin Settings
+# =====================================================
+# Prefix for all messages sent by Moda and its modules
+#
+# you can use color codes with an & character.
+# &a-f,0-1,k,l,m,n,o
+#
+# for no prefix do ""
+
 prefix: "&8[&bM&8] &7| "
 
 storage:
-  # can be 'file' or 'mysql'. if mysql, configure mysql below.
+  # can be 'file' or 'mysql'. if mysql, uncomment and configure mysql below.
   type: file
   
-#mysql:
-#  host: "localhost"
-#  port: 3306
-#  database: "db"
-#  user: "root"
-#  password: "password"
+#  mysql:
+#    host: "localhost"
+#    port: 3306
+#    database: "db"
+#    user: "root"
+#    password: "password"
 
 debug: true
 
@@ -44,39 +85,7 @@ debug: true
 
 
 
-## Plugin Configuration for iCore (by MineGlade)
-## =====================================================
-##                      Description
-## =====================================================
-## This plugin is a general all-purposes plugin designed
-## specifically for MineGlade (https://minegla.de/).
-## In stead of keeping the plugin custom and private,
-## we've decided to make it open-source and free-to-use
-## for other servers.
-##
-## We appreciate everyone using the plugin, and we hope
-## you'll be able to learn something from it.
-#
-## =====================================================
-##                       Licensing
-## =====================================================
-## 
-## This plugin (iCore) is licensed under GPL v3.0
-## Derivative works have to be published under the same
-## license, and reference the original (iCore).
-## 
-## https://github.com/MineGlade/iCore/blob/development/LICENSE
-## https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3)
-#
-## =====================================================
-##                     Plugin Settings
-## =====================================================
-## you can use color codes with an & character.
-## &a-f,0-1,k,l,m,n,o
-##
-## for no prefix do ""
-#
-#plugin-prefix: "&8[&bM&8] &7| "
+
 #
 ## =====================================================
 ##                          Chat
