@@ -18,30 +18,27 @@ public class ModaPlaceholderAPI {
 
 	public static String parsePlaceholders(String string, final Player player) {
 		for (final Map.Entry<String, Function<Player, Object>> placeholderEntry : PLACEHOLDERS.entrySet()) {
-			if (string.contains(formatPlaceholder(placeholderEntry.getKey()))) {
-				string = string.replace(formatPlaceholder(placeholderEntry.getKey()), placeholderEntry.getValue().apply(player).toString());
+			if (string.contains(placeholderEntry.getKey())) {
+				string = string.replace(placeholderEntry.getKey(), placeholderEntry.getValue().apply(player).toString());
 			}
 		}
 		return string;
 	}
 
-	private static String formatPlaceholder(final String placeholder) {
-		return PLACEHOLDER_START + placeholder + PLACEHOLDER_END;
-	}
-
 	public static void addPlaceholder(final String placeholder, final Function<Player, Object> supplier) {
-		PLACEHOLDERS.put(placeholder, supplier);
+		PLACEHOLDERS.put(PLACEHOLDER_START + placeholder + PLACEHOLDER_END, supplier);
 	}
-
 
 	public static BaseComponent[] parsePlaceholders(final Player player, final BaseComponent... components) {
 		final BaseComponent[] newComponents = new BaseComponent[components.length];
 		for (int i = 0; i < components.length; i++) {
 			final BaseComponent originalComponent = components[i];
+			final String text = originalComponent.toPlainText();
+			System.out.println("text: " + text);
 			for (final Map.Entry<String, Function<Player, Object>> placeholderEntry : PLACEHOLDERS.entrySet()) {
-				final String text = originalComponent.toPlainText();
-				if (text.contains(formatPlaceholder(placeholderEntry.getKey()))) {
-					final String newText = text.replace(formatPlaceholder(placeholderEntry.getKey()), placeholderEntry.getValue().apply(player).toString());
+				System.out.println("contains " + placeholderEntry.getKey() + "?    " + text.contains(placeholderEntry.getKey()));
+				if (text.contains(placeholderEntry.getKey())) {
+					final String newText = text.replace(placeholderEntry.getKey(), placeholderEntry.getValue().apply(player).toString());
 					final BaseComponent component = new TextComponent(newText);
 					component.copyFormatting(originalComponent);
 					newComponents[i] = component;
