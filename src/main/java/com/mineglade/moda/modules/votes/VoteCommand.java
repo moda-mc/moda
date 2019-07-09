@@ -1,4 +1,4 @@
-package com.mineglade.moda.votes;
+package com.mineglade.moda.modules.votes;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -16,11 +16,11 @@ import org.bukkit.plugin.UnknownDependencyException;
 import com.mineglade.moda.Moda;
 import com.mineglade.moda.modules.chat.ChatModule;
 import com.mineglade.moda.modules.mute.MuteModule;
+import com.mineglade.moda.modules.votes.Votes;
 import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
 import com.mineglade.moda.utils.storage.FileStorageHandler;
 import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 import com.mineglade.moda.utils.storage.StorageType;
-import com.mineglade.moda.votes.Votes;
 
 import xyz.derkades.derkutils.FileUtils;
 
