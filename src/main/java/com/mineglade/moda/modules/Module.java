@@ -84,9 +84,13 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		this.getDataFolder().mkdirs();
 
 		// Load config file
-		final File configOutputFile = new File(this.getDataFolder(), "config.yaml");
-		FileUtils.copyOutOfJar(this.getClass(), "/modules/" + this.getName() + "/config.yaml", configOutputFile);
-		this.config = YamlConfiguration.loadConfiguration(configOutputFile);
+		try {
+			final File configOutputFile = new File(this.getDataFolder(), "config.yaml");
+			FileUtils.copyOutOfJar(this.getClass(), "/modules/" + this.getName() + "/config.yaml", configOutputFile);
+			this.config = YamlConfiguration.loadConfiguration(configOutputFile);
+		} catch (final NullPointerException e) {
+			this.logger.debug("Module does not have a config file");
+		}
 
 		// Load language file
 		final File langFileFile = new File(this.getDataFolder(), "lang.yaml");
