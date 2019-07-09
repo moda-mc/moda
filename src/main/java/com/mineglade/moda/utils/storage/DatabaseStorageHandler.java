@@ -23,10 +23,11 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 
 	/**
 	 * Called when the module is loaded. Can be used to create tables using {@link #createTableIfNonexistent(String, String)}
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public abstract void setup() throws SQLException;
 
+	@Deprecated
 	protected void createTableIfNonexistent(final String table, final String sql) throws SQLException {
 		final DatabaseMetaData meta = this.db.getConnection().getMetaData();
 		final ResultSet result = meta.getTables(null, null, table, null);

@@ -17,7 +17,7 @@ public abstract class FileStorageHandler extends StorageHandler {
 
 	private final File fileFile;
 
-	public FileStorageHandler(final Module module) {
+	public FileStorageHandler(final Module<? extends ModuleStorageHandler> module) {
 		super(module);
 
 		this.fileFile = new File(module.getDataFolder() + File.separator + "data", "data.yaml");
