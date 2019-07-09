@@ -49,8 +49,6 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 	public abstract IMessage[] getMessages();
 
-	public Command[] getCommands() { return null; }
-
 	public abstract FileStorageHandler getFileStorageHandler();
 
 	public abstract DatabaseStorageHandler getDatabaseStorageHandler();
@@ -93,21 +91,6 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		final FileConfiguration langFileFileConfiguration = YamlConfiguration.loadConfiguration(langFileFile);
 		this.lang = new LangFile(langFileFileConfiguration, this.getMessages());
 
-		// Register commands
-		if ((this.getCommands() != null) && (this.getCommands().length > 0)) {
-			try {
-				final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-				field.setAccessible(true);
-				final CommandMap map = (CommandMap) field.get(Bukkit.getServer());
-
-				for (final Command command : this.getCommands()) {
-					map.register(Moda.instance.getName(), command);
-				}
-			} catch (final IllegalAccessException | NoSuchFieldException | SecurityException e) {
-				throw new RuntimeException();
-			}
-		}
-
 		// Initialize scheduler
 		this.scheduler = new Scheduler(this);
 
@@ -131,6 +114,17 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		}
 
 		this.logger.debug("Enabled");
+	}
+
+	protected void registerCommand(final Command command) {
+		try {
+			final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+			field.setAccessible(true);
+			final CommandMap map = (CommandMap) field.get(Bukkit.getServer());
+			map.register(Moda.instance.getName(), command);
+		} catch (final IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public final void disable() {
