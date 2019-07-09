@@ -2,66 +2,57 @@ package com.mineglade.moda.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.moda.Moda;
 
-import net.md_5.bungee.api.ChatColor;
-import xyz.derkades.derkutils.bukkit.Colors;
-
 /**
  * handles all player data in either mysql or a yaml file.
- * 
+ *
  * @author MineGlade
  */
+@Deprecated
 public class PlayerData {
 
-	private OfflinePlayer player;
+	private final OfflinePlayer player;
 
-	private JavaPlugin iCore = Moda.instance;
-	private boolean mysql = Moda.instance.getConfig().getBoolean("mysql.enabled");
+	private final JavaPlugin iCore = Moda.instance;
+	private final boolean mysql = Moda.instance.getConfig().getBoolean("mysql.enabled");
 	private FileConfiguration dataFile;
 	private File dataFileFile;
-	
-	private boolean debug = Moda.instance.getConfig().getBoolean("debug");
+
+	private final boolean debug = Moda.instance.getConfig().getBoolean("debug");
 
 	/**
 	 * establishes player, writes and establishes dataFilefile.
-	 * 
+	 *
 	 * @param player
 	 */
-	public PlayerData(OfflinePlayer player) {
+	public PlayerData(final OfflinePlayer player) {
 		this.player = player;
-		if (!mysql) {
-			File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
+		if (!this.mysql) {
+			final File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
 			dataFileFileFolder.mkdirs();
-			dataFileFile = new File(dataFileFileFolder, player.getUniqueId() + ".yaml");
-			this.dataFile = YamlConfiguration.loadConfiguration(dataFileFile);
+			this.dataFileFile = new File(dataFileFileFolder, player.getUniqueId() + ".yaml");
+			this.dataFile = YamlConfiguration.loadConfiguration(this.dataFileFile);
 		}
 	}
 
 	/**
 	 * Instance of PlayerData file.
-	 * 
+	 *
 	 * @param file
 	 */
-	public PlayerData(File file) {
+	public PlayerData(final File file) {
 		this.player = null;
-		dataFileFile = file;
-		this.dataFile = YamlConfiguration.loadConfiguration(dataFileFile);
+		this.dataFileFile = file;
+		this.dataFile = YamlConfiguration.loadConfiguration(this.dataFileFile);
 	}
 
 	/**
@@ -69,52 +60,52 @@ public class PlayerData {
 	 */
 	public void save() {
 		try {
-			dataFile.save(dataFileFile);
-		} catch (IOException e) {
+			this.dataFile.save(this.dataFileFile);
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public String getFileName() {
-		return dataFileFile.getName();
+		return this.dataFileFile.getName();
 	}
 
 
-	
-	
+
+
 	public static List<PlayerData> getAllDataFiles() {
-		List<PlayerData> dataFileList = new ArrayList<>();
-		File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
+		final List<PlayerData> dataFileList = new ArrayList<>();
+		final File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
 		dataFileFileFolder.mkdirs();
-		for (File file : dataFileFileFolder.listFiles()) {
-			PlayerData data = new PlayerData(file);
+		for (final File file : dataFileFileFolder.listFiles()) {
+			final PlayerData data = new PlayerData(file);
 			dataFileList.add(data);
 		}
 		return dataFileList;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //	/**
 //	 * gets chat-color character from mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @return ChatColor object
 //	 */
 //	public ChatColor getChatColor() {
-//		ChatColor chatColor; 
+//		ChatColor chatColor;
 //		if (mysql) {
 //			try {
 //				PreparedStatement statement = Moda.db
@@ -148,7 +139,7 @@ public class PlayerData {
 //
 //	/**
 //	 * sets a chat-color character in the mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @param color <br>
 //	 *              &nbsp;&nbsp;example: <code>c</code>
 //	 */
@@ -192,7 +183,7 @@ public class PlayerData {
 //
 //	/**
 //	 * gets chat-format character from mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @return
 //	 */
 //	public ChatColor getChatFormat() {
@@ -222,7 +213,7 @@ public class PlayerData {
 //
 //	/**
 //	 * sets a chat-format character in the mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @param color <br>
 //	 *              &nbsp;&nbsp;example: <code>c</code>
 //	 */
@@ -273,7 +264,7 @@ public class PlayerData {
 //
 //	/**
 //	 * gets name-color from mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @return ChatColor object
 //	 */
 //	public ChatColor getNameColor() {
@@ -303,7 +294,7 @@ public class PlayerData {
 //
 //	/**
 //	 * sets a name-color character in the mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @param color <br>
 //	 *              &nbsp;&nbsp;example: <code>c</code>
 //	 */
@@ -347,7 +338,7 @@ public class PlayerData {
 //
 //	/**
 //	 * gets chat-format from mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @return ChatColor object
 //	 */
 //	public ChatColor getNameFormat() {
@@ -378,7 +369,7 @@ public class PlayerData {
 //
 //	/**
 //	 * sets a name-format character in the mysql or playerdata file.
-//	 * 
+//	 *
 //	 * @param color <br>
 //	 *              &nbsp;&nbsp;example: <code>c</code>
 //	 */
@@ -423,7 +414,7 @@ public class PlayerData {
 //	/**
 //	 * sets a nickname in the mysql or playerdata file. (maximum of 16 characters,
 //	 * ignoring color codes).
-//	 * 
+//	 *
 //	 * @param nickName <br>
 //	 *                 &nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
 //	 * @return
@@ -524,10 +515,10 @@ public class PlayerData {
 //	/**
 //	 * gets a nickname from the mysql or playerdata file. (maximum of 16 characters,
 //	 * ignoring color codes).
-//	 * 
+//	 *
 //	 * @return iCore nickname <br>
 //	 *         &nbsp;&nbsp;example: <code>&aThis&cIs&bMy&eNickname</code>
-//	 * @throws PlayerNotLoggedException 
+//	 * @throws PlayerNotLoggedException
 //	 */
 //	public String getNickName() throws PlayerNotLoggedException {
 //
@@ -591,9 +582,9 @@ public class PlayerData {
 //	/**
 //	 * gets the last username a player connected to the server with from the
 //	 * playerdatabase.
-//	 * 
+//	 *
 //	 * @return Minecraft username
-//	 * @throws PlayerNotLoggedException 
+//	 * @throws PlayerNotLoggedException
 //	 */
 //	public String getLastUserName() throws PlayerNotLoggedException {
 //		if (player.isOnline()) {
@@ -627,7 +618,7 @@ public class PlayerData {
 //	/**
 //	 * sets the username a player is currently connected to the server with to the
 //	 * playerdatabase.
-//	 * 
+//	 *
 //	 * @param username (player.getName())
 //	 */
 //	public void setLastUsername(String userName) {
@@ -651,7 +642,7 @@ public class PlayerData {
 //	/**
 //	 * gets the IP-address the player last connected to the server with from the
 //	 * playerdatabase.
-//	 * 
+//	 *
 //	 * @return IP-address
 //	 */
 //	public String getLastConnectionAddress() {
@@ -666,5 +657,5 @@ public class PlayerData {
 //
 //	}
 
-	
+
 }
