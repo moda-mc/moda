@@ -39,11 +39,24 @@ public class Scheduler {
 		return task;
 	}
 
+	public BukkitTask delayAsync(final long delay, final Runnable runnable) {
+		final BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(Moda.instance, runnable, delay);
+		this.registerTask(task);
+		return task;
+	}
+
 	public BukkitTask interval(final long delay, final long interval, final Runnable runnable) {
 		final BukkitTask task = Bukkit.getScheduler().runTaskTimer(Moda.instance, runnable, delay, interval);
 		this.registerTask(task);
 		return task;
 	}
+
+	public BukkitTask intervalAsync(final long delay, final long interval, final Runnable runnable) {
+		final BukkitTask task = Bukkit.getScheduler().runTaskTimerAsynchronously(Moda.instance, runnable, delay, interval);
+		this.registerTask(task);
+		return task;
+	}
+
 
 	private void registerTask(final BukkitTask task) {
 		final List<BukkitTask> tasks = RUNNING_TASKS.containsKey(this.module.getName()) ?
