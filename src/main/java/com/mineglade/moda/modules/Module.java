@@ -64,7 +64,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 	}
 
 	@SuppressWarnings("unchecked")
-	public final void enable() throws Exception {
+	public void enable() throws Exception {
 		// Initialize logger
 		this.logger = new ModuleLogger(Moda.instance.getLogger(), this);
 
@@ -93,9 +93,11 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		}
 
 		// Load language file
-		final File langFileFile = new File(this.getDataFolder(), "lang.yaml");
-		final FileConfiguration langFileFileConfiguration = YamlConfiguration.loadConfiguration(langFileFile);
-		this.lang = new LangFile(langFileFileConfiguration, this.getMessages());
+		if (this.getMessages() != null) {
+			final File langFileFile = new File(this.getDataFolder(), "lang.yaml");
+			final FileConfiguration langFileFileConfiguration = YamlConfiguration.loadConfiguration(langFileFile);
+			this.lang = new LangFile(langFileFileConfiguration, this.getMessages());
+		}
 
 		// Initialize scheduler
 		this.scheduler = new Scheduler(this);
@@ -103,10 +105,21 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		// Initialize data storage
 		final StorageType storageType = Moda.instance.getStorageType();
 		if (storageType == StorageType.MYSQL) {
-			final DatabaseStorageHandler handler = this.getDatabaseStorageHandler();
-			handler.setDatabaseHandler(Moda.db);
-			handler.setup();
-			this.storage = (T) handler;
+			if (this.getDatabaseStorageHandler() != null) {
+				final DatabaseStorageHandler handler = this.getDatabaseStorageHandler();
+				handler.setDatabaseHandler(Moda.db);
+				handler.setup();
+				this.storage = (T) handler;
+			} else {
+				this.logger.debug("No mysql storage handler provided, using file storage instead.");
+				final FileStorageHandler handler = this.getFileStorageHandler();
+				this.storage = (T) handler;
+
+				// Save config periodically
+				this.scheduler.interval(5*60*20, 5*60*20, () -> {
+					this.scheduler.async(handler::save);
+				});
+			}
 		} else if (storageType == StorageType.FILE) {
 			final FileStorageHandler handler = this.getFileStorageHandler();
 			this.storage = (T) handler;
