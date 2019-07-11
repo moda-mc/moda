@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.mineglade.moda.hooks.discord.DiscordListener;
 import com.mineglade.moda.modules.ExternalModule;
 import com.mineglade.moda.modules.Module;
+import com.mineglade.moda.utils.ModaExternalModuleLoader;
 import com.mineglade.moda.utils.placeholders.ModaPlaceholderAPI;
 import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 import com.mineglade.moda.utils.storage.StorageType;
@@ -91,6 +92,11 @@ public class Moda extends JavaPlugin implements Listener {
 		for (final Module<? extends ModuleStorageHandler> module : Module.MODULES) {
 			Moda.registerModule(module, true);
 		}
+
+		// Load external modules
+		final File modulesDirectory = new File(this.getDataFolder(), "modules");
+		final ModaExternalModuleLoader loader = new ModaExternalModuleLoader(modulesDirectory);
+		loader.load();
 	}
 
 	@Override
