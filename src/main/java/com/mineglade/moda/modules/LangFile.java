@@ -1,10 +1,13 @@
 package com.mineglade.moda.modules;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.mineglade.moda.Moda;
 
@@ -14,14 +17,21 @@ public class LangFile {
 
 	private final FileConfiguration file;
 
-	public LangFile(final FileConfiguration file, final IMessage[] messages) {
-		this.file = file;
+	public LangFile(final File fileFile, final IMessage[] messages) throws IOException {
+		this.file = YamlConfiguration.loadConfiguration(fileFile);
+
+		boolean changes = false;
 
 		for (final IMessage message : messages) {
-			file.addDefault(message.getPath(), message.getDefault());
-			if (!file.contains(message.getPath())) {
-				file.set(message.getPath(), message.getDefault());
+			this.file.addDefault(message.getPath(), message.getDefault());
+			if (!this.file.contains(message.getPath())) {
+				this.file.set(message.getPath(), message.getDefault());
+				changes = true;
 			}
+		}
+
+		if (changes) {
+			this.file.save(fileFile);
 		}
 	}
 

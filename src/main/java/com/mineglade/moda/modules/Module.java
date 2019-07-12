@@ -94,9 +94,8 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 		// Load language file
 		if (this.getMessages() != null) {
-			final File langFileFile = new File(this.getDataFolder(), "lang.yaml");
-			final FileConfiguration langFileFileConfiguration = YamlConfiguration.loadConfiguration(langFileFile);
-			this.lang = new LangFile(langFileFileConfiguration, this.getMessages());
+			final File langFile = new File(this.getDataFolder(), "lang.yaml");
+			this.lang = new LangFile(langFile, this.getMessages());
 		}
 
 		// Initialize scheduler
