@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -30,7 +31,8 @@ public class ModaExternalModuleLoader {
 
 	@SuppressWarnings("unchecked")
 	public void load() {
-		for (final File jarFile : this.moduleDir.listFiles()) {
+		final File[] jarFiles = (File[]) Arrays.asList(this.moduleDir.listFiles()).stream().filter((f) -> f.getAbsolutePath().endsWith(".jar")).toArray();
+		for (final File jarFile : jarFiles) {
 			try (final ZipFile zip = new ZipFile(jarFile)){
 				final ZipEntry moduleYamlEntry = zip.getEntry("module.yaml");
 
