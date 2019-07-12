@@ -4,7 +4,7 @@ import com.mineglade.moda.modules.IMessage;
 
 public enum VotesMessage implements IMessage {
 
-	TEST("", ""),
+	TEST("test", ""),
 
 	;
 
