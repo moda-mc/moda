@@ -60,7 +60,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 	}
 
 	public final File getDataFolder() {
-		return new File(this.plugin.getDataFolder(), this.getName());
+		return new File("modules", this.getName());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -94,7 +94,7 @@ public class Moda extends JavaPlugin implements Listener {
 		}
 
 		// Load external modules
-		final File modulesDirectory = new File(this.getDataFolder(), "modules");
+		final File modulesDirectory = new File("modules");
 		final ModaExternalModuleLoader loader = new ModaExternalModuleLoader(modulesDirectory);
 		loader.load();
 	}
