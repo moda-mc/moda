@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -119,8 +118,7 @@ public class Moda extends JavaPlugin implements Listener {
 		}
 
 		// bStats Metrics
-		final Metrics metrics = new Metrics(this);
-		metrics.addCustomChart(new Metrics.AdvancedPie("enabled_modules", null));
+		new Stats(this);
 	}
 
 	@Override
