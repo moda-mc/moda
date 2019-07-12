@@ -49,6 +49,10 @@
 
 					<relocations>
 						<relocation>
+							<pattern>org.bstats</pattern>
+							<shadedPattern>com.mineglade.moda.lib.bstats</shadedPattern>
+						</relocation>
+						<relocation>
 							<pattern>net.dv8tion.jda</pattern>
 							<shadedPattern>com.mineglade.moda.lib.jda</shadedPattern>
 						</relocation>
@@ -88,6 +92,13 @@
 			<artifactId>spigot-api</artifactId>
 			<version>${spigot.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>1.5</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -150,6 +161,11 @@
 
 	<repositories>
 
+		<repository>
+			<id>CodeMC</id>
+			<url>https://repo.codemc.org/repository/maven-public</url>
+		</repository>
+		
 		<repository>
 			<id>inventive-repo</id>
 			<url>https://repo.inventivetalent.org/content/groups/public/</url>
