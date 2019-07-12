@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.mineglade.moda.Moda;
+import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 
 import xyz.derkades.derkutils.bukkit.Colors;
 
@@ -17,14 +18,15 @@ public class LangFile {
 
 	private final FileConfiguration file;
 
-	public LangFile(final File fileFile, final IMessage[] messages) throws IOException {
+	public LangFile(final File fileFile, final Module<? extends ModuleStorageHandler> module) throws IOException {
 		this.file = YamlConfiguration.loadConfiguration(fileFile);
 
 		boolean changes = false;
 
-		for (final IMessage message : messages) {
+		for (final IMessage message : module.getMessages()) {
 			this.file.addDefault(message.getPath(), message.getDefault());
 			if (!this.file.contains(message.getPath())) {
+				module.logger.debug("Adding language option to config %s: %s", message.getPath(), message.getDefault());
 				this.file.set(message.getPath(), message.getDefault());
 				changes = true;
 			}
