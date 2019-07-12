@@ -159,6 +159,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			}
 
 			module.onLoad();
+			module.logger.debug("Loaded external module " + module.getName());
 		} catch (final Exception e) {
 			throw new Exception(e);
 		}
@@ -189,6 +190,8 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		}
 
 		module.onLoad();
+
+		module.logger.debug("Loaded internal module " + module.getName());
 	}
 
 	protected final void initLogger() {
@@ -213,6 +216,8 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		if (!LOADED.contains(this)) {
 			throw new IllegalStateException("This module has not been loaded");
 		}
+
+		this.logger.debug("Enabling module " + this.getName());
 
 		// Check dependencies
 		for (final String dependencyString : this.getPluginDependencies()) {
@@ -265,7 +270,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		// Initialize scheduler
 		this.scheduler = new Scheduler(this);
 
-		this.logger.debug("Enabled");
+		this.logger.debug("Enabled module " + this.getName());
 
 		ENABLED.add(this);
 	}
@@ -275,14 +280,14 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			throw new IllegalStateException("This module is not enabled");
 		}
 
+		this.logger.debug("Disabling module " + this.getName());
+
 		HandlerList.unregisterAll(this);
 		Scheduler.cancelAllTasks(this);
 
 		if (this.storage instanceof FileStorageHandler) {
 			((FileStorageHandler) this.storage).saveBlocking();
 		}
-
-		this.logger.debug("Disabled");
 
 		ENABLED.remove(this);
 	}
