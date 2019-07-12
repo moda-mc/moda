@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -66,7 +68,7 @@ public class Moda extends JavaPlugin implements Listener {
 		// Load all external modules
 		final File modulesDirectory = new File(this.getDataFolder(), "modules");
 		modulesDirectory.mkdirs();
-		final File[] jarFiles = (File[]) Arrays.asList(modulesDirectory.listFiles()).stream().filter((f) -> f.getAbsolutePath().endsWith(".jar")).toArray();
+		final Set<File> jarFiles = Arrays.asList(modulesDirectory.listFiles()).stream().filter((f) -> f.getAbsolutePath().endsWith(".jar")).collect(Collectors.toSet());
 		for (final File jarFile : jarFiles) {
 			try {
 				Module.loadExternal(jarFile);
