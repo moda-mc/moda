@@ -202,8 +202,11 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 	protected final void loadLang() throws IOException {
 		// Load language file
 		if (this.getMessages() != null) {
+			this.logger.debug("Loading language file");
 			final File langFile = new File(this.getDataFolder(), "lang.yaml");
-			this.lang = new LangFile(langFile, this.getMessages());
+			this.lang = new LangFile(langFile, this);
+		} else {
+			this.logger.debug("No IMessage array provided, skipping language file loading");
 		}
 	}
 
