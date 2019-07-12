@@ -22,7 +22,7 @@ public class MuteDatabaseStorageHandler extends DatabaseStorageHandler implement
 
 	@Override
 	public void setup() throws SQLException {
-		this.db.createTableIfNonexistent("moda_mute", "CREATE TABLE `" + this.db.getDatabase() + "`.`moda_mute` "
+		this.db.createTableIfNonexistent("playerMuted", "CREATE TABLE `" + this.db.getDatabase() + "`.`playerMuted` "
 				+ "(`uuid` VARCHAR(100) NOT NULL, `expires` BIGINT() NOT NULL, PRIMARY KEY (`uuid`)) ENGINE = InnoDB");
 	}
 

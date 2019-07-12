@@ -1,10 +1,12 @@
 package com.mineglade.moda.modules.chat;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.mineglade.moda.modules.IMessage;
 import com.mineglade.moda.modules.Module;
@@ -79,10 +81,38 @@ public class ChatModule extends Module<ChatStorageHandler> {
 		event.getRecipients().clear();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onJoin(final PlayerJoinEvent event) {
+
+		event.setJoinMessage("");
+
 		final Player player = event.getPlayer();
 
+		final Placeholder vaultPrefix = new Placeholder("{PREFIX}", this.vault == null ? "&c[NoVault]" : this.vault.getChat().getPlayerPrefix(player));
+		final Placeholder vaultSuffix = new Placeholder("{SUFFIX}", this.vault == null ? "&c[NoVault] " : this.vault.getChat().getPlayerSuffix(player));
+		final Placeholder vaultGroup = new Placeholder("{GROUP}", this.vault == null ? "&c[NoVault]" : this.vault.getChat().getPrimaryGroup(player));
+
+		Bukkit.spigot().broadcast(
+				ModaPlaceholderAPI.parsePlaceholders(player,
+						Chat.toComponentWithPapiPlaceholders(this.config, "join-message", player,
+								vaultPrefix, vaultSuffix, vaultGroup)));
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onQuit(final PlayerQuitEvent event) {
+
+		event.setQuitMessage("");
+
+		final Player player = event.getPlayer();
+
+		final Placeholder vaultPrefix = new Placeholder("{PREFIX}", this.vault == null ? "&c[NoVault]" : this.vault.getChat().getPlayerPrefix(player));
+		final Placeholder vaultSuffix = new Placeholder("{SUFFIX}", this.vault == null ? "&c[NoVault] " : this.vault.getChat().getPlayerSuffix(player));
+		final Placeholder vaultGroup = new Placeholder("{GROUP}", this.vault == null ? "&c[NoVault]" : this.vault.getChat().getPrimaryGroup(player));
+
+		Bukkit.spigot().broadcast(
+				ModaPlaceholderAPI.parsePlaceholders(player,
+						Chat.toComponentWithPapiPlaceholders(this.config, "leave-message", player,
+								vaultPrefix, vaultSuffix, vaultGroup)));
 
 	}
 }
