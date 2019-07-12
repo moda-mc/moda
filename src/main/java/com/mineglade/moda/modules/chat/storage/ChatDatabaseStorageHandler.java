@@ -13,7 +13,5 @@ public class ChatDatabaseStorageHandler extends DatabaseStorageHandler implement
 
 	@Override
 	public void setup() throws SQLException {
-		this.db.createTableIfNonexistent("playerMuted", "");
 	}
-
 }
