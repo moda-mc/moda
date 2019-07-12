@@ -1,5 +1,7 @@
 package com.mineglade.moda;
 
+import java.util.stream.Collectors;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +15,12 @@ public class ModaCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length == 1 && args[0].equals("list")) {
-			String.join(", ", (String[]) Module.LOADED.stream().map(Module::getName).toArray());
+		if (args.length == 1 && args[0].equals("loaded")) {
+			sender.sendMessage(String.join(", ",
+					Module.LOADED.stream().map(Module::getName).collect(Collectors.toList()).toArray(new String[] {})));
+		} else if (args.length == 1 && args[0].equals("enabled")) {
+				sender.sendMessage(String.join(", ",
+						Module.ENABLED.stream().map(Module::getName).collect(Collectors.toList()).toArray(new String[] {})));
 		} else if (args.length == 2 && args[0].equals("enable")) {
 			final Module<? extends ModuleStorageHandler> module = Module.getLoadedModuleByName(args[1]);
 			if (module == null) {
