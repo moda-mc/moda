@@ -65,6 +65,7 @@ public class Moda extends JavaPlugin implements Listener {
 
 		// Load all external modules
 		final File modulesDirectory = new File(this.getDataFolder(), "modules");
+		modulesDirectory.mkdirs();
 		final File[] jarFiles = (File[]) Arrays.asList(modulesDirectory.listFiles()).stream().filter((f) -> f.getAbsolutePath().endsWith(".jar")).toArray();
 		for (final File jarFile : jarFiles) {
 			try {
