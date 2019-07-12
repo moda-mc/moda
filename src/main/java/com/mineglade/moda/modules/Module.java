@@ -223,6 +223,9 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			}
 		}
 
+		// Initialize scheduler
+		this.scheduler = new Scheduler(this);
+
 		// Initialize data storage
 		final StorageType storageType = Moda.instance.getStorageType();
 		if (storageType == StorageType.MYSQL) {
