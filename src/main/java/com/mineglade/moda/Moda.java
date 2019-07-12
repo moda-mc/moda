@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -81,6 +82,7 @@ public class Moda extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
+
 		// Register core command
 		this.getCommand("moda").setExecutor(new ModaCommand());
 
@@ -114,6 +116,10 @@ public class Moda extends JavaPlugin implements Listener {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+
+		// bStats Metrics
+		final Metrics metrics = new Metrics(this);
+		metrics.addCustomChart(new Metrics.AdvancedPie("enabled_modules", null));
 	}
 
 	@Override
