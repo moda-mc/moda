@@ -89,7 +89,7 @@ public class Moda extends JavaPlugin implements Listener {
 		// Add core placeholders.
 		this.addCorePlaceholders();
 
-		final File modulesConfigFile = new File(Moda.instance.getDataFolder(), "modules.yaml");
+		final File modulesConfigFile = new File("modules", "modules.yaml");
 		final FileConfiguration modulesConfig = YamlConfiguration.loadConfiguration(modulesConfigFile);
 
 		// Enable all loaded modules that are enabled in modules.yaml

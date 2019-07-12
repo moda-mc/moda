@@ -26,6 +26,7 @@ import org.bukkit.plugin.UnknownDependencyException;
 
 import com.mineglade.moda.Moda;
 import com.mineglade.moda.modules.chat.ChatModule;
+import com.mineglade.moda.modules.joinquit.JoinQuitModule;
 import com.mineglade.moda.modules.mute.MuteModule;
 import com.mineglade.moda.modules.votes.Votes;
 import com.mineglade.moda.utils.InvalidModuleException;
@@ -43,6 +44,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			new Votes(),
 			new ChatModule(),
 			new MuteModule(),
+			new JoinQuitModule(),
 	};
 
 	public static final List<Module<? extends ModuleStorageHandler>> LOADED = new ArrayList<>();

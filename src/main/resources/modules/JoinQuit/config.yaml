@@ -1,0 +1,34 @@
+# =====================================================
+#                     Join & Leave
+# =====================================================
+# In this section you may define messages for the join  
+# and leave events.
+
+# Some simple join & leave messages would be:
+join-message:
+  - text: "&e{PLAYER} has joined the server"
+leave-message:
+  - text: "&e{PLAYER} has left the server"
+  
+# The following example includes more advanced options:
+
+#join-message: 
+#  # a join prefix
+#  - text: "&f[&a+&f] &7| "
+#  
+#  # a player component
+#  - text: "{PREFIX}&r {DSIPLAYNAME}&r {SUFFIX}"
+#    hover: |
+#      username: {PLAYER}
+#      group: {GROUP}
+#    suggest_command: "/tell {PLAYER}"
+#leave-message: 
+#  # a leave prefix
+#  - text: "&f[&c-&f] &7| "
+#  
+#  # a player component
+#  - text: "{PREFIX}&r {DSIPLAYNAME}&r {SUFFIX}"
+#    hover: |
+#      username: {PLAYER}
+#      group: {GROUP}
+#    suggest_command: "/tell {PLAYER}"

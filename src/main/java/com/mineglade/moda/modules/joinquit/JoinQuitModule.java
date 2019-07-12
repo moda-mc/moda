@@ -25,7 +25,7 @@ public class JoinQuitModule extends Module<NoStorageHandler> {
 
 	@Override
 	public String getName() {
-		return "JoinLeave";
+		return "JoinQuit";
 	}
 
 	@Override
