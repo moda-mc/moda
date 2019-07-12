@@ -3,6 +3,7 @@ package com.mineglade.moda;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -124,7 +125,7 @@ public class Moda extends JavaPlugin implements Listener {
 
 	@Override
 	public void onDisable() {
-		for (final Module<? extends ModuleStorageHandler> module : Module.ENABLED) {
+		for (final Module<? extends ModuleStorageHandler> module : new ArrayList<>(Module.ENABLED)) {
 			try {
 				module.disable();
 			} catch (final Exception e) {
