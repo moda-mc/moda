@@ -25,7 +25,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 
 import com.mineglade.moda.Moda;
-import com.mineglade.moda.modules.chat.ChatModule;
 import com.mineglade.moda.modules.joinquit.JoinQuitModule;
 import com.mineglade.moda.modules.mute.MuteModule;
 import com.mineglade.moda.modules.votes.Votes;
@@ -40,56 +39,24 @@ import xyz.derkades.derkutils.FileUtils;
 
 public abstract class Module<T extends ModuleStorageHandler> implements Listener {
 
+	public static final List<Module<? extends ModuleStorageHandler>> ENABLED = new ArrayList<>();
+
 	public static final Module<? extends ModuleStorageHandler>[] INTERNAL_MODULES = new Module<?>[]{
-			new Votes(),
-			new ChatModule(),
-			new MuteModule(),
-			new JoinQuitModule(),
+		new Votes(),
+		new MuteModule(),
+		new JoinQuitModule(),
 	};
 
 	public static final List<Module<? extends ModuleStorageHandler>> LOADED = new ArrayList<>();
 
-	public static final List<Module<? extends ModuleStorageHandler>> ENABLED = new ArrayList<>();
-
-	protected Moda plugin;
-	protected ModuleLogger logger;
-	protected FileConfiguration config;
-	protected LangFile lang;
-	protected Scheduler scheduler;
-	protected T storage;
-
-	private boolean external;
-
-	public Module() {
-		this.plugin = Moda.instance;
+	public static Module<? extends ModuleStorageHandler> getLoadedModuleByName(final String name){
+		for (final Module<? extends ModuleStorageHandler> module : Module.LOADED) {
+			if (module.getName().equals(name)) {
+				return module;
+			}
+		}
+		return null;
 	}
-
-	public abstract String getName();
-
-	public void onLoad() {}
-
-	public void onEnable() {}
-
-	public void onDisable() {}
-
-	public abstract IMessage[] getMessages();
-
-	public abstract FileStorageHandler getFileStorageHandler();
-
-	public abstract DatabaseStorageHandler getDatabaseStorageHandler();
-
-	public String[] getPluginDependencies() {
-		return new String[] {};
-	}
-
-	public final File getDataFolder() {
-		return new File("modules", this.getName());
-	}
-
-	public boolean isExternal() {
-		return this.external;
-	}
-
 	@SuppressWarnings("unchecked")
 	public static void loadExternal(final File jarFile) throws Exception {
 		final JarLoader jarLoader = new JarLoader(Moda.instance);
@@ -166,7 +133,6 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			throw new Exception(e);
 		}
 	}
-
 	public static void loadInternal(final Module<? extends ModuleStorageHandler> module) throws Exception {
 		module.external = false;
 
@@ -195,21 +161,37 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 		module.logger.debug("Loaded internal module " + module.getName());
 	}
+	protected FileConfiguration config;
+	private boolean external;
+	protected LangFile lang;
 
-	protected final void initLogger() {
-		// Initialize logger
-		this.logger = new ModuleLogger(Moda.instance.getLogger(), this);
+	protected ModuleLogger logger;
+
+	protected Moda plugin;
+
+	protected Scheduler scheduler;
+
+	protected T storage;
+
+	public Module() {
+		this.plugin = Moda.instance;
 	}
 
-	protected final void loadLang() throws IOException {
-		// Load language file
-		if (this.getMessages() != null) {
-			this.logger.debug("Loading language file");
-			final File langFile = new File(this.getDataFolder(), "lang.yaml");
-			this.lang = new LangFile(langFile, this);
-		} else {
-			this.logger.debug("No IMessage array provided, skipping language file loading");
+	public final void disable() throws Exception {
+		if (!ENABLED.contains(this)) {
+			throw new IllegalStateException("This module is not enabled");
 		}
+
+		this.logger.debug("Disabling module " + this.getName());
+
+		HandlerList.unregisterAll(this);
+		Scheduler.cancelAllTasks(this);
+
+		if (this.storage instanceof FileStorageHandler) {
+			((FileStorageHandler) this.storage).saveBlocking();
+		}
+
+		ENABLED.remove(this);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -280,22 +262,47 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		ENABLED.add(this);
 	}
 
-	public final void disable() throws Exception {
-		if (!ENABLED.contains(this)) {
-			throw new IllegalStateException("This module is not enabled");
-		}
+	public abstract DatabaseStorageHandler getDatabaseStorageHandler();
 
-		this.logger.debug("Disabling module " + this.getName());
-
-		HandlerList.unregisterAll(this);
-		Scheduler.cancelAllTasks(this);
-
-		if (this.storage instanceof FileStorageHandler) {
-			((FileStorageHandler) this.storage).saveBlocking();
-		}
-
-		ENABLED.remove(this);
+	public final File getDataFolder() {
+		return new File("modules", this.getName());
 	}
+
+	public abstract FileStorageHandler getFileStorageHandler();
+
+	public abstract IMessage[] getMessages();
+
+	public abstract String getName();
+
+	public String[] getPluginDependencies() {
+		return new String[] {};
+	}
+
+	protected final void initLogger() {
+		// Initialize logger
+		this.logger = new ModuleLogger(Moda.instance.getLogger(), this);
+	}
+
+	public boolean isExternal() {
+		return this.external;
+	}
+
+	protected final void loadLang() throws IOException {
+		// Load language file
+		if (this.getMessages() != null) {
+			this.logger.debug("Loading language file");
+			final File langFile = new File(this.getDataFolder(), "lang.yaml");
+			this.lang = new LangFile(langFile, this);
+		} else {
+			this.logger.debug("No IMessage array provided, skipping language file loading");
+		}
+	}
+
+	public void onDisable() {}
+
+	public void onEnable() {}
+
+	public void onLoad() {}
 
 	protected void registerCommand(final Command command) {
 		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s",
@@ -311,15 +318,6 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		} catch (final IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public static Module<? extends ModuleStorageHandler> getLoadedModuleByName(final String name){
-		for (final Module<? extends ModuleStorageHandler> module : Module.LOADED) {
-			if (module.getName().equals(name)) {
-				return module;
-			}
-		}
-		return null;
 	}
 
 }
