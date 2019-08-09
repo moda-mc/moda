@@ -1,4 +1,4 @@
-main: com.mineglade.moda.Moda
+main: moda.plugin.moda.Moda
 
 name: "Moda"
 description: "A fully modular core plugin for spigot."
