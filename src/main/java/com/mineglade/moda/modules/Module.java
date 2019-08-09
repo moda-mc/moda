@@ -25,9 +25,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 
 import com.mineglade.moda.Moda;
-import com.mineglade.moda.modules.joinquit.JoinQuitModule;
-import com.mineglade.moda.modules.mute.MuteModule;
-import com.mineglade.moda.modules.votes.Votes;
 import com.mineglade.moda.utils.InvalidModuleException;
 import com.mineglade.moda.utils.JarLoader;
 import com.mineglade.moda.utils.storage.DatabaseStorageHandler;
@@ -35,17 +32,9 @@ import com.mineglade.moda.utils.storage.FileStorageHandler;
 import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 import com.mineglade.moda.utils.storage.StorageType;
 
-import xyz.derkades.derkutils.FileUtils;
-
 public abstract class Module<T extends ModuleStorageHandler> implements Listener {
 
 	public static final List<Module<? extends ModuleStorageHandler>> ENABLED = new ArrayList<>();
-
-	public static final Module<? extends ModuleStorageHandler>[] INTERNAL_MODULES = new Module<?>[]{
-		new Votes(),
-		new MuteModule(),
-		new JoinQuitModule(),
-	};
 
 	public static final List<Module<? extends ModuleStorageHandler>> LOADED = new ArrayList<>();
 
@@ -57,8 +46,9 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		}
 		return null;
 	}
+
 	@SuppressWarnings("unchecked")
-	public static void loadExternal(final File jarFile) throws Exception {
+	public static void load(final File jarFile) throws Exception {
 		final JarLoader jarLoader = new JarLoader(Moda.instance);
 		try (final ZipFile zip = new ZipFile(jarFile)){
 			final ZipEntry moduleYamlEntry = zip.getEntry("module.yaml");
@@ -133,34 +123,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			throw new Exception(e);
 		}
 	}
-	public static void loadInternal(final Module<? extends ModuleStorageHandler> module) throws Exception {
-		module.external = false;
 
-		final String moduleName = module.getName();
-
-		for (final Module<? extends ModuleStorageHandler> loadedModule : LOADED) {
-			if (loadedModule.getName().equalsIgnoreCase(moduleName)) {
-				throw new IllegalStateException("A module with the name " + moduleName + " is already loaded");
-			}
-		}
-
-		LOADED.add(module);
-
-		module.initLogger();
-		module.loadLang();
-		try {
-			final File configOutputFile = new File(module.getDataFolder(), "config.yaml");
-			module.logger.debug("Internal module, copying config from %s",  "/modules/" + module.getName() + "/config.yaml");
-			FileUtils.copyOutOfJar(module.getClass(), "/modules/" + module.getName() + "/config.yaml", configOutputFile);
-			module.config = YamlConfiguration.loadConfiguration(configOutputFile);
-		} catch (final NullPointerException e) {
-			module.logger.debug("Module does not have a config file");
-		}
-
-		module.onLoad();
-
-		module.logger.debug("Loaded internal module " + module.getName());
-	}
 	protected FileConfiguration config;
 	private boolean external;
 	protected LangFile lang;
