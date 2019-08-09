@@ -20,7 +20,6 @@ import moda.plugin.moda.modules.Module;
 import moda.plugin.moda.repo.ModuleDownloader;
 import moda.plugin.moda.repo.Repositories;
 import moda.plugin.moda.repo.Repository;
-import moda.plugin.moda.repo.RepositoryDownloader;
 import moda.plugin.moda.repo.RepositoryModule;
 import moda.plugin.moda.utils.placeholders.ModaPlaceholderAPI;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
@@ -56,9 +55,6 @@ public class Moda extends JavaPlugin implements Listener {
 						this.getConfig().getString("mysql.password"));
 			} catch (final SQLException e) {
 				this.getLogger().severe("Initializing MySQL failed. Please configure MySQL properly or switch to file storage.");
-				//e.printStackTrace();
-				//Bukkit.getPluginManager().disablePlugin(this);
-				//return;
 				throw new RuntimeException(e);
 			}
 		}
@@ -71,8 +67,7 @@ public class Moda extends JavaPlugin implements Listener {
 
 		for (final Repository repo : repositories) {
 			try {
-				final RepositoryDownloader downloader = new RepositoryDownloader(repo);
-				for (final RepositoryModule module : downloader.getModules()) {
+				for (final RepositoryModule module : repo.getModules()) {
 					if (module.isDefault()) {
 						try {
 							final File moduleJarFile = new File(modulesDirectory, module.getName() + ".jar");
