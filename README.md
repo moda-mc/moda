@@ -1,1 +1,1 @@
-![Moda](https://github.com/MineGlade/Moda/blob/development/Branding/0.5x/moda-text-black-shadow@0.5x.png?raw=true)
+![Moda](https://github.com/ModaPlugin/Moda/raw/development/Branding/1x/moda-transparent%20badge.png)
