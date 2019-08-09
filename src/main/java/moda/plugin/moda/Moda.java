@@ -139,6 +139,17 @@ public class Moda extends JavaPlugin implements Listener {
 
 		// bStats Metrics
 		new Stats(this);
+
+		Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
+			for (final Repository repo : repositories) {
+				try {
+					repo.download();
+				} catch (final Exception e) {
+					this.getLogger().warning("Failed to connect to repository " + repo.getUrl().toString());
+					e.printStackTrace();
+				}
+			}
+		}, 10*20);
 	}
 
 	@Override

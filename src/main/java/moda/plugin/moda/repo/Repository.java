@@ -25,6 +25,10 @@ public class Repository {
 		return this.url;
 	}
 
+	public void download() throws IOException {
+		new RepositoryDownloader(this).downloadRepo();
+	}
+
 	public List<RepositoryModule> getModules() throws IOException {
 		final Logger log = Moda.instance.getLogger();
 		final RepositoryDownloader downloader = new RepositoryDownloader(this);
