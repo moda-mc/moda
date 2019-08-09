@@ -20,7 +20,7 @@ import moda.plugin.moda.modules.Module;
 import moda.plugin.moda.repo.ModuleDownloader;
 import moda.plugin.moda.repo.Repositories;
 import moda.plugin.moda.repo.Repository;
-import moda.plugin.moda.repo.RepositoryModule;
+import moda.plugin.moda.repo.ModuleMeta;
 import moda.plugin.moda.utils.placeholders.ModaPlaceholderAPI;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
 import moda.plugin.moda.utils.storage.StorageType;
@@ -67,7 +67,7 @@ public class Moda extends JavaPlugin implements Listener {
 
 		for (final Repository repo : repositories) {
 			try {
-				for (final RepositoryModule module : repo.getModules()) {
+				for (final ModuleMeta module : repo.getModules()) {
 					if (module.isDefault()) {
 						try {
 							final File moduleJarFile = new File(modulesDirectory, module.getName() + ".jar");

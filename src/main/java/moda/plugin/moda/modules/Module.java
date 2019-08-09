@@ -25,6 +25,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 
 import moda.plugin.moda.Moda;
+import moda.plugin.moda.repo.ModuleMeta;
 import moda.plugin.moda.utils.InvalidModuleException;
 import moda.plugin.moda.utils.JarLoader;
 import moda.plugin.moda.utils.storage.DatabaseStorageHandler;
@@ -128,6 +129,8 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 	private boolean external;
 	protected LangFile lang;
 
+	private ModuleMeta repoModule;
+
 	protected ModuleLogger logger;
 
 	protected Moda plugin;
@@ -138,6 +141,22 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 	public Module() {
 		this.plugin = Moda.instance;
+	}
+
+	//public String getName() {
+	//	return this.repoModule.getName();
+	//}
+
+	public String getDescription() {
+		return this.repoModule.getDescription();
+	}
+
+	public String getAuthor() {
+		return this.repoModule.getAuthor();
+	}
+
+	public String getVersion() {
+		return this.repoModule.getVersion();
 	}
 
 	public final void disable() throws Exception {

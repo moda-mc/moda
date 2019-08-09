@@ -9,9 +9,9 @@ import moda.plugin.moda.Moda;
 
 public class ModuleDownloader {
 
-	private final RepositoryModule module;
+	private final ModuleMeta module;
 
-	public ModuleDownloader(final RepositoryModule module) {
+	public ModuleDownloader(final ModuleMeta module) {
 		this.module = module;
 	}
 

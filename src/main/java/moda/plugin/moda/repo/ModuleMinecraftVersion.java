@@ -10,25 +10,32 @@ public enum ModuleMinecraftVersion {
 
 	// TODO optimize using actual binary operations
 
-	V_1_7_10 (1),
-	V_1_8    (2),
-	V_1_9    (4),
-	V_1_10   (8),
-	V_1_11   (16),
-	V_1_12   (32),
-	V_1_13   (64),
-	V_1_14   (128),
-	V_1_15   (256),
-	V_1_16   (512);
+	V_1_7_10 (1,   "1.7.10"),
+	V_1_8    (2,   "1.8.x"),
+	V_1_9    (4,   "1.9.x"),
+	V_1_10   (8,   "1.10.x"),
+	V_1_11   (16,  "1.11.x"),
+	V_1_12   (32,  "1.12.x"),
+	V_1_13   (64,  "1.13.x"),
+	V_1_14   (128, "1.14.x"),
+	V_1_15   (256, "1.15"),
+	V_1_16   (512, "1.16");
 
 	private int b;
+	private String string;
 
-	ModuleMinecraftVersion(final int b){
+	ModuleMinecraftVersion(final int b, final String string){
 		this.b = b;
+		this.string = string;
 	}
 
 	public int getCode() {
 		return this.b;
+	}
+
+	@Override
+	public String toString() {
+		return this.string;
 	}
 
 	private static Map<ModuleMinecraftVersion, Integer> map;
