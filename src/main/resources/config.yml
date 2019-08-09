@@ -57,6 +57,9 @@ debug: true
 
 repositories:
  - 'http://plugin.moda/repo/'
+ 
+# increase if downloading fails even though the repository or download url is working
+timeout: 1000
 
 
 

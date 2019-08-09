@@ -2,13 +2,13 @@ package com.mineglade.moda.repo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
+
+import org.apache.commons.io.FileUtils;
 
 import com.mineglade.moda.Moda;
 
 public class ModuleDownloader {
 
-	private final Logger logger = Moda.instance.getLogger();
 	private final RepositoryModule module;
 
 	public ModuleDownloader(final RepositoryModule module) {
@@ -16,8 +16,8 @@ public class ModuleDownloader {
 	}
 
 	public void download(final File outputFile) throws IOException {
-		final HAHA ERROR
-		// TODO refactor packages and don't forget to update main class
+		FileUtils.copyURLToFile(this.module.getDownloadURL(), outputFile,
+				Moda.instance.getConfig().getInt("timeout"), Moda.instance.getConfig().getInt("timeout"));
 	}
 
 }
