@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mineglade.moda.modules.Module;
+import com.mineglade.moda.repo.ModuleDownloader;
+import com.mineglade.moda.repo.Repositories;
+import com.mineglade.moda.repo.Repository;
+import com.mineglade.moda.repo.RepositoryDownloader;
+import com.mineglade.moda.repo.RepositoryModule;
 import com.mineglade.moda.utils.placeholders.ModaPlaceholderAPI;
 import com.mineglade.moda.utils.storage.ModuleStorageHandler;
 import com.mineglade.moda.utils.storage.StorageType;
@@ -26,6 +32,8 @@ import xyz.derkades.derkutils.DatabaseHandler;
 public class Moda extends JavaPlugin implements Listener {
 
 	public static Moda instance;
+
+	public static List<Repository> repositories;
 
 	public static DatabaseHandler db = null;
 
@@ -56,23 +64,40 @@ public class Moda extends JavaPlugin implements Listener {
 			}
 		}
 
-		// Load all internal modules
-		for (final Module<?> module : Module.INTERNAL_MODULES) {
+		// Initialize repositories
+		Moda.repositories = Repositories.getRepositories();
+
+		final File modulesDirectory = new File("modules");
+		modulesDirectory.mkdirs();
+
+		for (final Repository repo : repositories) {
 			try {
-				Module.loadInternal(module);
-			} catch (final Exception e) {
-				this.getLogger().severe("An error occured while loading internal module '" + module.getName() + "'");
-				e.printStackTrace();
+				final RepositoryDownloader downloader = new RepositoryDownloader(repo);
+				for (final RepositoryModule module : downloader.getModules()) {
+					if (module.isDefault()) {
+						try {
+							final File moduleJarFile = new File(modulesDirectory, module.getName() + ".jar");
+							if (!moduleJarFile.exists()) {
+								this.getLogger().info("Default module " + module.getName() + " is not installed, downloading..");
+								new ModuleDownloader(module).download(moduleJarFile);
+							}
+						} catch (final IOException e) {
+							this.getLogger().warning("Failed to download module " + module.getName() + " from " +
+									module.getDownloadURL().toString());
+						}
+					}
+				}
+			} catch (final IOException e) {
+				this.getLogger().warning("Failed to connect to repository " + repo.getUrl().toString());
 			}
 		}
 
-		// Load all external modules
-		final File modulesDirectory = new File(this.getDataFolder(), "modules");
-		modulesDirectory.mkdirs();
+		// Load all modules
+
 		final Set<File> jarFiles = Arrays.asList(modulesDirectory.listFiles()).stream().filter((f) -> f.getAbsolutePath().endsWith(".jar")).collect(Collectors.toSet());
 		for (final File jarFile : jarFiles) {
 			try {
-				Module.loadExternal(jarFile);
+				Module.load(jarFile);
 			} catch (final Exception e) {
 				this.getLogger().severe("An error occured while loading external module '" + jarFile.getPath() + "'");
 				e.printStackTrace();
@@ -82,7 +107,6 @@ public class Moda extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
-
 		// Register core command
 		this.getCommand("moda").setExecutor(new ModaCommand());
 

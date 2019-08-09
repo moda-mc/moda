@@ -55,6 +55,9 @@ storage:
 
 debug: true
 
+repositories:
+ - 'http://plugin.moda/repo/'
+
 
 
 
