@@ -71,9 +71,7 @@ public class Scheduler {
 		}
 
 		for (final BukkitTask task : RUNNING_TASKS.get(module.getName())) {
-			if (!task.isCancelled()) {
-				task.cancel();
-			}
+			task.cancel();
 		}
 	}
 

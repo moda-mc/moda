@@ -6,21 +6,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import moda.plugin.moda.modules.Module;
-import moda.plugin.moda.repo.ModuleDownloader;
+import moda.plugin.moda.modules.Modules;
+import moda.plugin.moda.modules.ModulesConfig;
+import moda.plugin.moda.repo.ModuleMeta;
+import moda.plugin.moda.repo.ModuleMetaVersion;
+import moda.plugin.moda.repo.ModuleMinecraftVersion;
 import moda.plugin.moda.repo.Repositories;
 import moda.plugin.moda.repo.Repository;
-import moda.plugin.moda.repo.ModuleMeta;
 import moda.plugin.moda.utils.placeholders.ModaPlaceholderAPI;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
 import moda.plugin.moda.utils.storage.StorageType;
@@ -31,11 +31,11 @@ public class Moda extends JavaPlugin implements Listener {
 
 	public static Moda instance;
 
-	public static List<Repository> repositories;
-
 	public static DatabaseHandler db = null;
 
 	public static FileConfiguration messages;
+
+	public static ModuleMinecraftVersion minecraftVersion;
 
 	public Moda() {
 		instance = this;
@@ -44,6 +44,11 @@ public class Moda extends JavaPlugin implements Listener {
 	@Override
 	public void onLoad() {
 		this.saveDefaultConfig();
+
+		minecraftVersion = ModuleMinecraftVersion.getServerVersion();
+
+		final File modulesDirectory = new File("modules");
+		modulesDirectory.mkdirs(); // Create modules directory. It can be assumed that it exists in other code.
 
 		// Connect to database if storage type is set to MySQL
 		if (this.getStorageType().equals(StorageType.MYSQL)) {
@@ -59,45 +64,60 @@ public class Moda extends JavaPlugin implements Listener {
 			}
 		}
 
-		// Initialize repositories
-		Moda.repositories = Repositories.getRepositories();
+		// Download default modules
+		try (final ModulesConfig modulesConfig = new ModulesConfig()){
+			for (final Repository repo : Repositories.getRepositories()) {
+				List<ModuleMeta> modules;
+				try {
+					modules = repo.getModules();
+				} catch (final Exception e) {
+					this.getLogger().warning("Failed to connect to repository " + repo.getUrl().toString() +
+							": " + e.getMessage());
+					continue;
+				}
 
-		final File modulesDirectory = new File("modules");
-		modulesDirectory.mkdirs();
+				for (final ModuleMeta module : modules) {
+					System.out.println(String.format("[debug] module name %s default %s is downloaded %s\n", module.getName(),module.isDefault(),module.isDownloaded())); // TODO remove debug
 
-		for (final Repository repo : repositories) {
-			try {
-				for (final ModuleMeta module : repo.getModules()) {
-					if (module.isDefault()) {
-						try {
-							final File moduleJarFile = new File(modulesDirectory, module.getName() + ".jar");
-							if (!moduleJarFile.exists()) {
-								this.getLogger().info("Default module " + module.getName() + " is not installed, downloading..");
-								new ModuleDownloader(module).download(moduleJarFile);
-							}
-						} catch (final Exception e) {
-							this.getLogger().warning("Failed to download module " + module.getName() + " from " +
-									module.getDownloadURL().toString());
-							e.printStackTrace();
+					if (!module.isDefault()) {
+						continue;
+					}
+
+					if (module.isDownloaded()) {
+						continue;
+					}
+
+					try {
+						final ModuleMetaVersion version = module.getLatestVersionThatSupports(Moda.minecraftVersion);
+						if (version != null) {
+							version.download();
+						} else {
+							this.getLogger().warning("The module " + module.getName() + " does not support your minecraft version");
+							this.getLogger().warning("Supported versions for the latest version: " + module.getLatestVersion().getSupportedMinecraftVersionsAsCommaSeparatedString());
+							continue;
 						}
+						modulesConfig.addModule(module.getName(), false);
+						Moda.instance.getLogger().info(String.format("New module installed: '%s'", module.getName()));
+					} catch (final Exception e) {
+						this.getLogger().warning("Failed to download module " + module.getName());
+						e.printStackTrace();
 					}
 				}
-			} catch (final Exception e) {
-				this.getLogger().warning("Failed to connect to repository " + repo.getUrl().toString());
-				e.printStackTrace();
 			}
-		}
 
-		// Load all modules
-
-		final Set<File> jarFiles = Arrays.asList(modulesDirectory.listFiles()).stream().filter((f) -> f.getAbsolutePath().endsWith(".jar")).collect(Collectors.toSet());
-		for (final File jarFile : jarFiles) {
-			try {
-				Module.load(jarFile);
-			} catch (final Exception e) {
-				this.getLogger().severe("An error occured while loading module '" + jarFile.getPath() + "'");
-				e.printStackTrace();
+			// Load all enabled modules
+			for (final String name : Modules.getInstalledModulesNames()) {
+				try {
+					if (modulesConfig.isEnabled(name)) {
+						Modules.load(name);
+					}
+				} catch (final Exception | IllegalAccessError e) {
+					this.getLogger().severe("An error occured while loading module '" + name + "'");
+					e.printStackTrace();
+				}
 			}
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -109,44 +129,26 @@ public class Moda extends JavaPlugin implements Listener {
 		// Add core placeholders.
 		this.addCorePlaceholders();
 
-		final File modulesConfigFile = new File("modules", "modules.yaml");
-		final FileConfiguration modulesConfig = YamlConfiguration.loadConfiguration(modulesConfigFile);
-
-		// Enable all loaded modules that are enabled in modules.yaml
-		for (final Module<? extends ModuleStorageHandler> module : Module.LOADED) {
-			final boolean external = module.isExternal();
-			if (!modulesConfig.contains(module.getName())) {
-				Moda.instance.getLogger().info(String.format("New module installed: '%s'", module.getName()));
-				modulesConfig.set(module.getName(), external); // Disable internal modules by default, enable external modules by default
-
+		// Enable all loaded modules
+		for (final Module<? extends ModuleStorageHandler> module : Modules.LOADED) {
+			try {
+				module.enable();
+			} catch (final Exception e) {
+				this.getLogger().severe("An error occured while enabling module " + module.getName());
+				e.printStackTrace();
 			}
-
-			if (modulesConfig.getBoolean(module.getName())) {
-				try {
-					module.enable();
-				} catch (final Exception e) {
-					this.getLogger().severe("An error occured while enabling module " + module.getName());
-					e.printStackTrace();
-				}
-			}
-		}
-
-		try {
-			modulesConfig.save(modulesConfigFile);
-		} catch (final IOException e) {
-			e.printStackTrace();
 		}
 
 		// bStats Metrics
 		new Stats(this);
 
+		// Refresh indexes async, to not slow down server startup
 		Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
-			for (final Repository repo : repositories) {
+			for (final Repository repo : Repositories.getRepositories()) {
 				try {
-					repo.download();
+					repo.downloadIndexIfOlderThan(60*60*1000); // Download if older than 1 hour
 				} catch (final Exception e) {
 					this.getLogger().warning("Failed to connect to repository " + repo.getUrl().toString());
-					e.printStackTrace();
 				}
 			}
 		}, 10*20);
@@ -154,7 +156,7 @@ public class Moda extends JavaPlugin implements Listener {
 
 	@Override
 	public void onDisable() {
-		for (final Module<? extends ModuleStorageHandler> module : new ArrayList<>(Module.ENABLED)) {
+		for (final Module<? extends ModuleStorageHandler> module : new ArrayList<>(Modules.ENABLED)) {
 			try {
 				module.disable();
 			} catch (final Exception e) {

@@ -25,7 +25,7 @@ public class LangFile {
 		for (final IMessage message : module.getMessages()) {
 			this.file.addDefault(message.getPath(), message.getDefault());
 			if (!this.file.contains(message.getPath())) {
-				module.logger.debug("Adding language option to config %s: %s", message.getPath(), message.getDefault());
+				module.getLogger().debug("Adding language option to config %s: %s", message.getPath(), message.getDefault());
 				this.file.set(message.getPath(), message.getDefault());
 				changes = true;
 			}

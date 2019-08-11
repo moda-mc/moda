@@ -42,7 +42,14 @@ public class ModaPlaceholderAPI {
 				}
 			}
 			final BaseComponent component = new TextComponent(text);
-			component.copyFormatting(originalComponent);
+			component.setColor(originalComponent.getColor());
+			component.setBold(originalComponent.isBold());
+			component.setItalic(originalComponent.isItalic());
+			component.setStrikethrough(originalComponent.isStrikethrough());
+			component.setObfuscated(originalComponent.isObfuscated());
+			component.setHoverEvent(originalComponent.getHoverEvent());
+			component.setClickEvent(originalComponent.getClickEvent());
+			//component.copyFormatting(originalComponent);
 			newComponents[i] = component;
 		}
 		return newComponents;
