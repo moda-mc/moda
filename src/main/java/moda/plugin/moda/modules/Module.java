@@ -154,6 +154,8 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		// Initialize scheduler
 		this.scheduler = new Scheduler(this);
 
+		this.onEnable();
+
 		if (this.meta != null) {
 			this.getLogger().info("Enabled module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
 		} else {
