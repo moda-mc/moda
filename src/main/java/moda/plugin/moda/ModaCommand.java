@@ -72,7 +72,12 @@ public class ModaCommand implements CommandExecutor {
 				e.printStackTrace();
 			}
 		} else if (args.length == 2 && args[0].equals("load")) {
-			sender.sendMessage("command not implemented");
+			try {
+				Modules.load(args[1]);
+			} catch (final Exception e) {
+				sender.sendMessage(e.getMessage());
+				e.printStackTrace();
+			}
 		} else {
 			return false;
 		}
