@@ -124,21 +124,26 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 				final FileStorageHandler handler = this.getFileStorageHandler();
 				this.storage = (T) handler;
 
-				// Save config periodically
-				this.scheduler.interval(5*60*20, 5*60*20, () -> {
-					this.scheduler.async(handler::save);
-				});
+				if (handler != null) {
+					// Save config periodically
+					this.scheduler.interval(5*60*20, 5*60*20, () -> {
+						this.logger.debug("Saving config");
+						this.scheduler.async(handler::save);
+					});
+				}
 			}
 		} else if (storageType == StorageType.FILE) {
 			this.logger.debug("Using file storage");
 			final FileStorageHandler handler = this.getFileStorageHandler();
 			this.storage = (T) handler;
 
-			// Save config periodically
-			this.scheduler.interval(5*60*20, 5*60*20, () -> {
-				this.logger.debug("Saving config");
-				this.scheduler.async(handler::save);
-			});
+			if (handler != null) {
+				// Save config periodically
+				this.scheduler.interval(5*60*20, 5*60*20, () -> {
+					this.logger.debug("Saving config");
+					this.scheduler.async(handler::save);
+				});
+			}
 		} else {
 			throw new AssertionError();
 		}
@@ -193,7 +198,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 	public void onEnable() {}
 
 	protected void registerCommand(final Command command) {
-		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s",
+		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s]",
 				command.getName(),
 				command.getDescription(),
 				command.getUsage(),
