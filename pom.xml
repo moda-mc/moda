@@ -108,7 +108,7 @@
 		<dependency>
 			<groupId>xyz.derkades</groupId>
 			<artifactId>Derkutils</artifactId>
-			<version>1.5.2-legacy</version>
+			<version>legacy</version>
 		</dependency>
 
 		<dependency>
