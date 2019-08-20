@@ -3,6 +3,7 @@ package moda.plugin.moda.modules;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,7 +21,7 @@ import moda.plugin.moda.utils.storage.FileStorageHandler;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
 import moda.plugin.moda.utils.storage.StorageType;
 
-public abstract class Module<T extends ModuleStorageHandler> implements Listener {
+public abstract class Module<T extends ModuleStorageHandler> {
 
 	ModuleMeta meta;
 	private FileConfiguration config;
@@ -28,6 +29,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 	private ModuleLogger logger;
 	private Scheduler scheduler;
 	private T storage;
+	private List<Listener> listeners;
 
 	public abstract String getName();
 
@@ -66,7 +68,8 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			this.getLogger().debug("Disabling module " + this.getName());
 		}
 
-		HandlerList.unregisterAll(this);
+		//HandlerList.unregisterAll(this);
+		this.listeners.forEach(HandlerList::unregisterAll);
 		Scheduler.cancelAllTasks(this);
 
 		if (this.storage instanceof FileStorageHandler) {
@@ -148,9 +151,6 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 			throw new AssertionError();
 		}
 
-		// Register listeners
-		Bukkit.getPluginManager().registerEvents(this, Moda.instance);
-
 		// Initialize scheduler
 		this.scheduler = new Scheduler(this);
 
@@ -199,7 +199,7 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 
 	public void onEnable() {}
 
-	protected void registerCommand(final Command command) {
+	public void registerCommand(final Command command) {
 		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s]",
 				command.getName(),
 				command.getDescription(),
@@ -213,6 +213,11 @@ public abstract class Module<T extends ModuleStorageHandler> implements Listener
 		} catch (final IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void registerListener(final Listener listener) {
+		this.listeners.add(listener);
+		Bukkit.getPluginManager().registerEvents(listener, Moda.instance);
 	}
 
 }
