@@ -54,7 +54,7 @@ public class ModuleManager {
 		final ModuleLoader loader = new ModuleLoader(Moda.instance, name);
 		loader.load();
 		loader.getModule().enable();
-		this.moduleLoaders.put("name", loader);
+		this.moduleLoaders.put(name, loader);
 	}
 
 	public List<Module<? extends ModuleStorageHandler>> getLoadedModules() {
