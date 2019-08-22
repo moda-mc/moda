@@ -1,17 +1,5 @@
 package moda.plugin.moda.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import moda.plugin.moda.Moda;
-
 /**
  * handles all player data in either mysql or a yaml file.
  *
@@ -19,76 +7,76 @@ import moda.plugin.moda.Moda;
  */
 @Deprecated
 public class PlayerData {
-
-	private final OfflinePlayer player;
-
-	private final JavaPlugin iCore = Moda.instance;
-	private final boolean mysql = Moda.instance.getConfig().getBoolean("mysql.enabled");
-	private FileConfiguration dataFile;
-	private File dataFileFile;
-
-	private final boolean debug = Moda.instance.getConfig().getBoolean("debug");
-
-	/**
-	 * establishes player, writes and establishes dataFilefile.
-	 *
-	 * @param player
-	 */
-	public PlayerData(final OfflinePlayer player) {
-		this.player = player;
-		if (!this.mysql) {
-			final File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
-			dataFileFileFolder.mkdirs();
-			this.dataFileFile = new File(dataFileFileFolder, player.getUniqueId() + ".yaml");
-			this.dataFile = YamlConfiguration.loadConfiguration(this.dataFileFile);
-		}
-	}
-
-	/**
-	 * Instance of PlayerData file.
-	 *
-	 * @param file
-	 */
-	public PlayerData(final File file) {
-		this.player = null;
-		this.dataFileFile = file;
-		this.dataFile = YamlConfiguration.loadConfiguration(this.dataFileFile);
-	}
-
-	/**
-	 * saves playerdata file.
-	 */
-	public void save() {
-		try {
-			this.dataFile.save(this.dataFileFile);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public String getFileName() {
-		return this.dataFileFile.getName();
-	}
-
-
-
-
-	public static List<PlayerData> getAllDataFiles() {
-		final List<PlayerData> dataFileList = new ArrayList<>();
-		final File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
-		dataFileFileFolder.mkdirs();
-		for (final File file : dataFileFileFolder.listFiles()) {
-			final PlayerData data = new PlayerData(file);
-			dataFileList.add(data);
-		}
-		return dataFileList;
-	}
-
-
-
-
-
-
+//
+//	private final OfflinePlayer player;
+//
+//	private final JavaPlugin iCore = Moda.instance;
+//	private final boolean mysql = Moda.instance.getConfig().getBoolean("mysql.enabled");
+//	private FileConfiguration dataFile;
+//	private File dataFileFile;
+//
+//	private final boolean debug = Moda.instance.getConfig().getBoolean("debug");
+//
+//	/**
+//	 * establishes player, writes and establishes dataFilefile.
+//	 *
+//	 * @param player
+//	 */
+//	public PlayerData(final OfflinePlayer player) {
+//		this.player = player;
+//		if (!this.mysql) {
+//			final File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
+//			dataFileFileFolder.mkdirs();
+//			this.dataFileFile = new File(dataFileFileFolder, player.getUniqueId() + ".yaml");
+//			this.dataFile = YamlConfiguration.loadConfiguration(this.dataFileFile);
+//		}
+//	}
+//
+//	/**
+//	 * Instance of PlayerData file.
+//	 *
+//	 * @param file
+//	 */
+//	public PlayerData(final File file) {
+//		this.player = null;
+//		this.dataFileFile = file;
+//		this.dataFile = YamlConfiguration.loadConfiguration(this.dataFileFile);
+//	}
+//
+//	/**
+//	 * saves playerdata file.
+//	 */
+//	public void save() {
+//		try {
+//			this.dataFile.save(this.dataFileFile);
+//		} catch (final IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	public String getFileName() {
+//		return this.dataFileFile.getName();
+//	}
+//
+//
+//
+//
+//	public static List<PlayerData> getAllDataFiles() {
+//		final List<PlayerData> dataFileList = new ArrayList<>();
+//		final File dataFileFileFolder = new File(Moda.instance.getDataFolder(), "playerdata");
+//		dataFileFileFolder.mkdirs();
+//		for (final File file : dataFileFileFolder.listFiles()) {
+//			final PlayerData data = new PlayerData(file);
+//			dataFileList.add(data);
+//		}
+//		return dataFileList;
+//	}
+//
+//
+//
+//
+//
+//
 
 
 

@@ -26,6 +26,10 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 	 */
 	public abstract void setup() throws SQLException;
 
+	public final void closeConnection() throws SQLException {
+		this.db.getConnection().close();
+	}
+
 	@Deprecated
 	protected void createTableIfNonexistent(final String table, final String sql) throws SQLException {
 		final DatabaseMetaData meta = this.db.getConnection().getMetaData();

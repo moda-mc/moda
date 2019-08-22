@@ -2,8 +2,17 @@ package moda.plugin.moda.modules;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,6 +29,7 @@ import moda.plugin.moda.utils.storage.DatabaseStorageHandler;
 import moda.plugin.moda.utils.storage.FileStorageHandler;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
 import moda.plugin.moda.utils.storage.StorageType;
+import xyz.derkades.derkutils.AssertionException;
 
 public abstract class Module<T extends ModuleStorageHandler> {
 
@@ -29,7 +39,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private ModuleLogger logger;
 	private Scheduler scheduler;
 	private T storage;
-	private List<Listener> listeners;
+	private final List<Listener> listeners =  new ArrayList<>();
 
 	public abstract String getName();
 
@@ -57,43 +67,47 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		return this.storage;
 	}
 
-	public final void disable() throws Exception {
-		if (!Modules.ENABLED.contains(this)) {
-			throw new IllegalStateException("This module is not enabled");
-		}
+	public abstract DatabaseStorageHandler getDatabaseStorageHandler();
 
-		if (this.meta != null) {
-			this.getLogger().debug("Disabling module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
-		} else {
-			this.getLogger().debug("Disabling module " + this.getName());
-		}
+	public final File getDataFolder() {
+		return new File("modules", this.getName());
+	}
 
-		//HandlerList.unregisterAll(this);
-		this.listeners.forEach(HandlerList::unregisterAll);
-		Scheduler.cancelAllTasks(this);
+	public abstract FileStorageHandler getFileStorageHandler();
 
-		if (this.storage instanceof FileStorageHandler) {
-			((FileStorageHandler) this.storage).saveBlocking();
-		}
+	public abstract IMessage[] getMessages();
 
-		Modules.ENABLED.remove(this);
+	public String[] getPluginDependencies() {
+		return new String[] {};
+	}
 
-		if (this.meta != null) {
-			this.getLogger().info("Disabled module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
-		} else {
-			this.getLogger().info("Disabled module " + this.getName());
+	public void onDisable() {}
+
+	public void onEnable() {}
+
+	public void registerCommand(final Command command) {
+		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s]",
+				command.getName(),
+				command.getDescription(),
+				command.getUsage(),
+				String.join(".", command.getAliases().toArray(new String[] {})));
+		try {
+			final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+			field.setAccessible(true);
+			final CommandMap map = (CommandMap) field.get(Bukkit.getServer());
+			map.register(Moda.instance.getName(), command);
+		} catch (final IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public void enable() throws Exception {
-		if (Modules.ENABLED.contains(this)) {
-			throw new IllegalStateException("This module is already enabled");
-		}
+	public void registerListener(final Listener listener) {
+		this.listeners.add(listener);
+		Bukkit.getPluginManager().registerEvents(listener, Moda.instance);
+	}
 
-		if (!Modules.LOADED.contains(this)) {
-			throw new IllegalStateException("This module has not been loaded");
-		}
+	public void enable() throws Exception {
+		this.initLogger();
 
 		if (this.meta != null) {
 			this.getLogger().debug("Enabling module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
@@ -105,14 +119,88 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		for (final String dependencyString : this.getPluginDependencies()) {
 			final Plugin dependency = Bukkit.getPluginManager().getPlugin(dependencyString);
 			if ((dependency == null) || !dependency.isEnabled()) {
-				//this.logger.severe("This module could not be enabled, because it requires the plugin " + dependencyString);
 				throw new UnknownDependencyException("This module could not be enabled, because it requires the plugin " + dependencyString);
 			}
 		}
 
-		// Initialize scheduler
 		this.scheduler = new Scheduler(this);
+		this.initLang();
+		this.initConfig();
+		this.initStorage();
 
+		this.onEnable();
+
+		if (this.meta != null) {
+			this.getLogger().info("Enabled module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
+		} else {
+			this.getLogger().info("Enabled module " + this.getName());
+		}
+	}
+
+	public void disable() throws Exception {
+		if (this.meta != null) {
+			this.getLogger().debug("Disabling module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
+		} else {
+			this.getLogger().debug("Disabling module " + this.getName());
+		}
+
+		this.listeners.forEach(HandlerList::unregisterAll);
+		Scheduler.cancelAllTasks(this);
+
+		if (this.storage instanceof FileStorageHandler) {
+			((FileStorageHandler) this.storage).saveBlocking();
+		}
+
+		if (this.storage instanceof DatabaseStorageHandler) {
+			((DatabaseStorageHandler) this.storage).closeConnection();
+		}
+
+		if (this.meta != null) {
+			this.getLogger().info("Disabled module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
+		} else {
+			this.getLogger().info("Disabled module " + this.getName());
+		}
+	}
+
+	private final void initLogger() {
+		// Initialize logger
+		this.logger = new ModuleLogger(Moda.instance.getLogger(), this);
+	}
+
+	private final void initLang() throws IOException {
+		// Load language file
+		if (this.getMessages() != null) {
+			this.logger.debug("Loading language file");
+			final File langFile = new File(this.getDataFolder(), "lang.yaml");
+			this.lang = new LangFile(langFile, this);
+		} else {
+			this.logger.debug("No IMessage array provided, skipping language file loading");
+		}
+	}
+
+	private final void initConfig() throws ZipException, IOException {
+		final File jarFile = new File("modules", this.getName() + ".jar");
+		try (final ZipFile zip = new ZipFile(jarFile)) {
+			final ZipEntry configYamlEntry = zip.getEntry("config.yaml");
+
+			if (configYamlEntry == null) {
+				this.getLogger().debug("Module jar does not contain 'config.yaml' file.");
+			} else {
+				final File output = new File(this.getDataFolder(), "config.yaml");
+				if (!output.exists()) {
+					this.getLogger().debug("Config yaml file does not exist, copying from jar file..");
+					final InputStream inputStream2 = zip.getInputStream(configYamlEntry);
+					final Path outputPath = Paths.get(output.toURI());
+					Files.copy(inputStream2, outputPath);
+				} else {
+					this.getLogger().debug("Config yaml file already exists");
+				}
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private final void initStorage() throws SQLException {
 		// Initialize data storage
 		final StorageType storageType = Moda.instance.getStorageType();
 		if (storageType == StorageType.MYSQL) {
@@ -148,76 +236,8 @@ public abstract class Module<T extends ModuleStorageHandler> {
 				});
 			}
 		} else {
-			throw new AssertionError();
+			throw new AssertionException();
 		}
-
-		// Initialize scheduler
-		this.scheduler = new Scheduler(this);
-
-		this.onEnable();
-
-		if (this.meta != null) {
-			this.getLogger().info("Enabled module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
-		} else {
-			this.getLogger().info("Enabled module " + this.getName());
-		}
-
-		Modules.ENABLED.add(this);
-	}
-
-	public abstract DatabaseStorageHandler getDatabaseStorageHandler();
-
-	public final File getDataFolder() {
-		return new File("modules", this.getName());
-	}
-
-	public abstract FileStorageHandler getFileStorageHandler();
-
-	public abstract IMessage[] getMessages();
-
-	public String[] getPluginDependencies() {
-		return new String[] {};
-	}
-
-	protected final void initLogger() {
-		// Initialize logger
-		this.logger = new ModuleLogger(Moda.instance.getLogger(), this);
-	}
-
-	protected final void loadLang() throws IOException {
-		// Load language file
-		if (this.getMessages() != null) {
-			this.logger.debug("Loading language file");
-			final File langFile = new File(this.getDataFolder(), "lang.yaml");
-			this.lang = new LangFile(langFile, this);
-		} else {
-			this.logger.debug("No IMessage array provided, skipping language file loading");
-		}
-	}
-
-	public void onDisable() {}
-
-	public void onEnable() {}
-
-	public void registerCommand(final Command command) {
-		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s]",
-				command.getName(),
-				command.getDescription(),
-				command.getUsage(),
-				String.join(".", command.getAliases().toArray(new String[] {})));
-		try {
-			final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-			field.setAccessible(true);
-			final CommandMap map = (CommandMap) field.get(Bukkit.getServer());
-			map.register(Moda.instance.getName(), command);
-		} catch (final IllegalAccessException | NoSuchFieldException | SecurityException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void registerListener(final Listener listener) {
-		this.listeners.add(listener);
-		Bukkit.getPluginManager().registerEvents(listener, Moda.instance);
 	}
 
 }

@@ -14,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import moda.plugin.moda.modules.Module;
-import moda.plugin.moda.modules.Modules;
+import moda.plugin.moda.modules.ModuleManager;
 import moda.plugin.moda.modules.ModulesConfig;
 import moda.plugin.moda.repo.ModuleMeta;
 import moda.plugin.moda.repo.ModuleMetaVersion;
@@ -104,18 +104,6 @@ public class Moda extends JavaPlugin implements Listener {
 					}
 				}
 			}
-
-			// Load all enabled modules
-			for (final String name : Modules.getInstalledModulesNames()) {
-				try {
-					if (modulesConfig.isEnabled(name)) {
-						Modules.load(name);
-					}
-				} catch (final Exception | IllegalAccessError e) {
-					this.getLogger().severe("An error occured while loading module '" + name + "'");
-					e.printStackTrace();
-				}
-			}
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -129,14 +117,21 @@ public class Moda extends JavaPlugin implements Listener {
 		// Add core placeholders.
 		this.addCorePlaceholders();
 
-		// Enable all loaded modules
-		for (final Module<? extends ModuleStorageHandler> module : Modules.LOADED) {
-			try {
-				module.enable();
-			} catch (final Exception e) {
-				this.getLogger().severe("An error occured while enabling module " + module.getName());
-				e.printStackTrace();
+		// Load all enabled modules
+		try (final ModulesConfig modulesConfig = new ModulesConfig()){
+			final ModuleManager manager = ModuleManager.getInstance();
+			for (final String name : manager.getInstalledModulesNames()) {
+				try {
+					if (modulesConfig.isEnabled(name)) {
+						manager.load(name);
+					}
+				} catch (final Exception | IllegalAccessError e) {
+					this.getLogger().severe("An error occured while loading module '" + name + "'");
+					e.printStackTrace();
+				}
 			}
+		} catch (final IOException e) {
+			e.printStackTrace();
 		}
 
 		// bStats Metrics
@@ -156,11 +151,12 @@ public class Moda extends JavaPlugin implements Listener {
 
 	@Override
 	public void onDisable() {
-		for (final Module<? extends ModuleStorageHandler> module : new ArrayList<>(Modules.ENABLED)) {
+		final ModuleManager manager = ModuleManager.getInstance();
+		for (final Module<? extends ModuleStorageHandler> module : new ArrayList<>(manager.getLoadedModules())) {
 			try {
-				module.disable();
+				manager.unload(module.getName());
 			} catch (final Exception e) {
-				this.getLogger().severe("An error occured while disabling module '" + module.getName() + "'");
+				this.getLogger().severe("An error occured while unloading module '" + module.getName() + "'");
 				e.printStackTrace();
 			}
 		}
@@ -168,8 +164,8 @@ public class Moda extends JavaPlugin implements Listener {
 		if (db != null) {
 			try {
 				db.getConnection().close();
-			} catch (final SQLException e1) {
-				e1.printStackTrace();
+			} catch (final SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}

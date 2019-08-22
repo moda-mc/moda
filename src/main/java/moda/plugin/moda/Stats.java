@@ -7,7 +7,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.Plugin;
 
 import moda.plugin.moda.modules.Module;
-import moda.plugin.moda.modules.Modules;
+import moda.plugin.moda.modules.ModuleManager;
 
 public class Stats extends Metrics {
 
@@ -30,7 +30,7 @@ public class Stats extends Metrics {
 		this.addCustomChart(new AdvancedPie("enabled_modules", () -> {
 			final Map<String, Integer> map = new HashMap<>();
 
-			for (final Module<?> module : Modules.ENABLED) {
+			for (final Module<?> module : ModuleManager.getInstance().getLoadedModules()) {
 				map.put(module.getName(), 1);
 			}
 
