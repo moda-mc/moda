@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import moda.plugin.moda.Moda;
+
 public class ModulesConfig implements Closeable, AutoCloseable {
 
 	private final File file;
@@ -31,7 +33,9 @@ public class ModulesConfig implements Closeable, AutoCloseable {
 
 	public boolean isEnabled(final String name) {
 		if (!this.config.contains(name)) {
-			throw new IllegalStateException("Module " + name + " is missing from the modules config");
+			// If it is missing from the config it must have been installed manually. Enable by default.
+			this.addModule(name, true);
+			Moda.instance.getLogger().warning("Module " + name + " is missing from the modules config. Did you install it manually?");
 		}
 
 		return this.config.getBoolean(name);
