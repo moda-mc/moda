@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import moda.plugin.moda.Moda;
@@ -57,6 +58,41 @@ public class Scheduler {
 		return task;
 	}
 
+	public BukkitTask async(final BukkitRunnable runnable) {
+		final BukkitTask task = runnable.runTaskAsynchronously(Moda.instance);
+		this.registerTask(task);
+		return task;
+	}
+
+	public BukkitTask run(final BukkitRunnable runnable) {
+		final BukkitTask task = runnable.runTask(Moda.instance);
+		this.registerTask(task);
+		return task;
+	}
+
+	public BukkitTask delay(final long delay, final BukkitRunnable runnable) {
+		final BukkitTask task = runnable.runTaskLater(Moda.instance, delay);
+		this.registerTask(task);
+		return task;
+	}
+
+	public BukkitTask delayAsync(final long delay, final BukkitRunnable runnable) {
+		final BukkitTask task = runnable.runTaskLaterAsynchronously(Moda.instance, delay);
+		this.registerTask(task);
+		return task;
+	}
+
+	public BukkitTask interval(final long delay, final long interval, final BukkitRunnable runnable) {
+		final BukkitTask task = runnable.runTaskTimer(Moda.instance, delay, interval);
+		this.registerTask(task);
+		return task;
+	}
+
+	public BukkitTask intervalAsync(final long delay, final long interval, final BukkitRunnable runnable) {
+		final BukkitTask task = runnable.runTaskTimerAsynchronously(Moda.instance, delay, interval);
+		this.registerTask(task);
+		return task;
+	}
 
 	private void registerTask(final BukkitTask task) {
 		final List<BukkitTask> tasks = RUNNING_TASKS.containsKey(this.module.getName()) ?
