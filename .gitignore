@@ -16,4 +16,5 @@ out/
 .settings/
 
 desktop.ini
-*.idea*
+*.idea
+.idea*
