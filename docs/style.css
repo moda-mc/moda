@@ -1,0 +1,145 @@
+/* global styles */
+
+html, body, header {
+    
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    font-family: Helvetica, Tahoma, sans-serif;
+
+}
+
+/* desktop styles */
+
+.slideshow {
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    text-align: center;
+
+    background-image: linear-gradient(to bottom right, #392E3F, #291D44);
+    color: white;
+
+}
+
+.slide {
+
+    width: 100%;
+    height: auto;
+    margin: 0;
+
+    display: block;
+
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+
+}
+
+#moda-badge {
+
+    width: 30%;
+    padding: 16px;
+
+    display: inline-block;
+
+}
+
+#tagline {
+
+    width: 45%;
+    padding: 16px;
+
+    display: inline-block;
+
+    font-size: 150%; 
+    font-style: italic;
+    word-wrap: normal;
+
+}
+
+.button {
+
+    border-radius: 6px;
+    margin: 16px;
+    padding: 16px;
+
+    box-shadow: #343434 0px 0px 5px;
+    background-image: linear-gradient(to bottom right, #7B80CE, #7E61C6);
+
+    color: white;
+    text-decoration: none;
+    font-weight: 900;
+    text-align: center;
+
+}
+
+.button:hover {
+
+    background-image: linear-gradient(to bottom right, #989CFF, #9270E6);
+
+}
+
+.button:active {
+
+    opacity: 1;
+    background-image: linear-gradient(to bottom right, rgb(122, 96, 134), rgb(102, 76, 161));
+
+}
+
+#soonbutton {
+
+    opacity: 0.75;
+
+    display: inline-block;
+
+    position: absolute;
+    bottom: 0px;
+    margin-left: -68.5px;
+
+}
+
+#soonbutton:hover {
+    opacity: 1;
+}
+
+#soon {
+
+    margin: 0;
+
+}
+
+/* laptop styles */
+
+@media screen and (max-width: 1280px) {    
+
+    #moda-badge {
+
+        width: 40%;
+        padding: 8px
+
+    }
+
+    #tagline {
+
+        font-size: 180%;
+        padding: 8px;
+
+    }
+    
+}
+
+/* tablet styles */
+
+@media screen and (max-width: 768px) {
+
+}
+
+
+/* phone styles */
+
+
