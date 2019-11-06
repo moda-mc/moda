@@ -1,0 +1,75 @@
+errors:
+  no-permission: "&cYou don't have permission to use {command}"
+
+color:
+
+  errors:
+    no-permissions: "&cYou don't have permissions for &f{color}&7."
+    target-invalid: "&cThe &ftarget&c you provided doesn't exist."
+
+  name-color: 
+    set: 
+      self: "&7Your name color has been set to &f{color}&7."
+      others: "&f{target}&7's name color has been set to &f{color}&7."
+    reset: 
+      self: "&7Your name color has been reset."
+      others: "&f{target}&7's name color has been reset."
+
+  name-format:
+    set: 
+      self: "&7Your name format has been set to &f{color}&7."
+      others: "&f{target}&7's name format has been set to &f{color}&7."
+    reset: 
+      self: "&7Your name format has been reset."
+      others: "&f{target}&7's name format has been reset."
+
+  chat-color:
+    set: 
+      self: "&7Your chat color has been set to &f{color}&7."
+      others: "&f{target}&7's chat color has been set to &f{color}&7."
+    reset: 
+      self: "&7Your chat color has been reset."
+      others: "&f{target}&7's chat color has been reset."
+
+  chat-format:
+    set: 
+      self: "&7Your chat format has been set to &f{color}&7."
+      others: "&f{target}&7's chat format has been set to &f{color}&7."
+    reset: 
+      self: "&7Your &fchat format&7 has been reset."
+      others: "&f{target}&7's chat format has been reset."
+
+nickname:
+  errors:
+    improper-usage: "&cPlease provide a &fnickname&c or a &ftarget&c."
+    no-target: "&cYou must specify a &ftarget&c."
+    target-invalid: "&cThe &ftarget&c you provided doesn't exist."
+    too-long: "&cA &fnickname can't be longer than &f16&c characters."
+    no-spaces: "&eA &fnickname&c can't contain spaces."
+    exists: "&cThat &fname &7({nickname}&7)&c is already in use."
+
+  reset:
+    self: "&7Your &fnickname&7 has been reset."
+    others: "&a{target}&7's &fnickname&7 has been reset."
+
+  set:
+    self: "&7Your &fnickname&7 has been set to &a{nickname}&7."
+    others: "&f{target}&7's &fnickname&7 has been set to &a{nickname}&7"
+
+teleport:
+  errors:
+    no-target: "&cPlease provide a player you wish to teleport to."
+    target-invalid: "&c{target} either doesn't exist or is not online."
+  success: 
+    self: "&aYou've successfully teleported to {target}"
+    others: "&aYou've successfuly teleported {subject} to {target}"
+
+ping:
+  errors:
+    target-invalid: "&cThe target you provided isn't online or doesn't exist."
+  responses:
+    self:
+      ping: "&7Your ping is &a{ping}ms"
+      hi: "&7Hi there! (&a{ping}ms&7)"
+    others:
+      ping: "&7{target_nickname}&7's ping is &a{ping}ms"
