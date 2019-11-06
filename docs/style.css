@@ -33,7 +33,7 @@ html, body, header {
 
     display: block;
 
-    position: absolute;
+    position: relative;
     top: 50%;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
@@ -68,6 +68,8 @@ html, body, header {
     margin: 16px;
     padding: 16px;
 
+    transition: margin 200ms ease-out, opacity 200ms ease;
+
     box-shadow: #343434 0px 0px 5px;
     background-image: linear-gradient(to bottom right, #7B80CE, #7E61C6);
 
@@ -80,31 +82,44 @@ html, body, header {
 
 .button:hover {
 
+    margin-bottom: 20px;
     background-image: linear-gradient(to bottom right, #989CFF, #9270E6);
 
 }
 
 .button:active {
 
+    margin-bottom: 16px;
+    transition: margin-bottom 30ms ease-out;
     opacity: 1;
     background-image: linear-gradient(to bottom right, rgb(122, 96, 134), rgb(102, 76, 161));
 
 }
 
-#soonbutton {
+#soon-container {
+    
+    width: 100%;
+    position: absolute;
+    bottom: 0;
 
-    opacity: 0.75;
+    text-align: center;
+}
+
+#soonbutton {
 
     display: inline-block;
 
-    position: absolute;
-    bottom: 0px;
-    margin-left: -68.5px;
-
 }
 
+#soonbutton:link {
+
+    opacity: 0.75;
+
+}
 #soonbutton:hover {
+
     opacity: 1;
+
 }
 
 #soon {
@@ -128,6 +143,16 @@ html, body, header {
 
         font-size: 180%;
         padding: 8px;
+
+    }
+
+    @media screen and (max-height: 548px) {
+
+        #soonbutton {
+
+            display: none;
+        
+        }
 
     }
     
