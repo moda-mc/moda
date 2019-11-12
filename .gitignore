@@ -18,3 +18,5 @@ out/
 desktop.ini
 *.idea
 .idea/
+Moda.iml
+*.iml
