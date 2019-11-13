@@ -37,7 +37,7 @@ public class LangFile {
 	}
 
 	public String getMessage(final IMessage message) {
-		return Colors.parseColors(this.getPrefix() + this.file.getString(message.getPath(), message.getDefault()));
+		return Colors.parseColors(Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault()));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class LangFile {
 			string = string.replace("{" + entry.getKey() + "}", entry.getValue());
 		}
 
-		return this.getPrefix() + Colors.parseColors(string);
+		return Colors.parseColors(string);
 	}
 
 	public void send(final CommandSender sender, final IMessage message) {
@@ -88,8 +88,8 @@ public class LangFile {
 		sender.sendMessage(this.getMessage(message, placeholders));
 	}
 
-	private String getPrefix() {
-		return Moda.instance.getConfig().getString("prefix", "");
-	}
-
+//	private String getPrefix() {
+//		return Moda.instance.getConfig().getString("prefix", "");
+//	}
+//
 }
