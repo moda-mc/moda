@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mineglade</groupId>
+	<groupId>moda.plugin</groupId>
 	<artifactId>Moda</artifactId>
 	<version>alpha</version>
 	<packaging>jar</packaging>
@@ -47,23 +47,23 @@
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>com.mineglade.moda.lib.bstats</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.bstats</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>net.dv8tion.jda</pattern>
-							<shadedPattern>com.mineglade.moda.lib.jda</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.jda</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>com.iwepbb.crypto</pattern>
-							<shadedPattern>com.mineglade.moda.lib.crypto</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.crypto</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>xyz.derkades.derkutils</pattern>
-							<shadedPattern>com.mineglade.moda.lib.derkutils</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.derkutils</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>com.google.gson</pattern>
-							<shadedPattern>com.mineglade.moda.lib.gson</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.gson</shadedPattern>
 						</relocation>
 					</relocations>
 
