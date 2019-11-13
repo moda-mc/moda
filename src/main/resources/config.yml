@@ -40,7 +40,7 @@
 #
 # for no prefix do ""
 
-prefix: "&8[&bM&8] &7| "
+prefix: "&5[&dModa&5] &7"
 
 storage:
   # can be 'file' or 'mysql'. if mysql, uncomment and configure mysql below.

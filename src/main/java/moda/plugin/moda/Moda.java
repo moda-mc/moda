@@ -186,7 +186,7 @@ public class Moda extends JavaPlugin implements Listener {
 
 	public static String getPrefix() {
 		return ChatColor.translateAlternateColorCodes('&',
-				instance.getConfig().getString("plugin-prefix", "&7[&bModa&7] "));
+				instance.getConfig().getString("prefix", "&5[&dModa&5] &7"));
 	}
 
 	private void addCorePlaceholders() {
