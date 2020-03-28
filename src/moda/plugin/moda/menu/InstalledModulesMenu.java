@@ -18,6 +18,9 @@ import xyz.derkades.derkutils.bukkit.menu.IconMenu;
 import xyz.derkades.derkutils.bukkit.menu.OptionClickEvent;
 
 public class InstalledModulesMenu extends IconMenu {
+	
+	private static final Material TYPE_DISABLED = Material.RED_CONCRETE;
+	private static final Material TYPE_ENABLED = Material.LIME_CONCRETE;
 
 	public InstalledModulesMenu(final Player player) {
 		super(Moda.instance, "Moda - Installed Modules", 5*9, player);
@@ -32,19 +35,19 @@ public class InstalledModulesMenu extends IconMenu {
 		final List<String> loaded = manager.getLoadedModules().stream().map(Module::getName).collect(Collectors.toList());
 
 		for (final String name : manager.getInstalledModulesNames()) {
-			final ItemBuilder builder = new ItemBuilder(Material.WOOL);
-
-			builder.name(ChatColor.RESET + "" + ChatColor.BOLD + name);
+			final ItemBuilder builder;
 
 			final List<String> lore = new ArrayList<>();
 
 			if (loaded.contains(name)) {
-				builder.damage(5);
+				builder = new ItemBuilder(TYPE_ENABLED);
 				lore.add(ChatColor.GREEN + "This module is enabled.");
 			} else {
-				builder.damage(14);
+				builder = new ItemBuilder(TYPE_DISABLED);
 				lore.add(ChatColor.RED + "This module is installed, but not enabled.");
 			}
+
+			builder.name(ChatColor.RESET + "" + ChatColor.BOLD + name);
 
 			lore.add("");
 
@@ -62,7 +65,7 @@ public class InstalledModulesMenu extends IconMenu {
 
 			builder.lore(lore);
 
-			this.items.put(i, builder.create());
+			addItem(i, builder.create());
 			i++;
 		}
 	}
@@ -72,7 +75,7 @@ public class InstalledModulesMenu extends IconMenu {
 		final ItemStack clicked = event.getItemStack();
 		final String name = ChatColor.stripColor(event.getItemStack().getItemMeta().getDisplayName());
 
-		if (clicked.getDurability() == 14) {
+		if (clicked.getType() == TYPE_DISABLED) {
 			// Unloaded module
 			try {
 				this.player.sendMessage("Loading module " + name);
@@ -82,7 +85,7 @@ public class InstalledModulesMenu extends IconMenu {
 				this.player.sendMessage("Error occured while loading module");
 				e.printStackTrace();
 			}
-		} else if (clicked.getDurability() == 5) {
+		} else if (clicked.getType() == TYPE_ENABLED) {
 			// Loaded module
 			try {
 				ModuleManager.getInstance().unload(name);
@@ -94,8 +97,8 @@ public class InstalledModulesMenu extends IconMenu {
 		} else {
 			this.player.sendMessage("error");
 		}
+		
 		this.addItems();
-		this.refreshItems();
 		return false;
 	}
 

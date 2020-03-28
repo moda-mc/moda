@@ -52,7 +52,7 @@ public class BrowseModulesMenu extends IconMenu {
 						lore.add("Website: " + module.getWebsiteUrl());
 					}
 
-					this.items.put(i, new ItemBuilder(Material.STONE)
+					addItem(i, new ItemBuilder(Material.STONE)
 							.name(module.getName())
 							.lore(lore)
 							.create());

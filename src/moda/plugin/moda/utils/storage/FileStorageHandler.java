@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import moda.plugin.moda.Moda;
 import moda.plugin.moda.modules.Module;
-import xyz.derkades.derkutils.NoParameter;
 import xyz.derkades.derkutils.bukkit.BukkitFuture;
 
 public abstract class FileStorageHandler extends StorageHandler {
@@ -29,7 +28,7 @@ public abstract class FileStorageHandler extends StorageHandler {
 		this.file = YamlConfiguration.loadConfiguration(this.fileFile);
 	}
 
-	public BukkitFuture<NoParameter> save() {
+	public BukkitFuture<Void> save() {
 		return new BukkitFuture<>(Moda.instance, () ->  {
 			this.file.save(this.fileFile);
 			return null;

@@ -15,7 +15,7 @@ public class ModaCommand implements CommandExecutor {
 	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
-				new ModaMenu(((Player) sender)).open();
+				new ModaMenu(((Player) sender));
 			} else {
 				sender.sendMessage("You cannot open the GUI from the console");
 			}

@@ -12,7 +12,7 @@ import moda.plugin.moda.modules.ModuleManager;
 public class Stats extends Metrics {
 
 	public Stats(final Plugin plugin) {
-		super(plugin);
+		super(plugin, 5106);
 
 		this.addCustomChart(new SimplePie("storage_type", () -> Moda.instance.getStorageType().name().toString()));
 		this.addCustomChart(new SimplePie("debug", () -> Moda.instance.getConfig().getBoolean("debug") + ""));
