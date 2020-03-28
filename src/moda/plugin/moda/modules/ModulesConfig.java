@@ -35,7 +35,7 @@ public class ModulesConfig implements Closeable, AutoCloseable {
 		if (!this.config.contains(name)) {
 			// If it is missing from the config it must have been installed manually. Enable by default.
 			this.addModule(name, true);
-			Moda.instance.getLogger().warning("Module " + name + " is missing from the modules config. Did you install it manually?");
+			Moda.instance.getLogger().warning("Module " + name + " is missing from the modules config. It has been enabled.");
 		}
 
 		return this.config.getBoolean(name);
