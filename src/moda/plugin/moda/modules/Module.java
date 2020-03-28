@@ -67,15 +67,21 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		return this.storage;
 	}
 
-	public abstract DatabaseStorageHandler getDatabaseStorageHandler();
-
 	public final File getDataFolder() {
 		return new File("modules", this.getName());
 	}
 
-	public abstract FileStorageHandler getFileStorageHandler();
+	public DatabaseStorageHandler getDatabaseStorageHandler() {
+		return null;
+	}
 
-	public abstract IMessage[] getMessages();
+	public FileStorageHandler getFileStorageHandler() {
+		return null;
+	}
+
+	public IMessage[] getMessages() {
+		return null;
+	}
 
 	public String[] getPluginDependencies() {
 		return new String[] {};
