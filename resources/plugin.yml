@@ -45,9 +45,4 @@ permissions:
     description: "allows the user to use all commands for all modules."
     default: op
     children:
-      moda.core.admin: true
-      moda.chat.admin: true
-      moda.colors.admin: true
-      moda.nicknames.admin: true
-      moda.teleportation.admin: true
-      moda.votes.admin: true
+      moda.module.*: true
