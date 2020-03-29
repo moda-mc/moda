@@ -78,7 +78,7 @@ public class ModuleLoader extends JarLoader {
 			}
 
 			if (!module.getName().equals(this.moduleName)) {
-				throw new InvalidModuleException("Module name mismatch, " + module.getName() + " isn't " + this.moduleName + ".");
+				throw new InvalidModuleException("Module name mismatch");
 			}
 
 			module.meta = meta;
