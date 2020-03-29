@@ -5,9 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>moda.plugin</groupId>
-	<artifactId>Moda</artifactId>
+	<artifactId>moda</artifactId>
 	<version>alpha</version>
-	<packaging>jar</packaging>
 
 	<name>Moda</name>
 	<url>https://github.com/mineglade/Moda</url>
@@ -17,6 +16,7 @@
 	</properties>
 
 	<build>
+		<finalName>${project.name}</finalName>
 		<sourceDirectory>src</sourceDirectory>
 
 		<resources>
