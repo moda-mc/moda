@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -24,7 +25,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 
 import moda.plugin.moda.Moda;
-import moda.plugin.moda.repo.ModuleMeta;
+import moda.plugin.moda.repo.ModuleMetaLocal;
 import moda.plugin.moda.utils.storage.DatabaseStorageHandler;
 import moda.plugin.moda.utils.storage.FileStorageHandler;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
@@ -33,7 +34,7 @@ import xyz.derkades.derkutils.AssertionException;
 
 public abstract class Module<T extends ModuleStorageHandler> {
 
-	ModuleMeta meta;
+	Optional<ModuleMetaLocal> meta;
 	private FileConfiguration config;
 	private LangFile lang;
 	private ModuleLogger logger;
@@ -42,8 +43,8 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private final List<Listener> listeners =  new ArrayList<>();
 
 	public abstract String getName();
-
-	public ModuleMeta getMeta() {
+	
+	public Optional<ModuleMetaLocal> getMeta() {
 		return this.meta;
 	}
 
@@ -115,8 +116,9 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	public void enable() throws Exception {
 		this.initLogger();
 
-		if (this.meta != null) {
-			this.getLogger().debug("Enabling module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
+		if (this.getMeta().isPresent()) {
+			final ModuleMetaLocal meta = this.getMeta().get();
+			this.getLogger().debug("Enabling module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());
 		} else {
 			this.getLogger().debug("Enabling module " + this.getName());
 		}
@@ -136,16 +138,18 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 		this.onEnable();
 
-		if (this.meta != null) {
-			this.getLogger().info("Enabled module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
+		if (this.getMeta().isPresent()) {
+			final ModuleMetaLocal meta = this.getMeta().get();
+			this.getLogger().info("Enabled module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());
 		} else {
 			this.getLogger().info("Enabled module " + this.getName());
 		}
 	}
 
 	public void disable() throws Exception {
-		if (this.meta != null) {
-			this.getLogger().debug("Disabling module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
+		if (this.getMeta().isPresent()) {
+			final ModuleMetaLocal meta = this.getMeta().get();
+			this.getLogger().debug("Disabling module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());
 		} else {
 			this.getLogger().debug("Disabling module " + this.getName());
 		}
@@ -161,8 +165,9 @@ public abstract class Module<T extends ModuleStorageHandler> {
 			((DatabaseStorageHandler) this.storage).closeConnection();
 		}
 
-		if (this.meta != null) {
-			this.getLogger().info("Disabled module " + this.meta.getName() + " by " + this.meta.getAuthor() + " version " + this.meta.getDownloadedVersionString());
+		if (this.getMeta().isPresent()) {
+			final ModuleMetaLocal meta = this.getMeta().get();
+			this.getLogger().info("Disabled module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());
 		} else {
 			this.getLogger().info("Disabled module " + this.getName());
 		}

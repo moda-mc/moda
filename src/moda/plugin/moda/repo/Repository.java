@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -22,23 +23,45 @@ import moda.plugin.moda.Moda;
 public class Repository {
 
 	private final URL url;
-	private final File index;
+	private final File indexFile;
 
 	public Repository(final URL url) {
 		this.url = url;
 
 		final File reposFolder = new File(Moda.instance.getDataFolder(), "repo-data");
 		reposFolder.mkdirs();
-		this.index = new File(reposFolder, DigestUtils.md5Hex(url.toString()));
+		this.indexFile = new File(reposFolder, DigestUtils.md5Hex(url.toString()));
 	}
 
 	public URL getUrl() {
 		return this.url;
 	}
 
-	public List<ModuleMeta> getModules() throws IOException {
-		final List<ModuleMeta> list = new ArrayList<>();
-		this.getIndex().get("modules").getAsJsonArray().forEach((e) -> list.add(new ModuleMeta(e.getAsJsonObject())));
+	public List<ModuleMetaRepository> getModules() throws InvalidMetadataException {
+		final List<ModuleMetaRepository> list = new ArrayList<>();
+		
+		JsonObject index;
+		try {
+			index = this.getIndex();
+		} catch (final IOException e) {
+			throw new InvalidMetadataException(e);
+		}
+		
+		if (!index.has("modules")) {
+			throw new InvalidMetadataException("Missing modules list");
+		}
+		
+		if (!index.get("modules").isJsonArray()) {
+			throw new InvalidMetadataException("Key 'modules' is not an array");
+		}
+		
+		for (final JsonElement elem : index.get("modules").getAsJsonArray()) {
+			try {
+				list.add(new ModuleMetaRepository(elem.getAsJsonObject()));
+			} catch (final ClassCastException e) {
+				throw new InvalidMetadataException("All elements of 'modules' array must be objects");
+			}
+		}
 		return list;
 	}
 
@@ -60,8 +83,8 @@ public class Repository {
 			responseBuilder.append(responseString);
 		}
 
-		if (this.index.exists()) {
-			this.index.delete();
+		if (this.indexFile.exists()) {
+			this.indexFile.delete();
 		}
 
 		final String content = responseBuilder.toString();
@@ -69,7 +92,7 @@ public class Repository {
 		final JsonObject json = new JsonParser().parse(content).getAsJsonObject();
 		json.addProperty("index_time", System.currentTimeMillis());
 
-		try (FileWriter writer = new FileWriter(this.index)){
+		try (FileWriter writer = new FileWriter(this.indexFile)){
 			writer.write(json.toString());
 		}
 
@@ -88,14 +111,14 @@ public class Repository {
 	public JsonObject getIndex() throws IOException {
 		JsonObject json = null;
 
-		if (!this.index.exists()) {
+		if (!this.indexFile.exists()) {
 			json = this.downloadIndex();
 		}
 
 		if (json != null) {
 			return json;
 		} else {
-			return new JsonParser().parse(new FileReader(this.index)).getAsJsonObject();
+			return new JsonParser().parse(new FileReader(this.indexFile)).getAsJsonObject();
 		}
 	}
 

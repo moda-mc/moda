@@ -1,14 +1,15 @@
 package moda.plugin.moda.menu;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import moda.plugin.moda.Moda;
-import moda.plugin.moda.repo.ModuleMeta;
+import moda.plugin.moda.repo.InvalidMetadataException;
+import moda.plugin.moda.repo.ModuleMetaRepository;
 import moda.plugin.moda.repo.ModuleMetaVersion;
 import moda.plugin.moda.repo.Repositories;
 import moda.plugin.moda.repo.Repository;
@@ -27,14 +28,15 @@ public class BrowseModulesMenu extends IconMenu {
 		final int i = 0;
 		for (final Repository repository : Repositories.getRepositories()) {
 			try {
-				for (final ModuleMeta module : repository.getModules()) {
+				for (final ModuleMetaRepository module : repository.getModules()) {
 					final List<String> lore = new ArrayList<>();
 					lore.add("Description: " + module.getDescription());
 					lore.add("Author:" + module.getAuthor());
-					final ModuleMetaVersion version = module.getLatestVersionThatSupports(Moda.minecraftVersion);
-					if (version == null) {
+					final Optional<ModuleMetaVersion> optVersion = module.getLatestVersionThatSupports(Moda.minecraftVersion);
+					if (optVersion.isEmpty()) {
 						lore.add("Your minecraft version is not supported by this module");
 					} else {
+						final ModuleMetaVersion version = optVersion.get();
 						lore.add(String.format("Version: %s (%s)", version.getVersion(), version.getBuild()));
 						lore.add("Minecraft versions: " + version.getSupportedMinecraftVersionsAsCommaSeparatedString());
 						lore.add("Download URL: " + version.getDownloadUrl());
@@ -57,8 +59,9 @@ public class BrowseModulesMenu extends IconMenu {
 							.lore(lore)
 							.create());
 				}
-			} catch (final IOException e) {
-				this.player.sendMessage("Failed to load repository " + repository.getUrl().toString());
+			} catch (final InvalidMetadataException e) {
+				this.player.sendMessage("Invalid metadata for repository " + repository.getUrl().toString());
+				this.player.sendMessage(e.getMessage());
 				e.printStackTrace();
 			}
 		}

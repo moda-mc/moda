@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import moda.plugin.moda.modules.Module;
 import moda.plugin.moda.modules.ModuleManager;
 import moda.plugin.moda.modules.ModulesConfig;
-import moda.plugin.moda.repo.ModuleMeta;
+import moda.plugin.moda.repo.ModuleMetaRepository;
 import moda.plugin.moda.repo.ModuleMetaVersion;
 import moda.plugin.moda.repo.ModuleMinecraftVersion;
 import moda.plugin.moda.repo.Repositories;
@@ -67,39 +68,41 @@ public class Moda extends JavaPlugin implements Listener {
 		// Download default modules
 		try (final ModulesConfig modulesConfig = new ModulesConfig()){
 			for (final Repository repo : Repositories.getRepositories()) {
-				List<ModuleMeta> modules;
+				List<ModuleMetaRepository> metas;
 				try {
-					modules = repo.getModules();
+					metas = repo.getModules();
 				} catch (final Exception e) {
 					this.getLogger().warning("Failed to connect to repository " + repo.getUrl().toString() +
 							": " + e.getMessage());
 					continue;
 				}
 
-				for (final ModuleMeta module : modules) {
-					System.out.println(String.format("[debug] module name %s default %s is downloaded %s\n", module.getName(),module.isDefault(),module.isDownloaded())); // TODO remove debug
-
-					if (!module.isDefault()) {
+				for (final ModuleMetaRepository meta : metas) {
+					if (!meta.shouldAutoDownload()) {
 						continue;
 					}
+					
+					final ModuleManager manager = ModuleManager.getInstance();
 
-					if (module.isDownloaded()) {
+					if (manager.isDownloaded(meta.getName())) {
 						continue;
 					}
-
+					
+					this.getLogger().info("The repository " + repo.getUrl() + " wants module " + meta.getName() + " to be automatically installed. Downloading..");
+					
 					try {
-						final ModuleMetaVersion version = module.getLatestVersionThatSupports(Moda.minecraftVersion);
-						if (version != null) {
-							version.download();
+						final Optional<ModuleMetaVersion> version = meta.getLatestVersionThatSupports(Moda.minecraftVersion);
+						if (version.isPresent()) {
+							manager.download(meta, version.get());
 						} else {
-							this.getLogger().warning("The module " + module.getName() + " does not support your minecraft version");
-							this.getLogger().warning("Supported versions for the latest version: " + module.getLatestVersion().getSupportedMinecraftVersionsAsCommaSeparatedString());
+							this.getLogger().warning("The module " + meta.getName() + " does not support your minecraft version");
+							this.getLogger().warning("Supported versions for the latest version: " + meta.getLatestVersion().getSupportedMinecraftVersionsAsCommaSeparatedString());
 							continue;
 						}
-						modulesConfig.addModule(module.getName(), false);
-						Moda.instance.getLogger().info(String.format("New module installed: '%s'", module.getName()));
+						modulesConfig.addModule(meta.getName(), false);
+						Moda.instance.getLogger().info(String.format("New module installed: '%s'", meta.getName()));
 					} catch (final Exception e) {
-						this.getLogger().warning("Failed to download module " + module.getName());
+						this.getLogger().warning("Failed to download module " + meta.getName());
 						e.printStackTrace();
 					}
 				}

@@ -1,50 +1,56 @@
 package moda.plugin.moda.repo;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 
 public enum ModuleMinecraftVersion {
 
-	// These values MUST be in opposite order
-	V_1_16   (512, "1.16"),
-	V_1_15   (256, "1.15"),
-	V_1_14   (128, "1.14"),
-	V_1_13   (64,  "1.13"),
-	V_1_12   (32,  "1.12"),
-	V_1_11   (16,  "1.11"),
-	V_1_10   (8,   "1.10"),
-	V_1_9    (4,   "1.9"),
-	V_1_8    (2,   "1.8"),
-	V_1_7_10 (1,   "1.7.10");
+	V_1_7  ("1.7"),
+	V_1_8  ("1.8"),
+	V_1_9  ("1.9"),
+	V_1_10 ("1.10"),
+	V_1_11 ("1.11"),
+	V_1_12 ("1.12"),
+	V_1_13 ("1.13"),
+	V_1_14 ("1.14"),
+	V_1_15 ("1.15"),
+	V_1_16 ("1.16"),
+	
+	;
 
-	private int value;
 	private String string;
 
-	ModuleMinecraftVersion(final int value, final String string){
-		this.value = value;
+	ModuleMinecraftVersion(final String string){
 		this.string = string;
 	}
-
-	public int getValue() {
-		return this.value;
+	
+	public int getFlag() {
+		return 1 << this.ordinal() + 1;
 	}
 
 	@Override
 	public String toString() {
 		return this.string;
 	}
+	
+	public boolean isSupported(final int flag) {
+		return (this.getFlag() & flag) != 0;
+	}
 
-	public static List<ModuleMinecraftVersion> parse(int code){
-		final List<ModuleMinecraftVersion> versions = new ArrayList<>();
-		for (final ModuleMinecraftVersion version : values()) {
-			if (code - version.getValue() > 0) {
-				code -= version.getValue();
-				versions.add(version);
-			}
-		}
-		return versions;
+	public static List<ModuleMinecraftVersion> parse(final int flag) {
+//		final List<ModuleMinecraftVersion> versions = new ArrayList<>();
+//		for (final ModuleMinecraftVersion version : values()) {
+//			if (code - version.getValue() > 0) {
+//				code -= version.getValue();
+//				versions.add(version);
+//			}
+//		}
+//		return versions;
+		
+		return Arrays.stream(values()).filter(e -> e.isSupported(flag)).collect(Collectors.toList());
 	}
 
 	public static ModuleMinecraftVersion getServerVersion() {

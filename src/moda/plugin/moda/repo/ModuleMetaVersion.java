@@ -1,97 +1,143 @@
 package moda.plugin.moda.repo;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.Validate;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import moda.plugin.moda.Moda;
-
-public class ModuleMetaVersion {
-
-	private final ModuleMeta moduleMeta;
-	private final JsonObject json;
-
-	ModuleMetaVersion(final ModuleMeta moduleMeta, final JsonObject json) {
-		this.moduleMeta = moduleMeta;
-		this.json = json;
+public class ModuleMetaVersion implements Comparable<ModuleMetaVersion> {
+	
+	private final ModuleMeta meta;
+	private int build;
+	private String version;
+	private Optional<String> changelog;
+	private URL download;
+	private int minecraftVersionsFlag;
+	
+	ModuleMetaVersion(final JsonObject json, final ModuleMeta meta) throws InvalidMetadataException {
+		Validate.notNull(json);
+		Validate.notNull(meta);
+		
+		this.meta = meta;
+		
+		if (json.has("build")) {
+			try {
+				this.build = json.get("build").getAsInt();
+			} catch (final ClassCastException e) {
+				throw new InvalidMetadataException("Key 'build' has wrong type");
+			}
+		} else {
+			throw new InvalidMetadataException("Missing key 'build'");
+		}
+		
+		if (json.has("version")) {
+			try {
+				this.version = json.get("version").getAsString();
+			} catch (final ClassCastException e) {
+				throw new InvalidMetadataException("Key 'version' has wrong type");
+			}
+		} else {
+			throw new InvalidMetadataException("Missing key 'version'");
+		}
+		
+		if (json.has("changelog")) {
+			try {
+				this.changelog = Optional.of(json.get("changelog").getAsString());
+			} catch (final ClassCastException e) {
+				throw new InvalidMetadataException("Key 'changelog' has wrong type");
+			}
+		} else {
+			this.changelog = Optional.empty();
+		}
+		
+		if (json.has("minecraft_versions")) {
+			try {
+				this.minecraftVersionsFlag = json.get("minecraft_versions").getAsInt();
+			} catch (final ClassCastException e) {
+				throw new InvalidMetadataException("Key 'minecraft_versions' has wrong type");
+			}
+		} else {
+			throw new InvalidMetadataException("Missing key 'minecraft_versions'");
+		}
 	}
-
+	
 	public ModuleMeta getModuleMeta() {
-		return this.moduleMeta;
-	}
-
-	public JsonObject getJson() {
-		return this.json;
+		return this.meta;
 	}
 
 	public int getBuild() {
-		return this.json.get("build").getAsInt();
+		return this.build;
 	}
-
+	
 	public String getVersion() {
-		return this.json.get("version").getAsString();
+		return this.version;
 	}
-
-	public String getChangelog() {
-		return this.json.get("changelog").getAsString();
+	
+	public Optional<String> getChangelog() {
+		return this.changelog;
 	}
-
-	public URL getDownloadUrl() throws MalformedURLException {
-		return new URL(this.json.get("download").getAsString());
+	
+	public URL getDownloadUrl() {
+		return this.download;
 	}
-
-	public int getSupportedMinecraftVersionsAsCode() {
-		return this.json.get("minecraft_versions").getAsInt();
+	
+	public int getSupportedMinecraftVersionsFlag() {
+		return this.minecraftVersionsFlag;
 	}
-
-	public List<ModuleMinecraftVersion> getSupportedMinecraftVersionsAsList() {
-		return ModuleMinecraftVersion.parse(this.getSupportedMinecraftVersionsAsCode());
+	
+	public List<ModuleMinecraftVersion> getSupportedMinecraftVersions() {
+		return ModuleMinecraftVersion.parse(this.minecraftVersionsFlag);
 	}
 
 	public String getSupportedMinecraftVersionsAsCommaSeparatedString() {
 		return String.join(", ",
-				this.getSupportedMinecraftVersionsAsList().stream().map(Object::toString).collect(Collectors.toList()));
+				this.getSupportedMinecraftVersions().stream().map(Object::toString).collect(Collectors.toList()));
 	}
 
-	public void download() throws IOException {
-		final String fileName = this.getModuleMeta().getName().toString();
-		final File jarFile = new File("modules", fileName + ".jar");
-		final File metaFile = new File("modules", fileName + ".json");
-
-		if (jarFile.exists()) jarFile.delete();
-		if (metaFile.exists()) metaFile.delete();
-
-		final JsonObject meta = this.moduleMeta.getJson();
-		meta.addProperty("downloaded_build", this.getBuild());
-		FileUtils.write(metaFile, meta.toString(), Charset.forName("UTF-8"), false);
-
-		final URL url = this.getDownloadUrl();
-
-		FileUtils.copyURLToFile(url, jarFile,
-				Moda.instance.getConfig().getInt("timeout"), Moda.instance.getConfig().getInt("timeout"));
+	@Override
+	public int compareTo(final ModuleMetaVersion other) {
+		return this.getBuild() - other.getBuild();
 	}
 
-	public boolean isDownloaded() throws IOException {
-		final String fileName = this.getModuleMeta().getName().toString();
-		final File jarFile = new File("modules", fileName + ".jar");
-		final File metaFile = new File("modules", fileName + ".json");
-
-		if (!jarFile.exists() || !metaFile.exists()) return false;
-
-		final int downloadedBuild = new JsonParser().parse(new FileReader(metaFile)).getAsJsonObject()
-				.get("downloaded_build").getAsInt();
-
-		return downloadedBuild == this.getBuild();
-	}
+//	public void download() throws IOException {
+//		final String fileName = this.getModuleMeta().getName().toString();
+//		final File jarFile = new File("modules", fileName + ".jar");
+//		final File metaFile = new File("modules", fileName + ".json");
+//
+//		if (jarFile.exists()) {
+//			jarFile.delete();
+//		}
+//		if (metaFile.exists()) {
+//			metaFile.delete();
+//		}
+//
+//		final JsonObject meta = this.moduleMeta.getJson();
+//		meta.addProperty("downloaded_build", this.getBuild());
+//		FileUtils.write(metaFile, meta.toString(), Charset.forName("UTF-8"), false);
+//
+//		final URL url = this.getDownloadUrl();
+//
+//		FileUtils.copyURLToFile(url, jarFile,
+//				Moda.instance.getConfig().getInt("timeout"), Moda.instance.getConfig().getInt("timeout"));
+//	}
+//
+//	public boolean isDownloaded() throws IOException {
+//		final String fileName = this.getModuleMeta().getName().toString();
+//		final File jarFile = new File("modules", fileName + ".jar");
+//		final File metaFile = new File("modules", fileName + ".json");
+//
+//		if (!jarFile.exists() || !metaFile.exists()) {
+//			return false;
+//		}
+//
+//		final int downloadedBuild = new JsonParser().parse(new FileReader(metaFile)).getAsJsonObject()
+//				.get("downloaded_build").getAsInt();
+//
+//		return downloadedBuild == this.getBuild();
+//	}
 
 }

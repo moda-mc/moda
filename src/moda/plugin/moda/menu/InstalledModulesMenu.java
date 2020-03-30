@@ -2,6 +2,7 @@ package moda.plugin.moda.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import moda.plugin.moda.Moda;
 import moda.plugin.moda.modules.Module;
 import moda.plugin.moda.modules.ModuleManager;
-import moda.plugin.moda.repo.ModuleMeta;
+import moda.plugin.moda.repo.ModuleMetaLocal;
 import xyz.derkades.derkutils.bukkit.ItemBuilder;
 import xyz.derkades.derkutils.bukkit.menu.IconMenu;
 import xyz.derkades.derkutils.bukkit.menu.OptionClickEvent;
@@ -51,15 +52,15 @@ public class InstalledModulesMenu extends IconMenu {
 
 			lore.add("");
 
-			final ModuleMeta meta = manager.getMetadata(name);
+			final Optional<ModuleMetaLocal> metaOpt = manager.getLocalMetadata(name);
 
-			if (meta == null) {
+			if (metaOpt.isEmpty()) {
 				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "No metadata");
 			} else {
+				final ModuleMetaLocal meta = metaOpt.get();
 				lore.add(ChatColor.GRAY + meta.getDescription());
 				lore.add("");
-				lore.add(this.formatKV("Downloaded version", meta.getDownloadedVersionString()));
-				lore.add(this.formatKV("Latest version", meta.getLatestVersionThatSupports(Moda.minecraftVersion).getVersion()));
+				lore.add(this.formatKV("Downloaded version", meta.getDownloadedVersion().getVersion()));
 				lore.add(this.formatKV("Author", meta.getAuthor()));
 			}
 

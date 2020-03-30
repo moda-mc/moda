@@ -1,14 +1,5 @@
 package moda.plugin.moda.modules;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
-import com.google.gson.JsonParser;
-
-import moda.plugin.moda.Moda;
-import moda.plugin.moda.repo.ModuleMeta;
-
 public class Modules {
 
 //	public static final List<Module<? extends ModuleStorageHandler>> ENABLED = new ArrayList<>();
@@ -120,15 +111,5 @@ public class Modules {
 //				.filter((f) -> f.getName().endsWith(".jar"))
 //				.map((f) -> f.getName().replace(".jar", "")).collect(Collectors.toList());
 //	}
-
-	public static ModuleMeta getMetadata(final String moduleName) {
-		final File metaFile = new File("modules", moduleName + ".json");
-		try {
-			return new ModuleMeta(new JsonParser().parse(new FileReader(metaFile)).getAsJsonObject());
-		} catch (final FileNotFoundException e) {
-			Moda.instance.getLogger().warning("Metadata file " + metaFile.getPath() + " does not exist. This is normal if the installed module was not downloaded from a repository. Some plugin features may not work properly. If you wish to create a file manually, have a look at the wiki: https://github.com/ModaPlugin/Moda/wiki/Module-metadata-file");
-			return null;
-		}
-	}
-
+	
 }

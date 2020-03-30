@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -13,7 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import moda.plugin.moda.Moda;
-import moda.plugin.moda.repo.ModuleMeta;
+import moda.plugin.moda.repo.ModuleMetaLocal;
 import moda.plugin.moda.utils.InvalidModuleException;
 import moda.plugin.moda.utils.JarLoader;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
@@ -36,7 +37,7 @@ public class ModuleLoader extends JarLoader {
 			throw new FileNotFoundException("Module file does not exist: " + jarFile.getAbsolutePath());
 		}
 
-		final ModuleMeta meta = Modules.getMetadata(this.moduleName);
+		final Optional<ModuleMetaLocal> meta = ModuleManager.getInstance().getLocalMetadata(this.moduleName);
 
 		final JarLoader jarLoader = new JarLoader(Moda.instance);
 		try (final ZipFile zip = new ZipFile(jarFile)){
