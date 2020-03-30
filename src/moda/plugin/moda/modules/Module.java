@@ -206,11 +206,11 @@ public abstract class Module<T extends ModuleStorageHandler> {
 					final InputStream input = zip.getInputStream(configYamlEntry);
 					final OutputStream output = new FileOutputStream(file);
 					IOUtils.copy(input, output);
-					
-					this.config = YamlConfiguration.loadConfiguration(file);
 				} else {
 					this.getLogger().debug("Config yaml file already exists");
 				}
+				
+				this.config = YamlConfiguration.loadConfiguration(file);
 			}
 		}
 	}
