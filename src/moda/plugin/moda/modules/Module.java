@@ -132,6 +132,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		}
 
 		this.scheduler = new Scheduler(this);
+		this.getDataFolder().mkdirs();
 		this.initLang();
 		this.initConfig();
 		this.initStorage();
