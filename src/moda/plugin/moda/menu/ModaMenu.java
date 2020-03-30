@@ -11,7 +11,7 @@ import xyz.derkades.derkutils.bukkit.menu.OptionClickEvent;
 public class ModaMenu extends IconMenu {
 
 	public ModaMenu(final Player player) {
-		super(Moda.instance, "Moda", 5*9, player);
+		super(Moda.instance, "Moda", 5, player);
 
 		addItem(20, new ItemBuilder(Material.STONE).name("Browse modules").create());
 		addItem(24, new ItemBuilder(Material.STONE).name("Installed modules").create());
