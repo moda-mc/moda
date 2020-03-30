@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -205,6 +206,8 @@ public abstract class Module<T extends ModuleStorageHandler> {
 					final InputStream input = zip.getInputStream(configYamlEntry);
 					final OutputStream output = new FileOutputStream(file);
 					IOUtils.copy(input, output);
+					
+					this.config = YamlConfiguration.loadConfiguration(file);
 				} else {
 					this.getLogger().debug("Config yaml file already exists");
 				}
@@ -231,7 +234,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 				if (handler != null) {
 					// Save config periodically
 					this.scheduler.interval(5*60*20, 5*60*20, () -> {
-						this.logger.debug("Saving config");
+						this.logger.debug("Saving data");
 						this.scheduler.async(handler::save);
 					});
 				}
