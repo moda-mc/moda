@@ -24,7 +24,7 @@ public class InstalledModulesMenu extends IconMenu {
 	private static final Material TYPE_ENABLED = Material.LIME_CONCRETE;
 
 	public InstalledModulesMenu(final Player player) {
-		super(Moda.instance, "Moda - Installed Modules", 5*9, player);
+		super(Moda.instance, "Moda - Installed Modules", 5, player);
 		this.addItems();
 	}
 

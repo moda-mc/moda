@@ -20,7 +20,7 @@ import xyz.derkades.derkutils.bukkit.menu.OptionClickEvent;
 public class BrowseModulesMenu extends IconMenu {
 
 	public BrowseModulesMenu(final Player player) {
-		super(Moda.instance, "Moda - Browse Modules", 5*9, player);
+		super(Moda.instance, "Moda - Browse Modules", 5, player);
 		this.addItems();
 	}
 
