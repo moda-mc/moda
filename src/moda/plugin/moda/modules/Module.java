@@ -87,9 +87,9 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		return new String[] {};
 	}
 
-	public void onDisable() {}
+	public void onDisable() throws Exception {}
 
-	public void onEnable() {}
+	public void onEnable() throws Exception {}
 
 	public void registerCommand(final Command command) {
 		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s]",
