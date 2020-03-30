@@ -43,19 +43,12 @@
 				<version>3.2.1</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<minimizeJar>true</minimizeJar>
 
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
 							<shadedPattern>moda.plugin.moda.lib.bstats</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>net.dv8tion.jda</pattern>
-							<shadedPattern>moda.plugin.moda.lib.jda</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>com.iwepbb.crypto</pattern>
-							<shadedPattern>moda.plugin.moda.lib.crypto</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>xyz.derkades.derkutils</pattern>
@@ -64,6 +57,18 @@
 						<relocation>
 							<pattern>com.google.gson</pattern>
 							<shadedPattern>moda.plugin.moda.lib.gson</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>org.apache.commons</pattern>
+							<shadedPattern>moda.plugin.moda.lib.commons</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>org.hamcrest</pattern>
+							<shadedPattern>moda.plugin.moda.lib.hamcrest</shadedPattern>
+						</relocation>
+							<relocation>
+							<pattern>org.json.simple</pattern>
+							<shadedPattern>moda.plugin.moda.lib.json-simple</shadedPattern>
 						</relocation>
 					</relocations>
 
@@ -74,6 +79,12 @@
 								<exclude>META-INF/*.SF</exclude>
 								<exclude>META-INF/*.DSA</exclude>
 								<exclude>META-INF/*.RSA</exclude>
+								<exclude>META-INF/LICENSE.txt</exclude>
+								<exclude>META-INF/NOTICE.txt</exclude>
+								<exclude>META-INF/maven/</exclude>
+								<exclude>LICENSE.txt</exclude>
+								<exclude>junit/</exclude>
+								<exclude>org/junit/</exclude>
 							</excludes>
 						</filter>
 					</filters>
