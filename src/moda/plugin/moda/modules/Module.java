@@ -1,12 +1,11 @@
 package moda.plugin.moda.modules;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -197,12 +197,13 @@ public abstract class Module<T extends ModuleStorageHandler> {
 			if (configYamlEntry == null) {
 				this.getLogger().debug("Module jar does not contain 'config.yaml' file.");
 			} else {
-				final File output = new File(this.getDataFolder(), "config.yaml");
-				if (!output.exists()) {
+				final File file = new File(this.getDataFolder(), "config.yaml");
+				if (!file.exists()) {
 					this.getLogger().debug("Config yaml file does not exist, copying from jar file..");
-					final InputStream inputStream2 = zip.getInputStream(configYamlEntry);
-					final Path outputPath = Paths.get(output.toURI());
-					Files.copy(inputStream2, outputPath);
+					file.createNewFile();
+					final InputStream input = zip.getInputStream(configYamlEntry);
+					final OutputStream output = new FileOutputStream(file);
+					IOUtils.copy(input, output);
 				} else {
 					this.getLogger().debug("Config yaml file already exists");
 				}
