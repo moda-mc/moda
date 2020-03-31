@@ -4,6 +4,8 @@ name: "Moda"
 description: "A fully modular core plugin for spigot."
 website: https://www.github.com/mineglade/Moda
 authors: [patchtv, Derkades]
+api-version: 1.13
+
 
 version: '@project.version@'
 
