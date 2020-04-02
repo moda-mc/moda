@@ -27,6 +27,7 @@ import org.bukkit.plugin.UnknownDependencyException;
 
 import moda.plugin.moda.Moda;
 import moda.plugin.moda.repo.ModuleMetaLocal;
+import moda.plugin.moda.utils.BukkitFuture;
 import moda.plugin.moda.utils.storage.DatabaseStorageHandler;
 import moda.plugin.moda.utils.storage.FileStorageHandler;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
@@ -160,7 +161,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		Scheduler.cancelAllTasks(this);
 
 		if (this.storage instanceof FileStorageHandler) {
-			((FileStorageHandler) this.storage).saveBlocking();
+			((FileStorageHandler) this.storage).save();
 		}
 
 		if (this.storage instanceof DatabaseStorageHandler) {
@@ -215,6 +216,8 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		}
 	}
 
+	
+	// TODO Clean up repetitive code and make sure period save tasks are shut down when a module is disabled
 	@SuppressWarnings("unchecked")
 	private final void initStorage() throws SQLException {
 		// Initialize data storage
@@ -234,8 +237,13 @@ public abstract class Module<T extends ModuleStorageHandler> {
 				if (handler != null) {
 					// Save config periodically
 					this.scheduler.interval(5*60*20, 5*60*20, () -> {
-						this.logger.debug("Saving data");
-						this.scheduler.async(handler::save);
+						this.logger.debug("Saving config");
+						final BukkitFuture<Void> future = handler.saveAsync();
+						future.onComplete((t) -> this.logger.debug("Saved config"));
+						future.onException((e) -> {
+							this.logger.warning("Error saving config");
+							e.printStackTrace();
+						});
 					});
 				}
 			}
@@ -248,7 +256,12 @@ public abstract class Module<T extends ModuleStorageHandler> {
 				// Save config periodically
 				this.scheduler.interval(5*60*20, 5*60*20, () -> {
 					this.logger.debug("Saving config");
-					this.scheduler.async(handler::save);
+					final BukkitFuture<Void> future = handler.saveAsync();
+					future.onComplete((t) -> this.logger.debug("Saved config"));
+					future.onException((e) -> {
+						this.logger.warning("Error saving config");
+						e.printStackTrace();
+					});
 				});
 			}
 		} else {

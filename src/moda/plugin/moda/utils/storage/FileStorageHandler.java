@@ -1,42 +1,23 @@
 package moda.plugin.moda.utils.storage;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import moda.plugin.moda.Moda;
 import moda.plugin.moda.modules.Module;
-import xyz.derkades.derkutils.bukkit.BukkitFuture;
+import moda.plugin.moda.utils.BukkitFuture;
 
 public abstract class FileStorageHandler extends StorageHandler {
 
-	protected FileConfiguration file;
-
-	private final File fileFile;
-
-	public FileStorageHandler(final Module<? extends ModuleStorageHandler> module) {
+	public FileStorageHandler(final Module<? extends ModuleStorageHandler> module) throws IOException {
 		super(module);
-
-		final File fileFileDir = new File(module.getDataFolder() + File.separator + "data");
-
-		fileFileDir.mkdirs();
-
-		this.fileFile = new File(fileFileDir, "data.yaml");
-
-		this.file = YamlConfiguration.loadConfiguration(this.fileFile);
 	}
-
-	public BukkitFuture<Void> save() {
-		return new BukkitFuture<>(Moda.instance, () ->  {
-			this.file.save(this.fileFile);
+	
+	public BukkitFuture<Void> saveAsync(){
+		return new BukkitFuture<>(() -> {
+			save();
 			return null;
 		});
 	}
-
-	public void saveBlocking() throws IOException {
-		this.file.save(this.fileFile);
-	}
+	
+	public abstract void save() throws IOException;
 
 }
