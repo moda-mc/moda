@@ -31,7 +31,9 @@ import moda.plugin.moda.utils.BukkitFuture;
 import moda.plugin.moda.utils.storage.DatabaseStorageHandler;
 import moda.plugin.moda.utils.storage.FileStorageHandler;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
+import moda.plugin.moda.utils.storage.StorageMigrator;
 import moda.plugin.moda.utils.storage.StorageType;
+import moda.plugin.moda.utils.storage.UnsupportedStorageMigrator;
 import xyz.derkades.derkutils.AssertionException;
 
 public abstract class Module<T extends ModuleStorageHandler> {
@@ -80,6 +82,10 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 	public FileStorageHandler getFileStorageHandler() {
 		return null;
+	}
+	
+	public StorageMigrator<T> getStorageMigrator() {
+		return new UnsupportedStorageMigrator<>();
 	}
 
 	public IMessage[] getMessages() {
