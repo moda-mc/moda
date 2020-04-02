@@ -162,6 +162,9 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		} else {
 			this.getLogger().debug("Disabling module " + this.getName());
 		}
+		
+		// Unregister everything before module is disabled so any exceptions thrown by
+		// onDisable() won't keep listeners/schedulers registered.
 
 		this.listeners.forEach(HandlerList::unregisterAll);
 		Scheduler.cancelAllTasks(this);
@@ -173,7 +176,9 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		if (this.storage instanceof DatabaseStorageHandler) {
 			((DatabaseStorageHandler) this.storage).closeConnection();
 		}
-
+		
+		this.onDisable();
+		
 		if (this.getMeta().isPresent()) {
 			final ModuleMetaLocal meta = this.getMeta().get();
 			this.getLogger().info("Disabled module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());

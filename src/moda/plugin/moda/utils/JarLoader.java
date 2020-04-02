@@ -9,6 +9,7 @@ import java.net.URLClassLoader;
 
 import org.bukkit.plugin.Plugin;
 
+@Deprecated
 public class JarLoader {
 
 	private static final Method ADD_URL_METHOD;
