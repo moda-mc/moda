@@ -208,13 +208,13 @@ public abstract class Module<T extends ModuleStorageHandler> {
 			} else {
 				final File file = new File(this.getDataFolder(), "config.yaml");
 				if (!file.exists()) {
-					this.getLogger().debug("Config yaml file does not exist, copying from jar file..");
+					this.getLogger().debug("Config file does not exist, copying from jar file..");
 					file.createNewFile();
 					final InputStream input = zip.getInputStream(configYamlEntry);
 					final OutputStream output = new FileOutputStream(file);
 					IOUtils.copy(input, output);
 				} else {
-					this.getLogger().debug("Config yaml file already exists");
+					this.getLogger().debug("Config file already exists");
 				}
 				
 				this.config = YamlConfiguration.loadConfiguration(file);
@@ -222,57 +222,63 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		}
 	}
 
-	
-	// TODO Clean up repetitive code and make sure period save tasks are shut down when a module is disabled
-	@SuppressWarnings("unchecked")
-	private final void initStorage() throws SQLException {
-		// Initialize data storage
+	private final void initStorage() throws Exception {
 		final StorageType storageType = Moda.instance.getStorageType();
 		if (storageType == StorageType.MYSQL) {
-			if (this.getDatabaseStorageHandler() != null) {
-				this.logger.debug("Mysql enabled, using database");
-				final DatabaseStorageHandler handler = this.getDatabaseStorageHandler();
-				handler.setDatabaseHandler(Moda.db);
-				handler.setup();
-				this.storage = (T) handler;
-			} else {
-				this.logger.debug("No mysql storage handler provided, using file storage instead.");
-				final FileStorageHandler handler = this.getFileStorageHandler();
-				this.storage = (T) handler;
-
-				if (handler != null) {
-					// Save config periodically
-					this.scheduler.interval(5*60*20, 5*60*20, () -> {
-						this.logger.debug("Saving config");
-						final BukkitFuture<Void> future = handler.saveAsync();
-						future.onComplete((t) -> this.logger.debug("Saved config"));
-						future.onException((e) -> {
-							this.logger.warning("Error saving config");
-							e.printStackTrace();
-						});
-					});
-				}
-			}
+			initDatabaseStorage();
 		} else if (storageType == StorageType.FILE) {
-			this.logger.debug("Using file storage");
-			final FileStorageHandler handler = this.getFileStorageHandler();
-			this.storage = (T) handler;
-
-			if (handler != null) {
-				// Save config periodically
-				this.scheduler.interval(5*60*20, 5*60*20, () -> {
-					this.logger.debug("Saving config");
-					final BukkitFuture<Void> future = handler.saveAsync();
-					future.onComplete((t) -> this.logger.debug("Saved config"));
-					future.onException((e) -> {
-						this.logger.warning("Error saving config");
-						e.printStackTrace();
-					});
-				});
-			}
+			initFileStorage();
 		} else {
 			throw new AssertionException();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private final void initDatabaseStorage() throws SQLException {
+		this.logger.debug("Trying to use database storage");
+		final DatabaseStorageHandler handler = this.getDatabaseStorageHandler();
+		
+		if (handler == null) {
+			this.logger.warning("Moda is configured to use database storage but module " + this.getName() + " only supports file storage.");
+			initFileStorage();
+			return;
+		}
+		
+		if (!(handler instanceof ModuleStorageHandler)) {
+			throw new IllegalArgumentException("Module database storage handler must implement a ModuleStorageHandler subinterface.");
+		}
+
+		handler.setDatabaseHandler(Moda.db);
+		handler.setup();
+		this.storage = (T) handler;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private final void initFileStorage() {
+		this.logger.debug("Trying to use file storage");
+		final FileStorageHandler handler = this.getFileStorageHandler();
+		
+		if (handler == null) {
+			this.logger.debug("File storage does not exist");
+			return;
+		}
+		
+		if (!(handler instanceof ModuleStorageHandler)) {
+			throw new IllegalArgumentException("Module file storage handler must implement a ModuleStorageHandler subinterface.");
+		}
+		
+		this.storage = (T) handler;
+
+		// Save config periodically
+		this.scheduler.interval(5*60*20, 5*60*20, () -> {
+			this.logger.debug("Saving config");
+			final BukkitFuture<Void> future = handler.saveAsync();
+			future.onComplete((t) -> this.logger.debug("Saved config"));
+			future.onException((e) -> {
+				this.logger.warning("Error saving config");
+				e.printStackTrace();
+			});
+		});
 	}
 
 }
