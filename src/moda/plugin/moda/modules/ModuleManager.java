@@ -52,6 +52,8 @@ public class ModuleManager {
 		
 		// Remove reference to old ClassLoader. The garbage collector will take care of the rest.
 		this.loaders.remove(name);
+		
+		this.classCache.clear(); // TODO find a smarter way to only clear caches from this module?
 	}
 
 	public void load(final String name) throws Exception {
