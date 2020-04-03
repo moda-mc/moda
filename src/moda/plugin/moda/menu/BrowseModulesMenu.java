@@ -33,7 +33,7 @@ public class BrowseModulesMenu extends IconMenu {
 					lore.add("Description: " + module.getDescription());
 					lore.add("Author:" + module.getAuthor());
 					final Optional<ModuleMetaVersion> optVersion = module.getLatestVersionThatSupports(Moda.minecraftVersion);
-					if (optVersion.isEmpty()) {
+					if (!optVersion.isPresent()) {
 						lore.add("Your minecraft version is not supported by this module");
 					} else {
 						final ModuleMetaVersion version = optVersion.get();
