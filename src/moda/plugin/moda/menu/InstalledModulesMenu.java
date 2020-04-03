@@ -54,7 +54,7 @@ public class InstalledModulesMenu extends IconMenu {
 
 			final Optional<ModuleMetaLocal> metaOpt = manager.getLocalMetadata(name);
 
-			if (metaOpt.isEmpty()) {
+			if (!metaOpt.isPresent()) {
 				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "No metadata");
 			} else {
 				final ModuleMetaLocal meta = metaOpt.get();

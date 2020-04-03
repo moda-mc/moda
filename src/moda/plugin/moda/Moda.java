@@ -187,41 +187,22 @@ public class Moda extends JavaPlugin implements Listener {
 		}
 	}
 
+	/**
+	 * this returns the configured (or default) moda plugin prefix
+	 * @return the moda plugin prefix
+	 */
 	public static String getPrefix() {
 		return ChatColor.translateAlternateColorCodes('&',
 				instance.getConfig().getString("prefix", "&5[&dModa&5] &7"));
 	}
 
+	/**
+	 * Adds the core Moda placeholders
+	 */
 	private void addCorePlaceholders() {
 		ModaPlaceholderAPI.addPlaceholder("USERNAME", Player::getName);
 		ModaPlaceholderAPI.addPlaceholder("ONLINECOUNT", player -> Bukkit.getServer().getOnlinePlayers().size());
 		ModaPlaceholderAPI.addPlaceholder("DISPLAYNAME", Player::getDisplayName);
 	}
-
-//	db = new DatabaseHandler(this.getConfig().getString("mysql.host"),
-//	this.getConfig().getInt("mysql.port"), this.getConfig().getString("mysql.database"),
-//	this.getConfig().getString("mysql.user"), this.getConfig().getString("mysql.password"));
-//
-//createTableIfNonexistent("playerUserName",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerUserName` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `username` VARCHAR(16) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//createTableIfNonexistent("playerChatColor",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerChatColor` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//createTableIfNonexistent("playerNameColor",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNameColor` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//createTableIfNonexistent("playerNickName",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickName` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `nickname` VARCHAR(256) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//}
 }
 
