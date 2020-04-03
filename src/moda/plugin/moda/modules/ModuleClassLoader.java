@@ -75,36 +75,36 @@ public class ModuleClassLoader extends URLClassLoader {
 		return this.module;
 	}
 	
-//    @Override
-//    protected Class<?> findClass(final String name) throws ClassNotFoundException {
-//        return findClass(name, true);
-//    }
-//
-//    Class<?> findClass(final String name, final boolean checkGlobal) throws ClassNotFoundException {
-//        if (name.startsWith("org.bukkit.") || name.startsWith("net.minecraft.")) {
-//            throw new ClassNotFoundException(name);
-//        }
-//
-//        Class<?> result = this.classes.get(name);
-//
-//        if (result == null) {
-//            if (checkGlobal) {
-//                result = this.manager.getClassByName(name);
-//            }
-//
-//            if (result == null) {
-//                result = super.findClass(name);
-//
-//                if (result != null) {
-//                    this.manager.cacheClass(name, result);
-//                }
-//            }
-//
-//            this.classes.put(name, result);
-//        }
-//
-//        return result;
-//    }
+    @Override
+    protected Class<?> findClass(final String name) throws ClassNotFoundException {
+        return findClass(name, true);
+    }
+
+    Class<?> findClass(final String name, final boolean checkGlobal) throws ClassNotFoundException {
+        if (name.startsWith("org.bukkit.") || name.startsWith("net.minecraft.")) {
+            throw new ClassNotFoundException(name);
+        }
+
+        Class<?> result = this.classes.get(name);
+
+        if (result == null) {
+            if (checkGlobal) {
+                result = this.manager.getClassByName(name);
+            }
+
+            if (result == null) {
+                result = super.findClass(name);
+
+                if (result != null) {
+                    this.manager.cacheClass(name, result);
+                }
+            }
+
+            this.classes.put(name, result);
+        }
+
+        return result;
+    }
 
 	Set<String> getClasses() {
         return this.classes.keySet();
