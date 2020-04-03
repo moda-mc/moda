@@ -34,9 +34,7 @@ public class ModaPlaceholderAPI {
 		for (int i = 0; i < components.length; i++) {
 			final BaseComponent originalComponent = components[i];
 			String text = originalComponent.toPlainText();
-			System.out.println("text: " + text);
 			for (final Map.Entry<String, Function<Player, Object>> placeholderEntry : PLACEHOLDERS.entrySet()) {
-				System.out.println("contains " + placeholderEntry.getKey() + "?    " + text.contains(placeholderEntry.getKey()));
 				if (text.contains(placeholderEntry.getKey())) {
 					text = text.replace(placeholderEntry.getKey(), placeholderEntry.getValue().apply(player).toString());
 				}
