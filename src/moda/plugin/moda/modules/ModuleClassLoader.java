@@ -34,22 +34,16 @@ public class ModuleClassLoader extends URLClassLoader {
 		
 		final String mainClassName = findMainClass(moduleFile);
 		
-		
-		Module<? extends ModuleStorageHandler> module;
+		final Module<? extends ModuleStorageHandler> module;
 		try {
-			final Class<?> mainClass = Class.forName(mainClassName);
-			final Object mainClassInstance = mainClass.getConstructor().newInstance();
-			if (mainClassInstance instanceof Module) {
-				module = (Module<? extends ModuleStorageHandler>) mainClassInstance;
-			} else {
-				throw new InvalidModuleException("Main class is not a subclass of Module");
-			}
+			final Class<? extends Module<? extends ModuleStorageHandler>> mainClass = (Class<? extends Module<? extends ModuleStorageHandler>>) Class.forName(mainClassName).asSubclass(Module.class);
+			module = mainClass.getConstructor().newInstance();
 		} catch (final ClassNotFoundException e) {
 			throw new InvalidModuleException("Main class not found: " + mainClassName);
 		} catch (final InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
 			throw new InvalidModuleException(e);
 		}
-	
+		
 		if (!moduleName.equals(module.getName())) {
 			throw new InvalidModuleException("Module name mismatch: expected '" + moduleName + "' but getName() says '" + module.getName() + "'.");
 		}
@@ -82,36 +76,36 @@ public class ModuleClassLoader extends URLClassLoader {
 		return this.module;
 	}
 	
-    @Override
-    protected Class<?> findClass(final String name) throws ClassNotFoundException {
-        return findClass(name, true);
-    }
-
-    Class<?> findClass(final String name, final boolean checkGlobal) throws ClassNotFoundException {
-        if (name.startsWith("org.bukkit.") || name.startsWith("net.minecraft.")) {
-            throw new ClassNotFoundException(name);
-        }
-        
-        Class<?> result = this.classes.get(name);
-
-        if (result == null) {
-            if (checkGlobal) {
-                result = this.manager.getClassByName(name);
-            }
-
-            if (result == null) {
-                result = super.findClass(name);
-
-                if (result != null) {
-                    this.manager.cacheClass(name, result);
-                }
-            }
-
-            this.classes.put(name, result);
-        }
-
-        return result;
-    }
+//    @Override
+//    protected Class<?> findClass(final String name) throws ClassNotFoundException {
+//        return findClass(name, true);
+//    }
+//
+//    Class<?> findClass(final String name, final boolean checkGlobal) throws ClassNotFoundException {
+//        if (name.startsWith("org.bukkit.") || name.startsWith("net.minecraft.")) {
+//            throw new ClassNotFoundException(name);
+//        }
+//
+//        Class<?> result = this.classes.get(name);
+//
+//        if (result == null) {
+//            if (checkGlobal) {
+//                result = this.manager.getClassByName(name);
+//            }
+//
+//            if (result == null) {
+//                result = super.findClass(name);
+//
+//                if (result != null) {
+//                    this.manager.cacheClass(name, result);
+//                }
+//            }
+//
+//            this.classes.put(name, result);
+//        }
+//
+//        return result;
+//    }
 
 	Set<String> getClasses() {
         return this.classes.keySet();

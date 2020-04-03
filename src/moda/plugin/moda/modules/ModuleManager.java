@@ -102,28 +102,28 @@ public class ModuleManager {
 		
 	}
 
-	Class<?> getClassByName(final String name) {
-		Class<?> cachedClass = this.classCache.get(name);
-
-		if (cachedClass != null) {
-			return cachedClass;
-		}
-
-		// Try to find classes in modules one by one
-		for (final ModuleClassLoader loader : this.loaders.values()) {
-			try {
-				// checkGlobal set to false to avoid infinite recursion
-				cachedClass = loader.findClass(name, false);
-			} catch (final ClassNotFoundException e) {}
-
-			if (cachedClass != null) {
-				return cachedClass;
-			}
-		}
-
-		// Class not found in any module
-		return null;
-	}
+//	Class<?> getClassByName(final String name) {
+//		Class<?> cachedClass = this.classCache.get(name);
+//
+//		if (cachedClass != null) {
+//			return cachedClass;
+//		}
+//
+//		// Try to find classes in modules one by one
+//		for (final ModuleClassLoader loader : this.loaders.values()) {
+//			try {
+//				// checkGlobal set to false to avoid infinite recursion
+//				cachedClass = loader.findClass(name, false);
+//			} catch (final ClassNotFoundException e) {}
+//
+//			if (cachedClass != null) {
+//				return cachedClass;
+//			}
+//		}
+//
+//		// Class not found in any module
+//		return null;
+//	}
 	
     void cacheClass(final String name, final Class<?> clazz) {
         if (!this.classCache.containsKey(name)) {
