@@ -36,8 +36,7 @@ public class ModuleClassLoader extends URLClassLoader {
 		
 		final Module<? extends ModuleStorageHandler> module;
 		try {
-			final Class<? extends Module<? extends ModuleStorageHandler>> mainClass = (Class<? extends Module<? extends ModuleStorageHandler>>) Class.forName(mainClassName).asSubclass(Module.class);
-			module = mainClass.getConstructor().newInstance();
+			module = Class.forName(mainClassName, true, this).asSubclass(Module.class).getConstructor().newInstance();
 		} catch (final ClassNotFoundException e) {
 			throw new InvalidModuleException("Main class not found: " + mainClassName);
 		} catch (final InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
