@@ -7,5 +7,9 @@ public class InvalidModuleException extends RuntimeException {
 	public InvalidModuleException(final String string) {
 		super(string);
 	}
+	
+	public InvalidModuleException(final Throwable cause) {
+		super(cause);
+	}
 
 }

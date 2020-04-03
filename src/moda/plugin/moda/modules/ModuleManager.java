@@ -36,36 +36,47 @@ public class ModuleManager {
 
 	private ModuleManager() {}
 
-	private final Map<String, ModuleLoader> moduleLoaders = new HashMap<>();
+	private final Map<String, ModuleClassLoader> loaders = new HashMap<>();
+	private final Map<String, Class<?>> classCache = new HashMap<>();
 
 	public void unload(final String name) throws Exception {
-		if (!this.moduleLoaders.containsKey(name)) {
+		if (!this.loaders.containsKey(name)) {
 			throw new IllegalStateException("No module with the name " + name + " is loaded");
 		}
 
-		final ModuleLoader loader = this.moduleLoaders.get(name);
+		final ModuleClassLoader loader = this.loaders.get(name);
 		final Module<?> module = loader.getModule();
+		
+		// Unregisters all listeners, disable all tasks, save data, call onDisable().
 		module.disable();
-
-		this.moduleLoaders.remove(name);
-
-		// All references to module classes are gone now. The garbage collector will take care of it.
+		
+		// Remove reference to old ClassLoader. The garbage collector will take care of the rest.
+		this.loaders.remove(name);
+		
+		this.classCache.clear(); // TODO find a smarter way to only clear caches from this module?
+		
 		System.gc();
 	}
 
 	public void load(final String name) throws Exception {
-		if (this.moduleLoaders.containsKey(name)) {
+		if (this.loaders.containsKey(name)) {
 			throw new IllegalStateException("A module with the name " + name + " is already loaded");
 		}
+		
+		final File jarFile = new File("modules", name + ".jar");
 
-		final ModuleLoader loader = new ModuleLoader(Moda.instance, name);
-		loader.load();
+		if (!jarFile.exists()) {
+			throw new FileNotFoundException("Module file does not exist: " + jarFile.getAbsolutePath());
+		}
+
+		final ModuleClassLoader loader = new ModuleClassLoader(Moda.instance.getClass().getClassLoader(), name, jarFile, this);
+		this.loaders.put(name, loader);
+		
 		loader.getModule().enable();
-		this.moduleLoaders.put(name, loader);
 	}
 
 	public List<Module<? extends ModuleStorageHandler>> getLoadedModules() {
-		return this.moduleLoaders.values().stream().map(ModuleLoader::getModule).collect(Collectors.toList());
+		return this.loaders.values().stream().map(ModuleClassLoader::getModule).collect(Collectors.toList());
 	}
 
 	public List<String> getInstalledModulesNames() {
@@ -93,8 +104,37 @@ public class ModuleManager {
 		return jarFile.exists();
 	}
 	
-	public void download(final ModuleMetaRepository meta, final ModuleMetaVersion version) {
+	public void download (final ModuleMetaRepository meta, final ModuleMetaVersion version) {
 		
 	}
+
+	Class<?> getClassByName(final String name) {
+		Class<?> cachedClass = this.classCache.get(name);
+
+		if (cachedClass != null) {
+			return cachedClass;
+		}
+
+		// Try to find classes in modules one by one
+		for (final ModuleClassLoader loader : this.loaders.values()) {
+			try {
+				// checkGlobal set to false to avoid infinite recursion
+				cachedClass = loader.findClass(name, false);
+			} catch (final ClassNotFoundException e) {}
+
+			if (cachedClass != null) {
+				return cachedClass;
+			}
+		}
+
+		// Class not found in any module
+		return null;
+	}
+	
+    void cacheClass(final String name, final Class<?> clazz) {
+        if (!this.classCache.containsKey(name)) {
+        	this.classCache.put(name, clazz);
+        }
+    }
 
 }
