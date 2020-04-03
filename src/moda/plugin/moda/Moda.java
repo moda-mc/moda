@@ -187,6 +187,10 @@ public class Moda extends JavaPlugin implements Listener {
 		}
 	}
 
+	/**
+	 * this returns the configured (or default) moda plugin prefix
+	 * @return the moda plugin prefix
+	 */
 	public static String getPrefix() {
 		return ChatColor.translateAlternateColorCodes('&',
 				instance.getConfig().getString("prefix", "&5[&dModa&5] &7"));
