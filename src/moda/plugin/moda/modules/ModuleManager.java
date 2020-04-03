@@ -54,6 +54,8 @@ public class ModuleManager {
 		this.loaders.remove(name);
 		
 		this.classCache.clear(); // TODO find a smarter way to only clear caches from this module?
+		
+		System.gc();
 	}
 
 	public void load(final String name) throws Exception {
