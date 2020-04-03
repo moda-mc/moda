@@ -1,0 +1,50 @@
+main: moda.plugin.moda.Moda
+
+name: "Moda"
+description: "A fully modular core plugin for spigot."
+website: https://www.github.com/mineglade/Moda
+authors: [patchtv, Derkades]
+api-version: 1.13
+
+
+version: '@project.version@'
+
+softdepend: [Votifier, PlaceholderAPI, Vault]
+
+commands:
+  moda:
+    description: "core command to use moda and its modules."
+    usage: "/moda"
+    aliases: ["m"]
+
+permissions:
+  moda.core:
+    description: "allows the user to view information about moda."
+    default: true
+
+  moda.core.enable:
+    description: "allows the user to enable modules."
+    default: op
+
+  moda.core.disable:
+    description: "allows the user to disable modules."
+    default: op
+
+  moda.core.reload:
+    description: "allows the user to reload modules."
+    default: op
+
+  moda.core.admin:
+    description: "allows the user to use all subcommands for /moda."
+    default: op
+    children: 
+      moda.core: true
+      moda.core.enable: true
+      moda.core.disable: true
+      moda.core.reload: true
+
+  moda.admin:
+    description: "allows the user to use all commands for all modules."
+    default: op
+    children:
+      moda.module.*: true

@@ -1,0 +1,12 @@
+errors:
+  no-permission: "&cYou don't have permission to use {command}"
+
+ping:
+  errors:
+    target-invalid: "&cThe target you provided isn't online or doesn't exist."
+  responses:
+    self:
+      ping: "&7Your ping is &a{ping}ms"
+      hi: "&7Hi there! (&a{ping}ms&7)"
+    others:
+      ping: "&7{target_nickname}&7's ping is &a{ping}ms"

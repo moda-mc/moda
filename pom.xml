@@ -4,10 +4,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mineglade</groupId>
-	<artifactId>Moda</artifactId>
+	<groupId>moda.plugin</groupId>
+	<artifactId>moda</artifactId>
 	<version>alpha</version>
-	<packaging>jar</packaging>
 
 	<name>Moda</name>
 	<url>https://github.com/mineglade/Moda</url>
@@ -17,11 +16,12 @@
 	</properties>
 
 	<build>
-		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+		<finalName>${project.name}</finalName>
+		<sourceDirectory>src</sourceDirectory>
 
 		<resources>
 			<resource>
-				<directory>${basedir}/src/main/resources</directory>
+				<directory>resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
@@ -43,27 +43,24 @@
 				<version>3.2.1</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<minimizeJar>true</minimizeJar>
 
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>com.mineglade.moda.lib.bstats</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>net.dv8tion.jda</pattern>
-							<shadedPattern>com.mineglade.moda.lib.jda</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>com.iwepbb.crypto</pattern>
-							<shadedPattern>com.mineglade.moda.lib.crypto</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.bstats</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>xyz.derkades.derkutils</pattern>
-							<shadedPattern>com.mineglade.moda.lib.derkutils</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.derkutils</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>com.google.gson</pattern>
-							<shadedPattern>com.mineglade.moda.lib.gson</shadedPattern>
+							<shadedPattern>moda.plugin.moda.lib.gson</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>org.apache.commons</pattern>
+							<shadedPattern>moda.plugin.moda.lib.commons</shadedPattern>
 						</relocation>
 					</relocations>
 
@@ -71,9 +68,9 @@
 						<filter>
 							<artifact>*:*</artifact>
 							<excludes>
-								<exclude>META-INF/*.SF</exclude>
-								<exclude>META-INF/*.DSA</exclude>
-								<exclude>META-INF/*.RSA</exclude>
+								<exclude>META-INF/LICENSE.txt</exclude>
+								<exclude>META-INF/NOTICE.txt</exclude>
+								<exclude>META-INF/maven/</exclude>
 							</excludes>
 						</filter>
 					</filters>
@@ -87,15 +84,14 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.8.8-R0.1-SNAPSHOT</version>
+			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>1.5</version>
-			<scope>compile</scope>
+			<version>1.7</version>
 		</dependency>
 
 		<dependency>
@@ -108,7 +104,7 @@
 		<dependency>
 			<groupId>xyz.derkades</groupId>
 			<artifactId>Derkutils</artifactId>
-			<version>legacy</version>
+			<version>master</version>
 		</dependency>
 
 		<dependency>
@@ -140,12 +136,6 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-
-		<repository>
-			<id>jcenter</id>
-			<name>jcenter-bintray</name>
-			<url>http://jcenter.bintray.com</url>
 		</repository>
 
 	</repositories>
