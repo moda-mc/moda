@@ -196,6 +196,9 @@ public class Moda extends JavaPlugin implements Listener {
 				instance.getConfig().getString("prefix", "&5[&dModa&5] &7"));
 	}
 
+	/**
+	 * Adds the core Moda placeholders
+	 */
 	private void addCorePlaceholders() {
 		ModaPlaceholderAPI.addPlaceholder("USERNAME", Player::getName);
 		ModaPlaceholderAPI.addPlaceholder("ONLINECOUNT", player -> Bukkit.getServer().getOnlinePlayers().size());
