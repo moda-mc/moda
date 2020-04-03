@@ -76,11 +76,11 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		return new File("modules", this.getName());
 	}
 
-	public DatabaseStorageHandler getDatabaseStorageHandler() {
+	public DatabaseStorageHandler getDatabaseStorageHandler() throws Exception {
 		return null;
 	}
 
-	public FileStorageHandler getFileStorageHandler() {
+	public FileStorageHandler getFileStorageHandler() throws Exception {
 		return null;
 	}
 	
@@ -236,7 +236,12 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	@SuppressWarnings("unchecked")
 	private final void initDatabaseStorage() throws SQLException {
 		this.logger.debug("Trying to use database storage");
-		final DatabaseStorageHandler handler = this.getDatabaseStorageHandler();
+		final DatabaseStorageHandler handler;
+		try {
+			handler = this.getDatabaseStorageHandler();
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
 		
 		if (handler == null) {
 			this.logger.warning("Moda is configured to use database storage but module " + this.getName() + " only supports file storage.");
@@ -256,7 +261,12 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	@SuppressWarnings("unchecked")
 	private final void initFileStorage() {
 		this.logger.debug("Trying to use file storage");
-		final FileStorageHandler handler = this.getFileStorageHandler();
+		final FileStorageHandler handler;
+		try {
+			handler = this.getFileStorageHandler();
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
 		
 		if (handler == null) {
 			this.logger.debug("File storage does not exist");
