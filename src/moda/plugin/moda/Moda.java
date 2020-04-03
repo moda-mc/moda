@@ -197,31 +197,5 @@ public class Moda extends JavaPlugin implements Listener {
 		ModaPlaceholderAPI.addPlaceholder("ONLINECOUNT", player -> Bukkit.getServer().getOnlinePlayers().size());
 		ModaPlaceholderAPI.addPlaceholder("DISPLAYNAME", Player::getDisplayName);
 	}
-
-//	db = new DatabaseHandler(this.getConfig().getString("mysql.host"),
-//	this.getConfig().getInt("mysql.port"), this.getConfig().getString("mysql.database"),
-//	this.getConfig().getString("mysql.user"), this.getConfig().getString("mysql.password"));
-//
-//createTableIfNonexistent("playerUserName",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerUserName` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `username` VARCHAR(16) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//createTableIfNonexistent("playerChatColor",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerChatColor` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//createTableIfNonexistent("playerNameColor",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNameColor` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `color` VARCHAR(1) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//createTableIfNonexistent("playerNickName",
-//	"CREATE TABLE `" + this.getConfig().getString("mysql.database") + "`.`playerNickName` "
-//			+ "(`uuid` VARCHAR(100) NOT NULL," + " `nickname` VARCHAR(256) NOT NULL,"
-//			+ " PRIMARY KEY (`uuid`)) " + "ENGINE = InnoDB ");
-//
-//}
 }
 
