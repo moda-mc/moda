@@ -31,6 +31,7 @@ import moda.plugin.moda.utils.BukkitFuture;
 import moda.plugin.moda.utils.storage.DatabaseStorageHandler;
 import moda.plugin.moda.utils.storage.FileStorageHandler;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
+import moda.plugin.moda.utils.storage.UuidValueStore;
 import moda.plugin.moda.utils.storage.StorageMigrator;
 import moda.plugin.moda.utils.storage.StorageType;
 import moda.plugin.moda.utils.storage.UnsupportedStorageMigrator;
@@ -44,6 +45,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private ModuleLogger logger;
 	private Scheduler scheduler;
 	private T storage;
+	private UuidValueStore playerData;
 	private final List<Listener> listeners =  new ArrayList<>();
 
 	public abstract String getName();
@@ -94,6 +96,10 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 	public String[] getPluginDependencies() {
 		return new String[] {};
+	}
+	
+	public UuidValueStore getPlayerData() {
+		return this.playerData;
 	}
 
 	public void onDisable() throws Exception {}

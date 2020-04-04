@@ -2,7 +2,7 @@ package moda.plugin.moda.utils.storage;
 
 import moda.plugin.moda.modules.Module;
 
-public abstract class StorageHandler {
+public abstract class StorageHandler implements UuidValueStore {
 
 	protected final Module<? extends ModuleStorageHandler> module;
 

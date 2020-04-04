@@ -204,5 +204,6 @@ public class Moda extends JavaPlugin implements Listener {
 		ModaPlaceholderAPI.addPlaceholder("ONLINECOUNT", player -> Bukkit.getServer().getOnlinePlayers().size());
 		ModaPlaceholderAPI.addPlaceholder("DISPLAYNAME", Player::getDisplayName);
 	}
+
 }
 
