@@ -6,7 +6,7 @@
 
 	<groupId>moda.plugin</groupId>
 	<artifactId>moda</artifactId>
-	<version>alpha</version>
+	<version>canary</version>
 
 	<name>Moda</name>
 	<url>https://github.com/mineglade/Moda</url>
