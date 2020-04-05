@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,6 +26,8 @@ public class YamlStorageHandler extends FileStorageHandler {
 	public YamlStorageHandler(final Module<? extends ModuleStorageHandler> module) throws IOException {
 		super(module);
 
+		Validate.notNull(module, "Module is null");
+		
 		final File fileFileDir = new File(module.getDataFolder() + File.separator + "data");
 
 		fileFileDir.mkdirs();
@@ -58,6 +61,8 @@ public class YamlStorageHandler extends FileStorageHandler {
 
 	@Override
 	public Map<String, Object> getProperties(final UUID uuid) {
+		Validate.notNull(uuid, "UUID is null");
+		
 		final Map<String, Object> map = new HashMap<>();
 		
 		if (uuidValueSection().isConfigurationSection(uuid.toString())) {
@@ -72,6 +77,9 @@ public class YamlStorageHandler extends FileStorageHandler {
 
 	@Override
 	public void setProperties(final UUID uuid, final Map<String, Object> properties) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(properties, "Properties map is null");
+		
 		if (uuidValueSection().isConfigurationSection(uuid.toString())) {
 			uuidValueSection().set(uuid.toString(), null);
 		}
@@ -83,13 +91,16 @@ public class YamlStorageHandler extends FileStorageHandler {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Optional<T> getProperty(final UUID uuid, final String id) {
+	public <T> Optional<T> getProperty(final UUID uuid, final String key) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(key, "Key is null");
+		
 		if (!uuidValueSection().isConfigurationSection(uuid.toString())) {
 			return Optional.empty();
 		}
 		
 		final ConfigurationSection section = uuidValueSection().getConfigurationSection(uuid.toString());
-		final Object o = section.get(id);
+		final Object o = section.get(key);
 		if (o == null) {
 			return Optional.empty();
 		} else {
@@ -98,7 +109,11 @@ public class YamlStorageHandler extends FileStorageHandler {
 	}
 
 	@Override
-	public <T> void setProperty(final UUID uuid, final String id, final T value) {
+	public <T> void setProperty(final UUID uuid, final String key, final T value) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(key, "Key is null");
+		Validate.notNull(value, "Value is null");
+		
 		ConfigurationSection section;
 		if (uuidValueSection().isConfigurationSection(uuid.toString())) {
 			section = uuidValueSection().getConfigurationSection(uuid.toString());
@@ -106,11 +121,14 @@ public class YamlStorageHandler extends FileStorageHandler {
 			section = uuidValueSection().createSection(uuid.toString());
 		}
 		
-		section.set(id, value);
+		section.set(key, value);
 	}
 
 	@Override
-	public void removeProperty(final UUID uuid, final String id) {
+	public void removeProperty(final UUID uuid, final String key) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(key, "Key is null");
+		
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 

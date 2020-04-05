@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.Validate;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -29,6 +31,8 @@ public class JsonStorageHandler extends FileStorageHandler {
 	
 	public JsonStorageHandler(final Module<? extends ModuleStorageHandler> module) throws IOException {
 		super(module);
+		
+		Validate.notNull(module, "Module is null");
 		
 		final File fileFileDir = new File(module.getDataFolder() + File.separator + "data");
 
@@ -83,6 +87,7 @@ public class JsonStorageHandler extends FileStorageHandler {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getProperties(final UUID uuid) {
+		Validate.notNull(uuid, "UUID is null");
 		final JsonObject json = getUuidValueStoreObject();
 		if (json.has(uuid.toString())) {
 			return new Gson().fromJson(json.get(uuid.toString()), Map.class);
@@ -93,6 +98,8 @@ public class JsonStorageHandler extends FileStorageHandler {
 
 	@Override
 	public void setProperties(final UUID uuid, final Map<String, Object> properties) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(properties, "Properties map is null");
 		final String uuidString = uuid.toString();
 		if (this.json.has(uuidString)) {
 			this.json.remove(uuidString);
@@ -103,17 +110,19 @@ public class JsonStorageHandler extends FileStorageHandler {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Optional<T> getProperty(final UUID uuid, final String id) {
+	public <T> Optional<T> getProperty(final UUID uuid, final String key) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(key, "Key is null");
 		final String uuidString = uuid.toString();
 		final JsonObject json = getUuidValueStoreObject();
 		if (!json.has(uuidString)) {
 			return Optional.empty();
 		}
 		final JsonObject player = json.get(uuidString).getAsJsonObject();
-		if (!player.has(id)) {
+		if (!player.has(key)) {
 			return Optional.empty();
 		}
-		final JsonPrimitive prim = player.get(id).getAsJsonPrimitive();
+		final JsonPrimitive prim = player.get(key).getAsJsonPrimitive();
 		
 		if (prim.isBoolean()) {
 			return (Optional<T>) Optional.of(prim.getAsBoolean());
@@ -127,7 +136,11 @@ public class JsonStorageHandler extends FileStorageHandler {
 	}
 
 	@Override
-	public <T> void setProperty(final UUID uuid, final String id, final T value) {
+	public <T> void setProperty(final UUID uuid, final String key, final T value) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(key, "Key is null");
+		Validate.notNull(value, "Value is null");
+		
 		final String uuidString = uuid.toString();
 		final JsonObject json = getUuidValueStoreObject();
 		
@@ -139,20 +152,23 @@ public class JsonStorageHandler extends FileStorageHandler {
 		}
 		
 		if (value instanceof Number) {
-			player.addProperty(id, (Number) value);
+			player.addProperty(key, (Number) value);
 		} else if (value instanceof String) {
-			player.addProperty(id, (String) value);
+			player.addProperty(key, (String) value);
 		} else if (value instanceof Character) {
-			player.addProperty(id, (Character) value);
+			player.addProperty(key, (Character) value);
 		} else if (value instanceof Boolean) {
-			player.addProperty(id, (Boolean) value);
+			player.addProperty(key, (Boolean) value);
 		} else {
 			throw new IllegalArgumentException("Invalid data type");
 		}
 	}
 
 	@Override
-	public void removeProperty(final UUID uuid, final String id) {
+	public void removeProperty(final UUID uuid, final String key) {
+		Validate.notNull(uuid, "UUID is null");
+		Validate.notNull(key, "Key is null");
+		
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 
