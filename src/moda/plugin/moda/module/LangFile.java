@@ -43,7 +43,7 @@ public class LangFile {
 	/**
 	 * Uses {@link #getMessage()} then replaces placeholders.
 	 * <br><br>
-	 * "Visit {link} {number} times"
+	 * "Visit {LINK} {NUMBER} times"
 	 * @param placeholders ["link", "https://example.com", "number", 3]
 	 * @return "Visit https://example.com 3 times"
 	 */
