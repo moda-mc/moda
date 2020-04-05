@@ -16,5 +16,7 @@ public interface UuidValueStore {
 	public <T> Optional<T> getProperty(UUID uuid, String id);
 	
 	public <T> void setProperty(UUID uuid, String id, T value);
+	
+	public void removeProperty(UUID uuid, String id);
 
 }

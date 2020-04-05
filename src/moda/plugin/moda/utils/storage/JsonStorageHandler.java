@@ -151,4 +151,9 @@ public class JsonStorageHandler extends FileStorageHandler {
 		}
 	}
 
+	@Override
+	public void removeProperty(final UUID uuid, final String id) {
+		throw new UnsupportedOperationException("not yet implemented");
+	}
+
 }

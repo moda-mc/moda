@@ -109,4 +109,9 @@ public class YamlStorageHandler extends FileStorageHandler {
 		section.set(id, value);
 	}
 
+	@Override
+	public void removeProperty(final UUID uuid, final String id) {
+		throw new UnsupportedOperationException("not yet implemented");
+	}
+
 }
