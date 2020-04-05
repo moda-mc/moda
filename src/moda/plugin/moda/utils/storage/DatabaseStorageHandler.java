@@ -4,6 +4,10 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import moda.plugin.moda.modules.Module;
 import xyz.derkades.derkutils.DatabaseHandler;
@@ -44,6 +48,31 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 		final PreparedStatement statement = this.db.prepareStatement(sql);
 		statement.execute();
 		statement.close();
+	}
+	
+	@Override
+	public Collection<UUID> getUuids() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Map<String, Object> getProperties(final UUID uuid) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setProperties(final UUID uuid, final Map<String, Object> properties) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public <T> Optional<T> getProperty(final UUID uuid, final String id) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public <T> void setProperty(final UUID uuid, final String id, final T value) {
+		throw new UnsupportedOperationException();
 	}
 
 }
