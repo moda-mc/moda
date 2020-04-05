@@ -31,10 +31,10 @@ import moda.plugin.moda.utils.BukkitFuture;
 import moda.plugin.moda.utils.storage.DatabaseStorageHandler;
 import moda.plugin.moda.utils.storage.FileStorageHandler;
 import moda.plugin.moda.utils.storage.ModuleStorageHandler;
-import moda.plugin.moda.utils.storage.UuidValueStore;
 import moda.plugin.moda.utils.storage.StorageMigrator;
 import moda.plugin.moda.utils.storage.StorageType;
 import moda.plugin.moda.utils.storage.UnsupportedStorageMigrator;
+import moda.plugin.moda.utils.storage.UuidValueStore;
 import xyz.derkades.derkutils.AssertionException;
 
 public abstract class Module<T extends ModuleStorageHandler> {
@@ -177,10 +177,6 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 		if (this.storage instanceof FileStorageHandler) {
 			((FileStorageHandler) this.storage).save();
-		}
-
-		if (this.storage instanceof DatabaseStorageHandler) {
-			((DatabaseStorageHandler) this.storage).closeConnection();
 		}
 		
 		this.onDisable();

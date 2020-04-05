@@ -30,6 +30,7 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 	 */
 	public abstract void setup() throws SQLException;
 
+	@Deprecated
 	public final void closeConnection() throws SQLException {
 		this.db.getConnection().close();
 	}
@@ -72,6 +73,11 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 
 	@Override
 	public <T> void setProperty(final UUID uuid, final String id, final T value) {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void removeProperty(final UUID uuid, final String id) {
 		throw new UnsupportedOperationException();
 	}
 
