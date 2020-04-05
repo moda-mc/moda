@@ -2,8 +2,8 @@ main: moda.plugin.moda.Moda
 
 name: "Moda"
 description: "A fully modular core plugin for spigot."
-website: https://www.github.com/mineglade/Moda
-authors: [patchtv, Derkades]
+website: https://www.github.com/ModaPlugin/Moda
+authors: [baymoe, Derkades]
 api-version: 1.13
 
 
