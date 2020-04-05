@@ -14,17 +14,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import moda.plugin.moda.modules.Module;
-import moda.plugin.moda.modules.ModuleManager;
-import moda.plugin.moda.modules.ModulesConfig;
+import moda.plugin.moda.module.Module;
+import moda.plugin.moda.module.ModuleManager;
+import moda.plugin.moda.module.ModulesConfig;
+import moda.plugin.moda.module.storage.ModuleStorageHandler;
+import moda.plugin.moda.module.storage.StorageType;
+import moda.plugin.moda.placeholder.ModaPlaceholderAPI;
 import moda.plugin.moda.repo.ModuleMetaRepository;
 import moda.plugin.moda.repo.ModuleMetaVersion;
 import moda.plugin.moda.repo.ModuleMinecraftVersion;
 import moda.plugin.moda.repo.Repositories;
 import moda.plugin.moda.repo.Repository;
-import moda.plugin.moda.utils.placeholders.ModaPlaceholderAPI;
-import moda.plugin.moda.utils.storage.ModuleStorageHandler;
-import moda.plugin.moda.utils.storage.StorageType;
 import net.md_5.bungee.api.ChatColor;
 import xyz.derkades.derkutils.DatabaseHandler;
 

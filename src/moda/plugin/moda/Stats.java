@@ -6,8 +6,8 @@ import java.util.Map;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.Plugin;
 
-import moda.plugin.moda.modules.Module;
-import moda.plugin.moda.modules.ModuleManager;
+import moda.plugin.moda.module.Module;
+import moda.plugin.moda.module.ModuleManager;
 
 public class Stats extends Metrics {
 
