@@ -21,7 +21,7 @@ public class ModuleCommandBuilder {
 	
 	public ModuleCommandBuilder(final String name) {
 		try {
-			final Constructor<PluginCommand> constructor = PluginCommand.class.getConstructor(String.class, Plugin.class);
+			final Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
 			constructor.setAccessible(true);
 			this.command = constructor.newInstance(name, Moda.instance);
 		} catch (final InvocationTargetException | InstantiationException |
