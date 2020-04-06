@@ -43,7 +43,7 @@
 				<version>3.2.1</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
-					<minimizeJar>false</minimizeJar>
+					<minimizeJar>true</minimizeJar>
 
 					<relocations>
 						<relocation>
@@ -70,7 +70,7 @@
 							</excludes>
 						</filter>
 						<filter>
-							<artifact>xyz.derkades:derkutils</artifact>
+							<artifact>xyz.derkades:Derkutils</artifact>
 							<includes>
 								<include>**</include>
 							</includes>
