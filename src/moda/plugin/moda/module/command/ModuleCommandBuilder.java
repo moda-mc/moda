@@ -70,7 +70,7 @@ public class ModuleCommandBuilder {
 		return this;
 	}
 	
-	public Command create() {
+	public PluginCommand create() {
 		return this.command;
 	}
 	
