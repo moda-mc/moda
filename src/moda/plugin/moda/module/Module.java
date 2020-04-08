@@ -15,9 +15,10 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -36,6 +37,7 @@ import moda.plugin.moda.module.storage.UuidValueStore;
 import moda.plugin.moda.repo.ModuleMetaLocal;
 import moda.plugin.moda.util.BukkitFuture;
 import xyz.derkades.derkutils.AssertionException;
+import xyz.derkades.derkutils.bukkit.reflection.ReflectionUtil;
 
 public abstract class Module<T extends ModuleStorageHandler> {
 
@@ -47,6 +49,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private T storage;
 	private UuidValueStore playerData;
 	private final List<Listener> listeners =  new ArrayList<>();
+	private final List<String> commandNames = new ArrayList<>();
 
 	public abstract String getName();
 	
@@ -106,12 +109,20 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 	public void onEnable() throws Exception {}
 
-	public void registerCommand(final Command command) {
+	public void registerCommand(final PluginCommand command) {
+		final String commandName = command.getName();
 		this.logger.debug("Registering command: [name=%s, description=%s, usage=%s, aliases=%s]",
-				command.getName(),
+				commandName,
 				command.getDescription(),
 				command.getUsage(),
 				String.join(".", command.getAliases().toArray(new String[] {})));
+		
+		Validate.isTrue(!ReflectionUtil.getKnownCommands().containsKey(commandName), "A command with this name is already registered");
+		
+		this.commandNames.add(command.getName());
+		this.commandNames.addAll(command.getAliases());
+		
+		ReflectionUtil.registerCommand(Moda.instance.getName() + "_" + this.getName(), command);
 		try {
 			final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			field.setAccessible(true);
@@ -173,6 +184,9 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		// onDisable() won't keep listeners/schedulers registered.
 
 		this.listeners.forEach(HandlerList::unregisterAll);
+		
+		this.commandNames.forEach(ReflectionUtil::unregisterCommand);
+		
 		Scheduler.cancelAllTasks(this);
 
 		if (this.storage instanceof FileStorageHandler) {
