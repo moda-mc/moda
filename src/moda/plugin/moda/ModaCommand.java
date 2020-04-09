@@ -15,14 +15,17 @@ public class ModaCommand implements CommandExecutor {
 	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
-				new ModaMenu(((Player) sender));
+				if (sender.hasPermission("moda.core")) {
+					new ModaMenu(((Player) sender));
+				} else {
+					sender.sendMessage("no");
+				}
 			} else {
 				sender.sendMessage("You cannot open the GUI from the console");
 			}
 		}
 		return true;
 	}
-
 
 
 }
