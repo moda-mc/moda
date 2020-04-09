@@ -182,8 +182,14 @@ public abstract class Module<T extends ModuleStorageHandler> {
 			this.getLogger().debug("Disabling module " + this.getName());
 		}
 		
-		// Unregister everything before module is disabled so any exceptions thrown by
-		// onDisable() won't keep listeners/schedulers registered.
+		// Catch any exceptions for later, to make sure module is always unloaded
+		// properly even if disabling fails.
+		Exception onDisableException = null;
+		try {
+			this.onDisable();
+		} catch (final Exception e) {
+			onDisableException = e;
+		}
 
 		this.listeners.forEach(HandlerList::unregisterAll);
 		
@@ -195,14 +201,16 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		if (this.storage instanceof FileStorageHandler) {
 			((FileStorageHandler) this.storage).save();
 		}
-		
-		this.onDisable();
-		
+
 		if (this.getMeta().isPresent()) {
 			final ModuleMetaLocal meta = this.getMeta().get();
 			this.getLogger().info("Disabled module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());
 		} else {
 			this.getLogger().info("Disabled module " + this.getName());
+		}
+		
+		if (onDisableException != null) {
+			throw new RuntimeException("Error occured in module onDisable", onDisableException);
 		}
 	}
 
