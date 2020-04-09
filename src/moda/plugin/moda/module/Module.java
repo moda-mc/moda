@@ -49,7 +49,8 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private T storage;
 	private UuidValueStore playerData;
 	private final List<Listener> listeners =  new ArrayList<>();
-	private final List<String> commandNames = new ArrayList<>();
+//	private final List<String> commandNames = new ArrayList<>();
+	private final List<PluginCommand> commands = new ArrayList<>();
 
 	public abstract String getName();
 	
@@ -119,8 +120,9 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		
 		Validate.isTrue(!ReflectionUtil.getKnownCommands().containsKey(commandName), "A command with this name is already registered");
 		
-		this.commandNames.add(command.getName());
-		this.commandNames.addAll(command.getAliases());
+//		this.commandNames.add(command.getName());
+//		this.commandNames.addAll(command.getAliases());
+		this.commands.add(command);
 		
 		ReflectionUtil.registerCommand(Moda.instance.getName() + "_" + this.getName(), command);
 		try {
@@ -185,7 +187,8 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 		this.listeners.forEach(HandlerList::unregisterAll);
 		
-		this.commandNames.forEach(ReflectionUtil::unregisterCommand);
+//		this.commandNames.forEach(ReflectionUtil::unregisterCommand);
+		this.commands.forEach(ReflectionUtil::unregisterCommand);
 		
 		Scheduler.cancelAllTasks(this);
 
