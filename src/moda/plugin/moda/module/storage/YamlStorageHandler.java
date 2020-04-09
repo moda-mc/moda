@@ -129,7 +129,10 @@ public class YamlStorageHandler extends FileStorageHandler {
 		Validate.notNull(uuid, "UUID is null");
 		Validate.notNull(key, "Key is null");
 		
-		throw new UnsupportedOperationException("not yet implemented");
+		final ConfigurationSection section = uuidValueSection();
+		if (section.isConfigurationSection(uuid.toString())) {
+			section.getConfigurationSection(uuid.toString()).set(key, null);
+		}
 	}
 
 }
