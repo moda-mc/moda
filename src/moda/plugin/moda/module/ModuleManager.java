@@ -39,25 +39,6 @@ public class ModuleManager {
 	private final Map<String, ModuleClassLoader> loaders = new HashMap<>();
 	private final Map<String, Class<?>> classCache = new HashMap<>();
 
-	public void unload(final String name) throws Exception {
-		if (!this.loaders.containsKey(name)) {
-			throw new IllegalStateException("No module with the name " + name + " is loaded");
-		}
-
-		final ModuleClassLoader loader = this.loaders.get(name);
-		final Module<?> module = loader.getModule();
-		
-		// Unregisters all listeners, disable all tasks, save data, call onDisable().
-		module.disable();
-		
-		// Remove reference to old ClassLoader. The garbage collector will take care of the rest.
-		this.loaders.remove(name);
-		
-		this.classCache.clear(); // TODO find a smarter way to only clear caches from this module?
-		
-		System.gc();
-	}
-
 	public void load(final String name) throws Exception {
 		if (this.loaders.containsKey(name)) {
 			throw new IllegalStateException("A module with the name " + name + " is already loaded");
@@ -73,6 +54,36 @@ public class ModuleManager {
 		this.loaders.put(name, loader);
 		
 		loader.getModule().enable();
+	}
+
+	public void unload(final String name) throws Exception {
+		if (!this.loaders.containsKey(name)) {
+			throw new IllegalStateException("No module with the name " + name + " is loaded");
+		}
+
+		final ModuleClassLoader loader = this.loaders.get(name);
+		final Module<?> module = loader.getModule();
+		
+		// Delay exception, module references must always be removed properly
+		Exception deferredException = null;;
+		
+		// Unregisters all listeners, disable all tasks, save data, call onDisable().
+		try {
+			module.disable();
+		} catch (final Exception e) {
+			deferredException = e;
+		}
+		
+		// Remove reference to old ClassLoader. The garbage collector will take care of the rest.
+		this.loaders.remove(name);
+		
+		this.classCache.clear(); // TODO find a smarter way to only clear caches from this module?
+		
+		System.gc();
+		
+		if (deferredException != null) {
+			throw new RuntimeException("Error occured while disabling module", deferredException);
+		}
 	}
 
 	public List<Module<? extends ModuleStorageHandler>> getLoadedModules() {
