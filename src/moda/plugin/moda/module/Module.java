@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -26,7 +27,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 
+import co.aikar.taskchain.TaskChainFactory;
 import moda.plugin.moda.Moda;
+import moda.plugin.moda.module.scheduler.ModuleTaskChainFactory;
 import moda.plugin.moda.module.storage.DatabaseStorageHandler;
 import moda.plugin.moda.module.storage.FileStorageHandler;
 import moda.plugin.moda.module.storage.ModuleStorageHandler;
@@ -46,16 +49,22 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private LangFile lang;
 	private ModuleLogger logger;
 	private Scheduler scheduler;
+	private TaskChainFactory taskChainFactory;
 	private T storage;
 	private UuidValueStore playerData;
 	private final List<Listener> listeners =  new ArrayList<>();
 //	private final List<String> commandNames = new ArrayList<>();
 	private final List<PluginCommand> commands = new ArrayList<>();
+	private boolean enabled = false;
 
 	public abstract String getName();
 	
 	public Optional<ModuleMetaLocal> getMeta() {
 		return this.meta;
+	}
+	
+	public boolean isEnabled() {
+		return this.enabled;
 	}
 
 	public FileConfiguration getConfig() {
@@ -72,6 +81,10 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 	public Scheduler getScheduler() {
 		return this.scheduler;
+	}
+	
+	public TaskChainFactory getTaskChainFactory() {
+		return this.taskChainFactory;
 	}
 
 	public T getStorage() {
@@ -163,9 +176,13 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		this.initLang();
 		this.initConfig();
 		this.initStorage();
+		
+		this.taskChainFactory = ModuleTaskChainFactory.create(this);
 
 		this.onEnable();
 
+		this.enabled = true;
+		
 		if (this.getMeta().isPresent()) {
 			final ModuleMetaLocal meta = this.getMeta().get();
 			this.getLogger().info("Enabled module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());
@@ -201,6 +218,10 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		if (this.storage instanceof FileStorageHandler) {
 			((FileStorageHandler) this.storage).save();
 		}
+		
+		this.taskChainFactory.shutdown(60, TimeUnit.SECONDS);
+		
+		this.enabled = false;
 
 		if (this.getMeta().isPresent()) {
 			final ModuleMetaLocal meta = this.getMeta().get();
