@@ -99,7 +99,7 @@ public class ModuleManager {
 	public Optional<ModuleMetaLocal> getLocalMetadata(final String moduleName) {
 		final File metaFile = new File("modules", moduleName + ".json");
 		try {
-			final JsonObject json = new JsonParser().parse(new FileReader(metaFile)).getAsJsonObject();
+			final JsonObject json = JsonParser.parseReader(new FileReader(metaFile)).getAsJsonObject();
 			return Optional.of(new ModuleMetaLocal(json));
 		} catch (final FileNotFoundException e) {
 			Moda.instance.getLogger().warning("Metadata file " + metaFile.getPath() + " does not exist. This is normal if the installed module was not downloaded from a repository. Some plugin features may not work properly. If you wish to create a file manually, have a look at the wiki: https://github.com/ModaPlugin/Moda/wiki/Module-metadata-file");

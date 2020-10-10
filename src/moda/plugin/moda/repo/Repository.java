@@ -89,7 +89,7 @@ public class Repository {
 
 		final String content = responseBuilder.toString();
 
-		final JsonObject json = new JsonParser().parse(content).getAsJsonObject();
+		final JsonObject json = JsonParser.parseString(content).getAsJsonObject();
 		json.addProperty("index_time", System.currentTimeMillis());
 
 		try (FileWriter writer = new FileWriter(this.indexFile)){
@@ -118,7 +118,7 @@ public class Repository {
 		if (json != null) {
 			return json;
 		} else {
-			return new JsonParser().parse(new FileReader(this.indexFile)).getAsJsonObject();
+			return JsonParser.parseReader(new FileReader(this.indexFile)).getAsJsonObject();
 		}
 	}
 

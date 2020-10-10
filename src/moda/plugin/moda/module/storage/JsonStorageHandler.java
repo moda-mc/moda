@@ -50,7 +50,7 @@ public class JsonStorageHandler extends FileStorageHandler {
 
 		try (Reader reader = new FileReader(this.file)){
 			try {
-				this.json = new JsonParser().parse(reader).getAsJsonObject();
+				this.json = JsonParser.parseReader(reader).getAsJsonObject();
 			} catch (final ClassCastException e) {
 				throw new IOException(e);
 			}
