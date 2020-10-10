@@ -38,7 +38,6 @@ import moda.plugin.moda.module.storage.StorageType;
 import moda.plugin.moda.module.storage.UnsupportedStorageMigrator;
 import moda.plugin.moda.module.storage.UuidValueStore;
 import moda.plugin.moda.repo.ModuleMetaLocal;
-import moda.plugin.moda.util.BukkitFuture;
 import xyz.derkades.derkutils.AssertionException;
 import xyz.derkades.derkutils.bukkit.reflection.ReflectionUtil;
 
@@ -335,11 +334,14 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		// Save config periodically
 		this.scheduler.interval(5*60*20, 5*60*20, () -> {
 			this.logger.debug("Saving config");
-			final BukkitFuture<Void> future = handler.saveAsync();
-			future.onComplete((t) -> this.logger.debug("Saved config"));
-			future.onException((e) -> {
-				this.logger.warning("Error saving config");
-				e.printStackTrace();
+			this.getScheduler().async(() -> {
+				try {
+					handler.save();
+					this.logger.debug("Saved config");
+				} catch (final IOException e) {
+					this.logger.warning("Error saving config");
+					e.printStackTrace();
+				}
 			});
 		});
 	}
