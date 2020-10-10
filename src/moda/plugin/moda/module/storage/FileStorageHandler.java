@@ -11,6 +11,7 @@ public abstract class FileStorageHandler extends StorageHandler {
 		super(module);
 	}
 	
+	@Deprecated
 	public BukkitFuture<Void> saveAsync(){
 		return new BukkitFuture<>(() -> {
 			save();
