@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import moda.plugin.moda.Moda;
-import moda.plugin.moda.modules.Module;
-import moda.plugin.moda.modules.ModuleManager;
+import moda.plugin.moda.module.Module;
+import moda.plugin.moda.module.ModuleManager;
 import moda.plugin.moda.repo.ModuleMetaLocal;
 import xyz.derkades.derkutils.bukkit.ItemBuilder;
 import xyz.derkades.derkutils.bukkit.menu.IconMenu;

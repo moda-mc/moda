@@ -6,7 +6,7 @@
 
 	<groupId>moda.plugin</groupId>
 	<artifactId>moda</artifactId>
-	<version>alpha</version>
+	<version>canary</version>
 
 	<name>Moda</name>
 	<url>https://github.com/mineglade/Moda</url>
@@ -51,10 +51,6 @@
 							<shadedPattern>moda.plugin.moda.lib.bstats</shadedPattern>
 						</relocation>
 						<relocation>
-							<pattern>xyz.derkades.derkutils</pattern>
-							<shadedPattern>moda.plugin.moda.lib.derkutils</shadedPattern>
-						</relocation>
-						<relocation>
 							<pattern>com.google.gson</pattern>
 							<shadedPattern>moda.plugin.moda.lib.gson</shadedPattern>
 						</relocation>
@@ -73,6 +69,18 @@
 								<exclude>META-INF/maven/</exclude>
 							</excludes>
 						</filter>
+						<filter>
+							<artifact>xyz.derkades:Derkutils</artifact>
+							<includes>
+								<include>**</include>
+							</includes>
+						</filter>
+						<filter>
+							<artifact>co.aikar:taskchain</artifact>
+							<includes>
+								<include>**</include>
+							</includes>
+						</filter>
 					</filters>
 				</configuration>
 			</plugin>
@@ -84,7 +92,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<version>1.16.3-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -112,13 +120,31 @@
 			<artifactId>gson</artifactId>
 			<version>2.8.5</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.13</version>
+			<version>1.14</version>
 		</dependency>
-			
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>co.aikar</groupId>
+			<artifactId>taskchain-core</artifactId>
+			<version>3.7.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -136,6 +162,11 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+
+		<repository>
+			<id>aikar</id>
+			<url>https://repo.aikar.co/content/groups/aikar/</url>
 		</repository>
 
 	</repositories>
