@@ -53,7 +53,7 @@ public class LangFile {
 	 * @param placeholders ["link", "https://example.com", "number", 3]
 	 * @return "Visit https://example.com 3 times"
 	 */
-	public String getMessage(final IMessage message, final String... placeholders) {
+	public String getMessage(final IMessage message, final Object... placeholders) {
 		return ModaPlaceholderAPI.parsePlaceholders(replacePlaceholders(this.getMessage(message), placeholders));
 	}
 	
@@ -64,11 +64,11 @@ public class LangFile {
 	 * @param placeholders ["link", "https://example.com", "number", 3]
 	 * @return "Visit https://example.com 3 times"
 	 */
-	public String getMessage(final IMessage message, final Player player, final String... placeholders) {
+	public String getMessage(final IMessage message, final Player player, final Object... placeholders) {
 		return ModaPlaceholderAPI.parsePlaceholders(replacePlaceholders(this.getMessage(message), placeholders), player);
 	}
 	
-	private String replacePlaceholders(String string, final String[] placeholders) {
+	private String replacePlaceholders(String string, final Object[] placeholders) {
 		if (placeholders.length % 2 != 0) {
 			throw new IllegalArgumentException("Placeholder array length must be an even number");
 		}
@@ -107,11 +107,11 @@ public class LangFile {
 		player.sendMessage(this.getMessage(message, player));
 	}
 
-	public void send(final CommandSender sender, final IMessage message, final String... placeholders) {
+	public void send(final CommandSender sender, final IMessage message, final Object... placeholders) {
 		sender.sendMessage(this.getMessage(message, placeholders));
 	}
 	
-	public void send(final Player player, final IMessage message, final String... placeholders) {
+	public void send(final Player player, final IMessage message, final Object... placeholders) {
 		player.sendMessage(this.getMessage(message, player, placeholders));
 	}
 
