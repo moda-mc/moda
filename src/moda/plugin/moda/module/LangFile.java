@@ -8,9 +8,11 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import moda.plugin.moda.Moda;
 import moda.plugin.moda.module.storage.ModuleStorageHandler;
+import moda.plugin.moda.placeholder.ModaPlaceholderAPI;
 import xyz.derkades.derkutils.bukkit.Colors;
 
 public class LangFile {
@@ -37,7 +39,11 @@ public class LangFile {
 	}
 
 	public String getMessage(final IMessage message) {
-		return Colors.parseColors(Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault()));
+		return ModaPlaceholderAPI.parsePlaceholders(Colors.parseColors(Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault())));
+	}
+	
+	public String getMessage(final IMessage message, final Player player) {
+		return ModaPlaceholderAPI.parsePlaceholders(Colors.parseColors(Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault())), player);
 	}
 
 	/**
@@ -47,19 +53,34 @@ public class LangFile {
 	 * @param placeholders ["link", "https://example.com", "number", 3]
 	 * @return "Visit https://example.com 3 times"
 	 */
-	public String getMessage(final IMessage message, final Object... placeholders) {
-		if (placeholders.length % 2 != 0) { // False if length is 1, 3, 5, 6, etc.
+	public String getMessage(final IMessage message, final String... placeholders) {
+		return ModaPlaceholderAPI.parsePlaceholders(replacePlaceholders(this.getMessage(message), placeholders));
+	}
+	
+	/**
+	 * Uses {@link #getMessage()} then replaces placeholders.
+	 * <br><br>
+	 * "Visit {LINK} {NUMBER} times"
+	 * @param placeholders ["link", "https://example.com", "number", 3]
+	 * @return "Visit https://example.com 3 times"
+	 */
+	public String getMessage(final IMessage message, final Player player, final String... placeholders) {
+		return ModaPlaceholderAPI.parsePlaceholders(replacePlaceholders(this.getMessage(message), placeholders), player);
+	}
+	
+	private String replacePlaceholders(String string, final String[] placeholders) {
+		if (placeholders.length % 2 != 0) {
 			throw new IllegalArgumentException("Placeholder array length must be an even number");
 		}
-
+		
 		if (placeholders.length == 0) {
-			return this.getMessage(message);
+			return string;
 		}
-
+		
 		final Map<String, String> placeholderMap = new HashMap<>();
-
+	
 		Object key = null;
-
+	
 		for (final Object object : placeholders) {
 			if (key == null) {
 				// 'placeholder' is a key
@@ -70,22 +91,28 @@ public class LangFile {
 				key = null; // Next 'placeholder' is a key
 			}
 		}
-
-		String string = this.getMessage(message);
-
-		for(final Map.Entry<String, String> entry : placeholderMap.entrySet()) {
+	
+		for (final Map.Entry<String, String> entry : placeholderMap.entrySet()) {
 			string = string.replace("{" + entry.getKey() + "}", entry.getValue());
 		}
-
-		return Colors.parseColors(string);
+		
+		return string;
 	}
 
 	public void send(final CommandSender sender, final IMessage message) {
 		sender.sendMessage(this.getMessage(message));
 	}
+	
+	public void send(final Player player, final IMessage message) {
+		player.sendMessage(this.getMessage(message, player));
+	}
 
-	public void send(final CommandSender sender, final IMessage message, final Object... placeholders) {
+	public void send(final CommandSender sender, final IMessage message, final String... placeholders) {
 		sender.sendMessage(this.getMessage(message, placeholders));
+	}
+	
+	public void send(final Player player, final IMessage message, final String... placeholders) {
+		player.sendMessage(this.getMessage(message, player, placeholders));
 	}
 
 //	private String getPrefix() {
