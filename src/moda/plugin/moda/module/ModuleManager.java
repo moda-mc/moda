@@ -89,6 +89,11 @@ public class ModuleManager {
 	public List<Module<? extends ModuleStorageHandler>> getLoadedModules() {
 		return this.loaders.values().stream().map(ModuleClassLoader::getModule).collect(Collectors.toList());
 	}
+	
+	public boolean isLoaded(final Module<ModuleStorageHandler> module) {
+		final String name = module.getName();
+		return this.loaders.containsKey(name) && this.loaders.get(name).getModule() == module;
+	}
 
 	public List<String> getInstalledModulesNames() {
 		return Arrays.asList(new File("modules").listFiles()).stream()

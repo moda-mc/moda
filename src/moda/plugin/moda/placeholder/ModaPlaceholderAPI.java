@@ -1,13 +1,17 @@
 package moda.plugin.moda.placeholder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Optional;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 
+import moda.plugin.moda.module.Module;
+import moda.plugin.moda.module.ModuleManager;
+import moda.plugin.moda.module.storage.ModuleStorageHandler;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -15,47 +19,62 @@ public class ModaPlaceholderAPI {
 
 	private static final char PLACEHOLDER_START = '{';
 	private static final char PLACEHOLDER_END = '}';
-
-	private static final Map<String, Function<Player, String>> PLAYER_PLACEHOLDERS = new HashMap<>();
-	private static final Map<String, Supplier<String>> GLOBAL_PLACEHOLDERS = new HashMap<>();
 	
-	public static String parsePlaceholders(String string, final Player player) {
-		for (final Map.Entry<String, Function<Player, String>> placeholderEntry : PLAYER_PLACEHOLDERS.entrySet()) {
-			if (string.contains(placeholderEntry.getKey())) {
-				string = string.replace(placeholderEntry.getKey(), placeholderEntry.getValue().apply(player));
+	private static final Map<String, IPlaceholder> PLACEHOLDERS = new HashMap<>();
+	
+	public static String parsePlaceholders(final Optional<Player> player, String string) {
+		final List<String> placeholdersFound = new ArrayList<>();
+		boolean inPlaceholder = false;
+		final StringBuilder placeholderName = new StringBuilder();
+		for (final char c : string.toCharArray()) {
+			if (inPlaceholder) {
+				if (c == PLACEHOLDER_END) {
+					inPlaceholder = false;
+					if (placeholderName.length() > 0) {
+						placeholdersFound.add(placeholderName.toString());
+					}
+				} else {
+					placeholderName.append(c);
+				}
+			} else {
+				if (c == PLACEHOLDER_START) {
+					inPlaceholder = true;
+				}
 			}
 		}
 		
-		return parsePlaceholders(string);
-	}
-	
-	public static String parsePlaceholders(String string) {
-		for (final Map.Entry<String, Supplier<String>> placeholderEntry : GLOBAL_PLACEHOLDERS.entrySet()) {
-			if (string.contains(placeholderEntry.getKey())) {
-				string = string.replace(placeholderEntry.getKey(), placeholderEntry.getValue().get());
+		for (final String name : placeholdersFound) {
+			final IPlaceholder placeholder = PLACEHOLDERS.get(name);
+			final String value;
+			if (placeholder == null) {
+				value = "[Unknown placeholder '" + name + "']";
+				continue;
+			} else if (placeholder instanceof IPlayerPlaceholder) {
+				if (player.isPresent()) {
+					return ((IPlayerPlaceholder) placeholder).getValue(player.get());
+				} else {
+					value = "[Player specific placeholder in global context '" + name + "']";
+					continue;
+				}
+			} else if (placeholder instanceof IGlobalPlaceholder) {
+				value = ((IGlobalPlaceholder) placeholder).getValue();
+			} else {
+				value = "[Player specific placeholder in global context '" + name + "']";
+				continue;
 			}
+			
+			string = string.replace(PLACEHOLDER_START + name + PLACEHOLDER_END, value);
 		}
+		
 		return string;
 	}
-
-	public static void addPlaceholder(final String placeholder, final Function<Player, String> supplier) {
-		PLAYER_PLACEHOLDERS.put(PLACEHOLDER_START + placeholder + PLACEHOLDER_END, supplier);
-	}
 	
-	public static void addPlaceholder(final String placeholder, final Supplier<String> supplier) {
-		GLOBAL_PLACEHOLDERS.put(PLACEHOLDER_START + placeholder + PLACEHOLDER_END, supplier);
-	}
-
-	public static BaseComponent[] parsePlaceholders(final Player player, final BaseComponent... components) {
-		final BaseComponent[] newComponents = new BaseComponent[components.length];
+	public static BaseComponent[] parsePlaceholders(final Optional<Player> player, final BaseComponent... components) {
+//		final BaseComponent[] newComponents = new BaseComponent[components.length];
 		for (int i = 0; i < components.length; i++) {
 			final BaseComponent originalComponent = components[i];
 			String text = originalComponent.toPlainText();
-			for (final Entry<String, Function<Player, String>> placeholderEntry : PLAYER_PLACEHOLDERS.entrySet()) {
-				if (text.contains(placeholderEntry.getKey())) {
-					text = text.replace(placeholderEntry.getKey(), placeholderEntry.getValue().apply(player));
-				}
-			}
+			text = parsePlaceholders(player, text);
 			final BaseComponent component = new TextComponent(text);
 //			component.setColor(originalComponent.getColor());
 //			component.setBold(originalComponent.isBold());
@@ -65,26 +84,34 @@ public class ModaPlaceholderAPI {
 //			component.setHoverEvent(originalComponent.getHoverEvent());
 //			component.setClickEvent(originalComponent.getClickEvent());
 			component.copyFormatting(originalComponent);
-			newComponents[i] = component;
+			components[i] = component;
 		}
-		return parsePlaceholders(newComponents);
+		return components;
 	}
 	
-	public static BaseComponent[] parsePlaceholders(final BaseComponent... components) {
-		final BaseComponent[] newComponents = new BaseComponent[components.length];
-		for (int i = 0; i < components.length; i++) {
-			final BaseComponent originalComponent = components[i];
-			String text = originalComponent.toPlainText();
-			for (final Entry<String, Supplier<String>> placeholderEntry : GLOBAL_PLACEHOLDERS.entrySet()) {
-				if (text.contains(placeholderEntry.getKey())) {
-					text = text.replace(placeholderEntry.getKey(), placeholderEntry.getValue().get());
-				}
+	public static void registerPlaceholder(final IPlaceholder placeholder) {
+		Validate.notNull(placeholder, "Placeholder is null");
+		
+		if (placeholder instanceof IModulePlaceholder) {
+			final IModulePlaceholder modulePlaceholder = (IModulePlaceholder) placeholder;
+			if (!ModuleManager.getInstance().isLoaded(modulePlaceholder.getModule())) {
+				throw new IllegalStateException("Attempted to register placeholder from unloaded module");
 			}
-			final BaseComponent component = new TextComponent(text);
-			component.copyFormatting(originalComponent);
-			newComponents[i] = component;
 		}
-		return newComponents;
+		
+		final String name = placeholder.getName();
+		PLACEHOLDERS.put(name, placeholder);
+	}
+	
+	public static void unregisterPlaceholders(final Module<ModuleStorageHandler> module) {
+		PLACEHOLDERS.entrySet().removeIf(e -> {
+			if (e.getValue() instanceof IModulePlaceholder) {
+				final IModulePlaceholder placeholder = (IModulePlaceholder) e.getValue();
+				return module == placeholder.getModule();
+			} else {
+				return false;
+			}
+		});
 	}
 
 }

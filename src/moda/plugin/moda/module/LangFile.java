@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,11 +40,21 @@ public class LangFile {
 	}
 
 	public String getMessage(final IMessage message) {
-		return ModaPlaceholderAPI.parsePlaceholders(Colors.parseColors(Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault())));
+		return ModaPlaceholderAPI.parsePlaceholders(
+				Optional.empty(),
+				Colors.parseColors(
+						Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault())
+						)
+				);
 	}
 	
 	public String getMessage(final IMessage message, final Player player) {
-		return ModaPlaceholderAPI.parsePlaceholders(Colors.parseColors(Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault())), player);
+		return ModaPlaceholderAPI.parsePlaceholders(
+				Optional.of(player),
+				Colors.parseColors(
+						Moda.getPrefix() + this.file.getString(message.getPath(), message.getDefault())
+						)
+				);
 	}
 
 	/**
@@ -54,7 +65,10 @@ public class LangFile {
 	 * @return "Visit https://example.com 3 times"
 	 */
 	public String getMessage(final IMessage message, final Object... placeholders) {
-		return ModaPlaceholderAPI.parsePlaceholders(replacePlaceholders(this.getMessage(message), placeholders));
+		return ModaPlaceholderAPI.parsePlaceholders(
+				Optional.empty(),
+				replacePlaceholders(this.getMessage(message), placeholders)
+				);
 	}
 	
 	/**
@@ -65,7 +79,10 @@ public class LangFile {
 	 * @return "Visit https://example.com 3 times"
 	 */
 	public String getMessage(final IMessage message, final Player player, final Object... placeholders) {
-		return ModaPlaceholderAPI.parsePlaceholders(replacePlaceholders(this.getMessage(message), placeholders), player);
+		return ModaPlaceholderAPI.parsePlaceholders(
+				Optional.of(player),
+				replacePlaceholders(this.getMessage(message), placeholders)
+				);
 	}
 	
 	private String replacePlaceholders(String string, final Object[] placeholders) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,7 +20,9 @@ import moda.plugin.moda.module.ModuleManager;
 import moda.plugin.moda.module.ModulesConfig;
 import moda.plugin.moda.module.storage.ModuleStorageHandler;
 import moda.plugin.moda.module.storage.StorageType;
+import moda.plugin.moda.placeholder.ModaPlaceholder;
 import moda.plugin.moda.placeholder.ModaPlaceholderAPI;
+import moda.plugin.moda.placeholder.ModaPlayerPlaceholder;
 import moda.plugin.moda.repo.ModuleMetaRepository;
 import moda.plugin.moda.repo.ModuleMetaVersion;
 import moda.plugin.moda.repo.ModuleMinecraftVersion;
@@ -200,9 +203,10 @@ public class Moda extends JavaPlugin implements Listener {
 	 * Adds the core Moda placeholders
 	 */
 	private void addCorePlaceholders() {
-		ModaPlaceholderAPI.addPlaceholder("USERNAME", Player::getName);
-		ModaPlaceholderAPI.addPlaceholder("ONLINECOUNT", player -> String.valueOf(Bukkit.getServer().getOnlinePlayers().size()));
-		ModaPlaceholderAPI.addPlaceholder("DISPLAYNAME", Player::getDisplayName);
+		ModaPlaceholderAPI.registerPlaceholder(new ModaPlayerPlaceholder("USERNAME", Player::getName));
+		final Supplier<String> onlineCount = () -> String.valueOf(Bukkit.getServer().getOnlinePlayers().size());
+		ModaPlaceholderAPI.registerPlaceholder(new ModaPlaceholder("ONLINECOUNT", onlineCount));
+		ModaPlaceholderAPI.registerPlaceholder(new ModaPlayerPlaceholder("DISPLAYNAME", Player::getDisplayName));
 	}
 
 }
