@@ -4,12 +4,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>moda.plugin</groupId>
+	<groupId>cx.moda</groupId>
 	<artifactId>moda</artifactId>
-	<version>canary</version>
+	<version>alpha</version>
 
 	<name>Moda</name>
-	<url>https://github.com/mineglade/Moda</url>
+	<url>https://github.com/ModaPlugin/Moda</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,15 +48,15 @@
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>moda.plugin.moda.lib.bstats</shadedPattern>
+							<shadedPattern>cx.moda.moda.lib.org.bstats</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>com.google.gson</pattern>
-							<shadedPattern>moda.plugin.moda.lib.gson</shadedPattern>
+							<shadedPattern>cx.moda.moda.lib.com.google.gson</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>org.apache.commons</pattern>
-							<shadedPattern>moda.plugin.moda.lib.commons</shadedPattern>
+							<shadedPattern>cx.moda.moda.lib.org.apache.commons</shadedPattern>
 						</relocation>
 					</relocations>
 
