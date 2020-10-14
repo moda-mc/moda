@@ -1,10 +1,11 @@
 package cx.moda.moda.placeholder;
 
-import cx.moda.moda.module.Module;
-import cx.moda.moda.module.storage.ModuleStorageHandler;
 import org.bukkit.entity.Player;
 
 import com.google.common.base.Function;
+
+import cx.moda.moda.module.Module;
+import cx.moda.moda.module.storage.ModuleStorageHandler;
 
 public class ModulePlayerPlaceholder extends ModaPlayerPlaceholder implements IModulePlaceholder {
 
@@ -15,7 +16,7 @@ public class ModulePlayerPlaceholder extends ModaPlayerPlaceholder implements IM
 	}
 	
 	public ModulePlayerPlaceholder(final Module<ModuleStorageHandler> module, final String name, final Function<Player, String> value, final boolean async) {
-		super(getPlaceholderName(module, name), value, async);
+		super(IModulePlaceholder.getPlaceholderName(module, name), value, async);
 		this.module = module;
 	}
 	
