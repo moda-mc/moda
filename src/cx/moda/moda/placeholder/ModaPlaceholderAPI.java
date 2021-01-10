@@ -23,6 +23,7 @@ public class ModaPlaceholderAPI {
 	private static final Map<String, IPlaceholder> PLACEHOLDERS = new HashMap<>();
 	
 	public static String parsePlaceholders(final Optional<Player> player, String string) {
+
 		final List<String> placeholdersFound = new ArrayList<>();
 		boolean inPlaceholder = false;
 		final StringBuilder placeholderName = new StringBuilder();
@@ -32,6 +33,7 @@ public class ModaPlaceholderAPI {
 					inPlaceholder = false;
 					if (placeholderName.length() > 0) {
 						placeholdersFound.add(placeholderName.toString());
+						placeholderName.setLength(0);
 					}
 				} else {
 					placeholderName.append(c);
@@ -48,19 +50,16 @@ public class ModaPlaceholderAPI {
 			final String value;
 			if (placeholder == null) {
 				value = "[Unknown placeholder '" + name + "']";
-				continue;
 			} else if (placeholder instanceof IPlayerPlaceholder) {
 				if (player.isPresent()) {
-					return ((IPlayerPlaceholder) placeholder).getValue(player.get());
+					value = ((IPlayerPlaceholder) placeholder).getValue(player.get());
 				} else {
 					value = "[Player specific placeholder in global context '" + name + "']";
-					continue;
 				}
 			} else if (placeholder instanceof IGlobalPlaceholder) {
 				value = ((IGlobalPlaceholder) placeholder).getValue();
 			} else {
-				value = "[Player specific placeholder in global context '" + name + "']";
-				continue;
+				value = "[Placeholder of " + name + " with unknown superclass]";
 			}
 			
 			string = string.replace(PLACEHOLDER_START + name + PLACEHOLDER_END, value);
