@@ -57,11 +57,11 @@ public class Moda extends JavaPlugin implements Listener {
 		// Connect to database if storage type is set to MySQL
 		if (this.getStorageType().equals(StorageType.MYSQL)) {
 			try {
-				db = new DatabaseHandler(this.getConfig().getString("mysql.host"),
-						this.getConfig().getInt("mysql.port"),
-						this.getConfig().getString("mysql.database"),
-						this.getConfig().getString("mysql.user"),
-						this.getConfig().getString("mysql.password"));
+				db = new DatabaseHandler(this.getConfig().getString("storage.mysql.host"),
+						this.getConfig().getInt("storage.mysql.port"),
+						this.getConfig().getString("storage.mysql.database"),
+						this.getConfig().getString("storage.mysql.user"),
+						this.getConfig().getString("storage.mysql.password"));
 			} catch (final SQLException e) {
 				this.getLogger().severe("Initializing MySQL failed. Please configure MySQL properly or switch to file storage.");
 				throw new RuntimeException(e);
