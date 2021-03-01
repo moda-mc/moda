@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import cx.moda.moda.module.storage.ModuleStorageHandler;
-import cx.moda.moda.placeholder.ModaPlaceholderAPI;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import cx.moda.moda.Moda;
+import cx.moda.moda.module.storage.ModuleStorageHandler;
+import cx.moda.moda.placeholder.ModaPlaceholderAPI;
 import xyz.derkades.derkutils.bukkit.Colors;
 
 public class LangFile {
@@ -26,7 +26,6 @@ public class LangFile {
 		boolean changes = false;
 
 		for (final IMessage message : module.getMessages()) {
-//			this.file.addDefault(message.getPath(), message.getDefault());
 			if (!this.file.contains(message.getPath())) {
 				module.getLogger().debug("Adding language option to config %s: %s", message.getPath(), message.getDefault());
 				this.file.set(message.getPath(), message.getDefault());
@@ -132,8 +131,4 @@ public class LangFile {
 		player.sendMessage(this.getMessage(message, player, placeholders));
 	}
 
-//	private String getPrefix() {
-//		return Moda.instance.getConfig().getString("prefix", "");
-//	}
-//
 }

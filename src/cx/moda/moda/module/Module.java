@@ -15,7 +15,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import cx.moda.moda.module.scheduler.ModuleTaskChainFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -30,6 +29,7 @@ import org.bukkit.plugin.UnknownDependencyException;
 
 import co.aikar.taskchain.TaskChainFactory;
 import cx.moda.moda.Moda;
+import cx.moda.moda.module.scheduler.ModuleTaskChainFactory;
 import cx.moda.moda.module.storage.DatabaseStorageHandler;
 import cx.moda.moda.module.storage.FileStorageHandler;
 import cx.moda.moda.module.storage.ModuleStorageHandler;
@@ -52,7 +52,6 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private T storage;
 	private UuidValueStore playerData;
 	private final List<Listener> listeners =  new ArrayList<>();
-//	private final List<String> commandNames = new ArrayList<>();
 	private final List<PluginCommand> commands = new ArrayList<>();
 	private boolean enabled = false;
 
@@ -132,8 +131,6 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		
 		Validate.isTrue(!ReflectionUtil.getKnownCommands().containsKey(commandName), "A command with this name is already registered");
 		
-//		this.commandNames.add(command.getName());
-//		this.commandNames.addAll(command.getAliases());
 		this.commands.add(command);
 		
 		ReflectionUtil.registerCommand(Moda.instance.getName() + "_" + this.getName(), command);
@@ -209,7 +206,6 @@ public abstract class Module<T extends ModuleStorageHandler> {
 
 		this.listeners.forEach(HandlerList::unregisterAll);
 		
-//		this.commandNames.forEach(ReflectionUtil::unregisterCommand);
 		this.commands.forEach(ReflectionUtil::unregisterCommand);
 		
 		Scheduler.cancelAllTasks(this);

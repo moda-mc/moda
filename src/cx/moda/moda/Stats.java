@@ -19,16 +19,6 @@ public class Stats extends Metrics {
 		this.addCustomChart(new SimplePie("storage_type", () -> Moda.instance.getStorageType().name().toString()));
 		this.addCustomChart(new SimplePie("debug", () -> Moda.instance.getConfig().getBoolean("debug") + ""));
 
-//		this.addCustomChart(new AdvancedPie("loaded_modules", () -> {
-//			final Map<String, Integer> map = new HashMap<>();
-//
-//			for (final Module<?> module : Modules.LOADED) {
-//				map.put(module.getName(), 1);
-//			}
-//
-//			return map;
-//		}));
-
 		this.addCustomChart(new AdvancedPie("enabled_modules", () -> {
 			final Map<String, Integer> map = new HashMap<>();
 
