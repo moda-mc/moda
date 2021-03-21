@@ -48,15 +48,19 @@
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>cx.moda.moda.lib.org.bstats</shadedPattern>
+							<shadedPattern>cx.moda.moda.lib.bstats</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>com.google.gson</pattern>
-							<shadedPattern>cx.moda.moda.lib.com.google.gson</shadedPattern>
+							<shadedPattern>cx.moda.moda.lib.gson</shadedPattern>
 						</relocation>
 						<relocation>
 							<pattern>org.apache.commons</pattern>
-							<shadedPattern>cx.moda.moda.lib.org.apache.commons</shadedPattern>
+							<shadedPattern>cx.moda.moda.lib.commons</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>xyz.derkades.derkutils</pattern>
+							<shadedPattern>cx.moda.moda.lib.derkutils</shadedPattern>
 						</relocation>
 					</relocations>
 
@@ -68,12 +72,6 @@
 								<exclude>META-INF/NOTICE.txt</exclude>
 								<exclude>META-INF/maven/</exclude>
 							</excludes>
-						</filter>
-						<filter>
-							<artifact>xyz.derkades:Derkutils</artifact>
-							<includes>
-								<include>**</include>
-							</includes>
 						</filter>
 						<filter>
 							<artifact>co.aikar:taskchain</artifact>
