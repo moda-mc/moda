@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>cx.moda</groupId>
-	<artifactId>Moda</artifactId>
+	<artifactId>moda</artifactId>
 	<version>alpha</version>
 
 	<name>Moda</name>
