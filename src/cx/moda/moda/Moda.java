@@ -2,26 +2,28 @@ package cx.moda.moda;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import cx.moda.moda.module.Module;
-import cx.moda.moda.module.ModuleManager;
-import cx.moda.moda.module.ModulesConfig;
-import cx.moda.moda.module.storage.ModuleStorageHandler;
-import cx.moda.moda.module.storage.StorageType;
-import cx.moda.moda.placeholder.ModaPlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import cx.moda.moda.module.Module;
+import cx.moda.moda.module.ModuleManager;
+import cx.moda.moda.module.ModulesConfig;
+import cx.moda.moda.module.storage.ModuleStorageHandler;
+import cx.moda.moda.module.storage.StorageType;
 import cx.moda.moda.placeholder.ModaPlaceholder;
+import cx.moda.moda.placeholder.ModaPlaceholderAPI;
 import cx.moda.moda.placeholder.ModaPlayerPlaceholder;
 import cx.moda.moda.repo.ModuleMetaRepository;
 import cx.moda.moda.repo.ModuleMetaVersion;
@@ -29,13 +31,16 @@ import cx.moda.moda.repo.ModuleMinecraftVersion;
 import cx.moda.moda.repo.Repositories;
 import cx.moda.moda.repo.Repository;
 import net.md_5.bungee.api.ChatColor;
-import xyz.derkades.derkutils.DatabaseHandler;
 
 public class Moda extends JavaPlugin implements Listener {
 
 	public static Moda instance;
 
-	public static DatabaseHandler db = null;
+	private static HikariDataSource hikariDataSource = null;
+
+	public static HikariDataSource getHikariDataSource() {
+		return hikariDataSource;
+	}
 
 	public static FileConfiguration messages;
 
@@ -56,16 +61,14 @@ public class Moda extends JavaPlugin implements Listener {
 
 		// Connect to database if storage type is set to MySQL
 		if (this.getStorageType().equals(StorageType.MYSQL)) {
-			try {
-				db = new DatabaseHandler(this.getConfig().getString("storage.mysql.host"),
-						this.getConfig().getInt("storage.mysql.port"),
-						this.getConfig().getString("storage.mysql.database"),
-						this.getConfig().getString("storage.mysql.user"),
-						this.getConfig().getString("storage.mysql.password"));
-			} catch (final SQLException e) {
-				this.getLogger().severe("Initializing MySQL failed. Please configure MySQL properly or switch to file storage.");
-				throw new RuntimeException(e);
-			}
+			final HikariConfig config = new HikariConfig();
+			config.setJdbcUrl(String.format("jdbc:mysql://%s:%s/%s",
+					this.getConfig().getString("storage.mysql.host"),
+					this.getConfig().getInt("storage.mysql.port"),
+					this.getConfig().getString("storage.mysql.database")));
+			config.setUsername(this.getConfig().getString("storage.mysql.user"));
+			config.setPassword(this.getConfig().getString("storage.mysql.password"));
+			hikariDataSource = new HikariDataSource(config);
 		}
 
 		// Download default modules
@@ -84,15 +87,15 @@ public class Moda extends JavaPlugin implements Listener {
 					if (!meta.shouldAutoDownload()) {
 						continue;
 					}
-					
+
 					final ModuleManager manager = ModuleManager.getInstance();
 
 					if (manager.isDownloaded(meta.getName())) {
 						continue;
 					}
-					
+
 					this.getLogger().info("The repository " + repo.getUrl() + " wants module " + meta.getName() + " to be automatically installed. Downloading..");
-					
+
 					try {
 						final Optional<ModuleMetaVersion> version = meta.getLatestVersionThatSupports(Moda.minecraftVersion);
 						if (version.isPresent()) {
@@ -167,12 +170,8 @@ public class Moda extends JavaPlugin implements Listener {
 			}
 		}
 
-		if (db != null) {
-			try {
-				db.getConnection().close();
-			} catch (final SQLException e) {
-				e.printStackTrace();
-			}
+		if (hikariDataSource != null) {
+			hikariDataSource.close();
 		}
 	}
 

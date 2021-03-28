@@ -1,27 +1,31 @@
 package cx.moda.moda.module.storage;
 
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.zaxxer.hikari.HikariDataSource;
+
+import cx.moda.moda.Moda;
 import cx.moda.moda.module.Module;
-import xyz.derkades.derkutils.DatabaseHandler;
 
 public abstract class DatabaseStorageHandler extends StorageHandler {
 
-	protected DatabaseHandler db;
+	private HikariDataSource dataSource = Moda.getHikariDataSource();
 
 	public DatabaseStorageHandler(final Module<? extends ModuleStorageHandler> module) {
 		super(module);
 	}
 
-	public void setDatabaseHandler(final DatabaseHandler handler) {
-		this.db = handler;
+	public void setDataSource(final HikariDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	public Connection getConnection() throws SQLException {
+		return this.dataSource.getConnection();
 	}
 
 	/**
@@ -30,27 +34,6 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 	 */
 	public abstract void setup() throws SQLException;
 
-	@Deprecated
-	public final void closeConnection() throws SQLException {
-		this.db.getConnection().close();
-	}
-
-	@Deprecated
-	protected void createTableIfNonexistent(final String table, final String sql) throws SQLException {
-		final DatabaseMetaData meta = this.db.getConnection().getMetaData();
-		final ResultSet result = meta.getTables(null, null, table, null);
-
-		if (result != null && result.next()) {
-			return; // Table exists
-		}
-
-		result.close();
-
-		final PreparedStatement statement = this.db.prepareStatement(sql);
-		statement.execute();
-		statement.close();
-	}
-	
 	@Override
 	public Collection<UUID> getUuids() {
 		throw new UnsupportedOperationException();
@@ -75,7 +58,7 @@ public abstract class DatabaseStorageHandler extends StorageHandler {
 	public <T> void setProperty(final UUID uuid, final String id, final T value) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
 	public void removeProperty(final UUID uuid, final String id) {
 		throw new UnsupportedOperationException();

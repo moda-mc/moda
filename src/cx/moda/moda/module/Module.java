@@ -56,11 +56,11 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	private boolean enabled = false;
 
 	public abstract String getName();
-	
+
 	public Optional<ModuleMetaLocal> getMeta() {
 		return this.meta;
 	}
-	
+
 	public boolean isEnabled() {
 		return this.enabled;
 	}
@@ -80,7 +80,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	public Scheduler getScheduler() {
 		return this.scheduler;
 	}
-	
+
 	public TaskChainFactory getTaskChainFactory() {
 		return this.taskChainFactory;
 	}
@@ -100,7 +100,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	public FileStorageHandler getFileStorageHandler() throws Exception {
 		return null;
 	}
-	
+
 	public StorageMigrator<T> getStorageMigrator() {
 		return new UnsupportedStorageMigrator<>();
 	}
@@ -112,7 +112,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 	public String[] getPluginDependencies() {
 		return new String[] {};
 	}
-	
+
 	public UuidValueStore getPlayerData() {
 		return this.playerData;
 	}
@@ -128,11 +128,11 @@ public abstract class Module<T extends ModuleStorageHandler> {
 				command.getDescription(),
 				command.getUsage(),
 				String.join(".", command.getAliases().toArray(new String[] {})));
-		
+
 		Validate.isTrue(!ReflectionUtil.getKnownCommands().containsKey(commandName), "A command with this name is already registered");
-		
+
 		this.commands.add(command);
-		
+
 		ReflectionUtil.registerCommand(Moda.instance.getName() + "_" + this.getName(), command);
 		try {
 			final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
@@ -172,13 +172,13 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		this.initLang();
 		this.initConfig();
 		this.initStorage();
-		
+
 		this.taskChainFactory = ModuleTaskChainFactory.create(this);
 
 		this.onEnable();
 
 		this.enabled = true;
-		
+
 		if (this.getMeta().isPresent()) {
 			final ModuleMetaLocal meta = this.getMeta().get();
 			this.getLogger().info("Enabled module " + meta.getName() + " by " + meta.getAuthor() + " version " + meta.getDownloadedVersion().getVersion());
@@ -194,7 +194,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		} else {
 			this.getLogger().debug("Disabling module " + this.getName());
 		}
-		
+
 		// Catch any exceptions for later, to make sure module is always unloaded
 		// properly even if disabling fails.
 		Exception onDisableException = null;
@@ -205,17 +205,17 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		}
 
 		this.listeners.forEach(HandlerList::unregisterAll);
-		
+
 		this.commands.forEach(ReflectionUtil::unregisterCommand);
-		
+
 		Scheduler.cancelAllTasks(this);
 
 		if (this.storage instanceof FileStorageHandler) {
 			((FileStorageHandler) this.storage).save();
 		}
-		
+
 		this.taskChainFactory.shutdown(60, TimeUnit.SECONDS);
-		
+
 		this.enabled = false;
 
 		if (this.getMeta().isPresent()) {
@@ -224,7 +224,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		} else {
 			this.getLogger().info("Disabled module " + this.getName());
 		}
-		
+
 		if (onDisableException != null) {
 			throw new RuntimeException("Error occured in module onDisable", onDisableException);
 		}
@@ -264,7 +264,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 				} else {
 					this.getLogger().debug("Config file already exists");
 				}
-				
+
 				this.config = YamlConfiguration.loadConfiguration(file);
 			}
 		}
@@ -280,7 +280,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 			throw new AssertionException();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private final void initDatabaseStorage() throws SQLException {
 		this.logger.debug("Trying to use database storage");
@@ -290,22 +290,21 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		if (handler == null) {
 			this.logger.warning("Moda is configured to use database storage but module " + this.getName() + " only supports file storage.");
 			initFileStorage();
 			return;
 		}
-		
+
 		if (!(handler instanceof ModuleStorageHandler)) {
 			throw new IllegalArgumentException("Module database storage handler must implement a ModuleStorageHandler subinterface.");
 		}
 
-		handler.setDatabaseHandler(Moda.db);
 		handler.setup();
 		this.storage = (T) handler;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private final void initFileStorage() {
 		this.logger.debug("Trying to use file storage");
@@ -315,16 +314,16 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		if (handler == null) {
 			this.logger.debug("File storage does not exist");
 			return;
 		}
-		
+
 		if (!(handler instanceof ModuleStorageHandler)) {
 			throw new IllegalArgumentException("Module file storage handler must implement a ModuleStorageHandler subinterface.");
 		}
-		
+
 		this.storage = (T) handler;
 
 		// Save config periodically
