@@ -38,7 +38,6 @@ import cx.moda.moda.module.storage.StorageType;
 import cx.moda.moda.module.storage.UnsupportedStorageMigrator;
 import cx.moda.moda.module.storage.UuidValueStore;
 import cx.moda.moda.repo.ModuleMetaLocal;
-import xyz.derkades.derkutils.AssertionException;
 import xyz.derkades.derkutils.bukkit.reflection.ReflectionUtil;
 
 public abstract class Module<T extends ModuleStorageHandler> {
@@ -277,7 +276,7 @@ public abstract class Module<T extends ModuleStorageHandler> {
 		} else if (storageType == StorageType.FILE) {
 			initFileStorage();
 		} else {
-			throw new AssertionException();
+			throw new IllegalStateException(storageType.name());
 		}
 	}
 
