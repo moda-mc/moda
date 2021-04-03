@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cx.moda.moda.module.storage.ModuleStorageHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import cx.moda.moda.Moda;
+import cx.moda.moda.module.storage.ModuleStorageHandler;
 
 public class Scheduler {
 
