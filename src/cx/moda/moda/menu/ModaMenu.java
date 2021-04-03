@@ -21,9 +21,9 @@ public class ModaMenu extends IconMenu {
 	public boolean onOptionClick(final OptionClickEvent event) {
 		final int slot = event.getPosition();
 		if (slot == 20) {
-			new BrowseModulesMenu(this.player);
+			new BrowseModulesMenu(event.getPlayer());
 		} else if (slot == 24) {
-			new InstalledModulesMenu(this.player);
+			new InstalledModulesMenu(event.getPlayer());
 		}
 		return false;
 	}

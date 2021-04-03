@@ -60,8 +60,9 @@ public class BrowseModulesMenu extends IconMenu {
 							.create());
 				}
 			} catch (final InvalidMetadataException e) {
-				this.player.sendMessage("Invalid metadata for repository " + repository.getUrl().toString());
-				this.player.sendMessage(e.getMessage());
+				final Player player = (Player) this.getPlayer();
+				player.sendMessage("Invalid metadata for repository " + repository.getUrl().toString());
+				player.sendMessage(e.getMessage());
 				e.printStackTrace();
 			}
 		}

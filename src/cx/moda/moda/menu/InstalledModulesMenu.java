@@ -5,21 +5,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import cx.moda.moda.module.Module;
-import cx.moda.moda.module.ModuleManager;
-import cx.moda.moda.repo.ModuleMetaLocal;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import cx.moda.moda.Moda;
+import cx.moda.moda.module.Module;
+import cx.moda.moda.module.ModuleManager;
+import cx.moda.moda.repo.ModuleMetaLocal;
 import xyz.derkades.derkutils.bukkit.ItemBuilder;
 import xyz.derkades.derkutils.bukkit.menu.IconMenu;
 import xyz.derkades.derkutils.bukkit.menu.OptionClickEvent;
 
 public class InstalledModulesMenu extends IconMenu {
-	
+
 	private static final Material TYPE_DISABLED = Material.RED_CONCRETE;
 	private static final Material TYPE_ENABLED = Material.LIME_CONCRETE;
 
@@ -79,26 +79,26 @@ public class InstalledModulesMenu extends IconMenu {
 		if (clicked.getType() == TYPE_DISABLED) {
 			// Unloaded module
 			try {
-				this.player.sendMessage("Loading module " + name);
+				event.getPlayer().sendMessage("Loading module " + name);
 				ModuleManager.getInstance().load(name);
-				this.player.sendMessage("Loaded module " + name);
+				event.getPlayer().sendMessage("Loaded module " + name);
 			} catch (final Exception | IllegalAccessError e) {
-				this.player.sendMessage("Error occured while loading module");
+				event.getPlayer().sendMessage("Error occured while loading module");
 				e.printStackTrace();
 			}
 		} else if (clicked.getType() == TYPE_ENABLED) {
 			// Loaded module
 			try {
 				ModuleManager.getInstance().unload(name);
-				this.player.sendMessage("Disabled module " + name);
+				event.getPlayer().sendMessage("Disabled module " + name);
 			} catch (final Exception e) {
-				this.player.sendMessage("Error occured while disabling module");
+				event.getPlayer().sendMessage("Error occured while disabling module");
 				e.printStackTrace();
 			}
 		} else {
-			this.player.sendMessage("error");
+			event.getPlayer().sendMessage("error");
 		}
-		
+
 		this.addItems();
 		return false;
 	}
