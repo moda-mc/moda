@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.entity.Player;
 
 import cx.moda.moda.module.Module;
@@ -19,9 +19,9 @@ public class ModaPlaceholderAPI {
 
 	private static final char PLACEHOLDER_START = '{';
 	private static final char PLACEHOLDER_END = '}';
-	
+
 	private static final Map<String, IPlaceholder> PLACEHOLDERS = new HashMap<>();
-	
+
 	public static String parsePlaceholders(final Optional<Player> player, String string) {
 
 		final List<String> placeholdersFound = new ArrayList<>();
@@ -44,7 +44,7 @@ public class ModaPlaceholderAPI {
 				}
 			}
 		}
-		
+
 		for (final String name : placeholdersFound) {
 			final IPlaceholder placeholder = PLACEHOLDERS.get(name);
 			final String value;
@@ -61,13 +61,13 @@ public class ModaPlaceholderAPI {
 			} else {
 				value = "[Placeholder of " + name + " with unknown superclass]";
 			}
-			
+
 			string = string.replace(PLACEHOLDER_START + name + PLACEHOLDER_END, value);
 		}
-		
+
 		return string;
 	}
-	
+
 	public static BaseComponent[] parsePlaceholders(final Optional<Player> player, final BaseComponent... components) {
 //		final BaseComponent[] newComponents = new BaseComponent[components.length];
 		for (int i = 0; i < components.length; i++) {
@@ -87,21 +87,21 @@ public class ModaPlaceholderAPI {
 		}
 		return components;
 	}
-	
+
 	public static void registerPlaceholder(final IPlaceholder placeholder) {
 		Validate.notNull(placeholder, "Placeholder is null");
-		
+
 		if (placeholder instanceof IModulePlaceholder) {
 			final IModulePlaceholder modulePlaceholder = (IModulePlaceholder) placeholder;
 			if (!ModuleManager.getInstance().isLoaded(modulePlaceholder.getModule())) {
 				throw new IllegalStateException("Attempted to register placeholder from unloaded module");
 			}
 		}
-		
+
 		final String name = placeholder.getName();
 		PLACEHOLDERS.put(name, placeholder);
 	}
-	
+
 	public static void unregisterPlaceholders(final Module<ModuleStorageHandler> module) {
 		PLACEHOLDERS.entrySet().removeIf(e -> {
 			if (e.getValue() instanceof IModulePlaceholder) {

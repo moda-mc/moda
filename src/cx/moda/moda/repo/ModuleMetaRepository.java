@@ -5,21 +5,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class ModuleMetaRepository extends ModuleMeta {
-	
+
 	private boolean autoDownload;
 	private final List<ModuleMetaVersion> versions;
-	
+
 	public ModuleMetaRepository(final JsonObject json) throws InvalidMetadataException {
 		super(json);
-		
+
 		Validate.notNull(json);
-		
+
 		if (json.has("versions")) {
 			try {
 				this.versions = new ArrayList<>();
@@ -32,7 +32,7 @@ public class ModuleMetaRepository extends ModuleMeta {
 		} else {
 			throw new InvalidMetadataException("Missing 'versions' key");
 		}
-		
+
 		if (json.has("auto_download")) {
 			try {
 				this.autoDownload = json.get("auto_download").getAsBoolean();
@@ -42,22 +42,22 @@ public class ModuleMetaRepository extends ModuleMeta {
 		} else {
 			this.autoDownload = false;
 		}
-		
+
 		if (this.versions.isEmpty()) {
 			throw new InvalidMetadataException("Module must have at least one version");
 		}
-		
+
 		Collections.sort(this.versions);
 	}
-	
+
 	public boolean shouldAutoDownload() {
 		return this.autoDownload;
 	}
-	
+
 	public List<ModuleMetaVersion> getAvailableVersions() {
 		return this.versions;
 	}
-	
+
 	public ModuleMetaVersion getLatestVersion() {
 		return this.getAvailableVersions().get(0);
 	}
@@ -68,7 +68,7 @@ public class ModuleMetaRepository extends ModuleMeta {
 				return Optional.of(version);
 			}
 		}
-		
+
 		return Optional.empty();
 	}
 

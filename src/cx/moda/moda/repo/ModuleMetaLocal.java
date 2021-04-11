@@ -5,20 +5,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import com.google.gson.JsonObject;
 
 public class ModuleMetaLocal extends ModuleMeta {
-	
+
 	private ModuleMetaVersion downloadedVersion;
 	private Optional<URL> repository;
-	
+
 	public ModuleMetaLocal(final JsonObject json) throws InvalidMetadataException, FileNotFoundException {
 		super(json);
-		
+
 		Validate.notNull(json);
-		
+
 		if (json.has("downloaded_version")) {
 			try {
 				this.downloadedVersion = new ModuleMetaVersion(json.get("website").getAsJsonObject(), this);
@@ -28,7 +28,7 @@ public class ModuleMetaLocal extends ModuleMeta {
 		} else {
 			throw new InvalidMetadataException("Missing key 'downloaded_version'");
 		}
-		
+
 		if (json.has("repository")) {
 			try {
 				this.repository = Optional.of(new URL(json.get("repository").getAsString()));
@@ -39,15 +39,15 @@ public class ModuleMetaLocal extends ModuleMeta {
 			this.repository = Optional.empty();
 		}
 	}
-	
+
 	public ModuleMetaVersion getDownloadedVersion() {
 		return this.downloadedVersion;
 	}
-	
+
 	public Optional<URL> getRepository() {
 		return this.repository;
 	}
-	
-	
+
+
 
 }

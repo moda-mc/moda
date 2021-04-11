@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,9 +17,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import cx.moda.moda.module.Module;
 
 public class YamlStorageHandler extends FileStorageHandler {
-	
+
 	private static final String UUID_VALUE_PATH = "moda_playerdata";
-	
+
 	private final FileConfiguration yaml;
 	private final File file;
 
@@ -27,7 +27,7 @@ public class YamlStorageHandler extends FileStorageHandler {
 		super(module);
 
 		Validate.notNull(module, "Module is null");
-		
+
 		final File fileFileDir = new File(module.getDataFolder() + File.separator + "data");
 
 		fileFileDir.mkdirs();
@@ -36,7 +36,7 @@ public class YamlStorageHandler extends FileStorageHandler {
 
 		this.yaml = YamlConfiguration.loadConfiguration(this.file);
 	}
-	
+
 	public FileConfiguration getYaml() {
 		return this.yaml;
 	}
@@ -45,7 +45,7 @@ public class YamlStorageHandler extends FileStorageHandler {
 	public void save() throws IOException {
 		this.yaml.save(this.file);
 	}
-	
+
 	public ConfigurationSection uuidValueSection() {
 		if (getYaml().isConfigurationSection(UUID_VALUE_PATH)) {
 			return getYaml().getConfigurationSection(UUID_VALUE_PATH);
@@ -62,16 +62,16 @@ public class YamlStorageHandler extends FileStorageHandler {
 	@Override
 	public Map<String, Object> getProperties(final UUID uuid) {
 		Validate.notNull(uuid, "UUID is null");
-		
+
 		final Map<String, Object> map = new HashMap<>();
-		
+
 		if (uuidValueSection().isConfigurationSection(uuid.toString())) {
 			for (final String key : uuidValueSection().getKeys(false)) {
 				final Object value = uuidValueSection().get(uuid.toString() + "." + key);
 				map.put(key, value);
 			}
 		}
-		
+
 		return map;
 	}
 
@@ -79,13 +79,13 @@ public class YamlStorageHandler extends FileStorageHandler {
 	public void setProperties(final UUID uuid, final Map<String, Object> properties) {
 		Validate.notNull(uuid, "UUID is null");
 		Validate.notNull(properties, "Properties map is null");
-		
+
 		if (uuidValueSection().isConfigurationSection(uuid.toString())) {
 			uuidValueSection().set(uuid.toString(), null);
 		}
-		
+
 		final ConfigurationSection section = uuidValueSection().createSection(uuid.toString());
-		
+
 		properties.forEach((key, value) -> section.set(key, value));
 	}
 
@@ -94,11 +94,11 @@ public class YamlStorageHandler extends FileStorageHandler {
 	public <T> Optional<T> getProperty(final UUID uuid, final String key) {
 		Validate.notNull(uuid, "UUID is null");
 		Validate.notNull(key, "Key is null");
-		
+
 		if (!uuidValueSection().isConfigurationSection(uuid.toString())) {
 			return Optional.empty();
 		}
-		
+
 		final ConfigurationSection section = uuidValueSection().getConfigurationSection(uuid.toString());
 		final Object o = section.get(key);
 		if (o == null) {
@@ -113,14 +113,14 @@ public class YamlStorageHandler extends FileStorageHandler {
 		Validate.notNull(uuid, "UUID is null");
 		Validate.notNull(key, "Key is null");
 		Validate.notNull(value, "Value is null");
-		
+
 		ConfigurationSection section;
 		if (uuidValueSection().isConfigurationSection(uuid.toString())) {
 			section = uuidValueSection().getConfigurationSection(uuid.toString());
 		} else {
 			section = uuidValueSection().createSection(uuid.toString());
 		}
-		
+
 		section.set(key, value);
 	}
 
@@ -128,7 +128,7 @@ public class YamlStorageHandler extends FileStorageHandler {
 	public void removeProperty(final UUID uuid, final String key) {
 		Validate.notNull(uuid, "UUID is null");
 		Validate.notNull(key, "Key is null");
-		
+
 		final ConfigurationSection section = uuidValueSection();
 		if (section.isConfigurationSection(uuid.toString())) {
 			section.getConfigurationSection(uuid.toString()).set(key, null);

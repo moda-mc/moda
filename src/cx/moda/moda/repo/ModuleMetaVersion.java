@@ -5,25 +5,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import com.google.gson.JsonObject;
 
 public class ModuleMetaVersion implements Comparable<ModuleMetaVersion> {
-	
+
 	private final ModuleMeta meta;
 	private int build;
 	private String version;
 	private Optional<String> changelog;
 	private URL download;
 	private int minecraftVersionsFlag;
-	
+
 	ModuleMetaVersion(final JsonObject json, final ModuleMeta meta) throws InvalidMetadataException {
 		Validate.notNull(json);
 		Validate.notNull(meta);
-		
+
 		this.meta = meta;
-		
+
 		if (json.has("build")) {
 			try {
 				this.build = json.get("build").getAsInt();
@@ -33,7 +33,7 @@ public class ModuleMetaVersion implements Comparable<ModuleMetaVersion> {
 		} else {
 			throw new InvalidMetadataException("Missing key 'build'");
 		}
-		
+
 		if (json.has("version")) {
 			try {
 				this.version = json.get("version").getAsString();
@@ -43,7 +43,7 @@ public class ModuleMetaVersion implements Comparable<ModuleMetaVersion> {
 		} else {
 			throw new InvalidMetadataException("Missing key 'version'");
 		}
-		
+
 		if (json.has("changelog")) {
 			try {
 				this.changelog = Optional.of(json.get("changelog").getAsString());
@@ -53,7 +53,7 @@ public class ModuleMetaVersion implements Comparable<ModuleMetaVersion> {
 		} else {
 			this.changelog = Optional.empty();
 		}
-		
+
 		if (json.has("minecraft_versions")) {
 			try {
 				this.minecraftVersionsFlag = json.get("minecraft_versions").getAsInt();
@@ -64,7 +64,7 @@ public class ModuleMetaVersion implements Comparable<ModuleMetaVersion> {
 			throw new InvalidMetadataException("Missing key 'minecraft_versions'");
 		}
 	}
-	
+
 	public ModuleMeta getModuleMeta() {
 		return this.meta;
 	}
@@ -72,23 +72,23 @@ public class ModuleMetaVersion implements Comparable<ModuleMetaVersion> {
 	public int getBuild() {
 		return this.build;
 	}
-	
+
 	public String getVersion() {
 		return this.version;
 	}
-	
+
 	public Optional<String> getChangelog() {
 		return this.changelog;
 	}
-	
+
 	public URL getDownloadUrl() {
 		return this.download;
 	}
-	
+
 	public int getSupportedMinecraftVersionsFlag() {
 		return this.minecraftVersionsFlag;
 	}
-	
+
 	public List<ModuleMinecraftVersion> getSupportedMinecraftVersions() {
 		return ModuleMinecraftVersion.parse(this.minecraftVersionsFlag);
 	}
