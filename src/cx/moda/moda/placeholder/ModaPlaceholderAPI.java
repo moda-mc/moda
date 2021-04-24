@@ -68,6 +68,7 @@ public class ModaPlaceholderAPI {
 		return string;
 	}
 
+	@Deprecated
 	public static BaseComponent[] parsePlaceholders(final Optional<Player> player, final BaseComponent... components) {
 //		final BaseComponent[] newComponents = new BaseComponent[components.length];
 		for (int i = 0; i < components.length; i++) {
