@@ -17,8 +17,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ModaPlaceholderAPI {
 
-	static final char PLACEHOLDER_START = '{';
-	static final char PLACEHOLDER_END = '}';
+	private static final char PLACEHOLDER_START = '{';
+	private static final char PLACEHOLDER_END = '}';
 
 	private static final Map<String, IPlaceholder> PLACEHOLDERS = new HashMap<>();
 
