@@ -17,8 +17,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ModaPlaceholderAPI {
 
-	private static final char PLACEHOLDER_START = '{';
-	private static final char PLACEHOLDER_END = '}';
+	static final char PLACEHOLDER_START = '{';
+	static final char PLACEHOLDER_END = '}';
 
 	private static final Map<String, IPlaceholder> PLACEHOLDERS = new HashMap<>();
 
@@ -46,26 +46,29 @@ public class ModaPlaceholderAPI {
 		}
 
 		for (final String name : placeholdersFound) {
-			final IPlaceholder placeholder = PLACEHOLDERS.get(name);
-			final String value;
-			if (placeholder == null) {
-				value = "[Unknown placeholder '" + name + "']";
-			} else if (placeholder instanceof IPlayerPlaceholder) {
-				if (player.isPresent()) {
-					value = ((IPlayerPlaceholder) placeholder).getValue(player.get());
-				} else {
-					value = "[Player specific placeholder in global context '" + name + "']";
-				}
-			} else if (placeholder instanceof IGlobalPlaceholder) {
-				value = ((IGlobalPlaceholder) placeholder).getValue();
-			} else {
-				value = "[Placeholder of " + name + " with unknown superclass]";
-			}
+			final String value = parseSinglePlaceholder(player, name);
 
 			string = string.replace(PLACEHOLDER_START + name + PLACEHOLDER_END, value);
 		}
 
 		return string;
+	}
+
+	public static String parseSinglePlaceholder(final Optional<Player> player, final String placeholderName) {
+		final IPlaceholder placeholder = PLACEHOLDERS.get(placeholderName);
+		if (placeholder == null) {
+			return "[Unknown placeholder '" + placeholderName + "']";
+		} else if (placeholder instanceof IPlayerPlaceholder) {
+			if (player.isPresent()) {
+				return ((IPlayerPlaceholder) placeholder).getValue(player.get());
+			} else {
+				return "[Player specific placeholder in global context '" + placeholderName + "']";
+			}
+		} else if (placeholder instanceof IGlobalPlaceholder) {
+			return ((IGlobalPlaceholder) placeholder).getValue();
+		} else {
+			return "[Placeholder of " + placeholderName + " with unknown superclass]";
+		}
 	}
 
 	@Deprecated

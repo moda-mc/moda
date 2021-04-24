@@ -142,11 +142,18 @@
 			<artifactId>taskchain-core</artifactId>
 			<version>3.7.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
 			<version>4.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>me.clip</groupId>
+			<artifactId>placeholderapi</artifactId>
+			<version>2.10.9</version>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>
@@ -171,6 +178,11 @@
 		<repository>
 			<id>aikar</id>
 			<url>https://repo.aikar.co/content/groups/aikar/</url>
+		</repository>
+
+		<repository>
+			<id>placeholderapi</id>
+			<url>http://repo.extendedclip.com/content/repositories/placeholderapi</url>
 		</repository>
 
 	</repositories>

@@ -25,6 +25,7 @@ import cx.moda.moda.module.storage.StorageType;
 import cx.moda.moda.placeholder.ModaPlaceholder;
 import cx.moda.moda.placeholder.ModaPlaceholderAPI;
 import cx.moda.moda.placeholder.ModaPlayerPlaceholder;
+import cx.moda.moda.placeholder.PapiExpansionRegistrar;
 import cx.moda.moda.repo.ModuleMetaRepository;
 import cx.moda.moda.repo.ModuleMetaVersion;
 import cx.moda.moda.repo.ModuleMinecraftVersion;
@@ -156,6 +157,10 @@ public class Moda extends JavaPlugin implements Listener {
 				}
 			}
 		}, 10*20);
+
+		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			PapiExpansionRegistrar.register();
+		}
 	}
 
 	@Override
